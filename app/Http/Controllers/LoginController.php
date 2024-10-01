@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Persona;
 
 class LoginController extends Controller
 {
@@ -18,21 +19,24 @@ class LoginController extends Controller
     public function register(Request $request)
     {
         // Validar los datos de entrada
-        /*
+        
         $request->validate([
-            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]); */
+            'password' => 'required|string|min:8'
+        ]);
 
         // Crear un nuevo usuario
         $user = new User();
-        $user->name=$request->name;
         $user->email=$request->email;
         $user->password = Hash::make($request->password);
 
         // Guardar el usuario en la base de datos
         $user->save();
+
+        // Crear automáticamente el perfil (persona) asociado al usuario
+        $persona = new Persona();
+        $persona->user_id = $user->id;
+        $persona->save();
 
         // Iniciar sesión automáticamente después de registrarse
         Auth::login($user); 

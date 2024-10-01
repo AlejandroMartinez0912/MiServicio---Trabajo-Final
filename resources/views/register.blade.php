@@ -16,11 +16,6 @@
                 <form method="POST" action="{{ route('validar-registro') }}">
                     @csrf
                     <div class="mb-3">
-                        <label for="userInput" class="form-label">Nombre y Apellido</label>
-                        <input type="text" class="form-control" id="userInput" name="name" required autocomplete="disable">
-                    </div>
-
-                    <div class="mb-3">
                         <label for="emailInput" class="form-label">Email</label>
                         <input type="email" class="form-control" id="emailInput" name="email" required autocomplete="disable">
                     </div>

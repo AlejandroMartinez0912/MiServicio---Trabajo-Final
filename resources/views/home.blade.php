@@ -8,12 +8,12 @@
     <a class="nav-link" href="{{ route('login') }}">Iniciar Sesión</a>
 @endsection
 
+
 @section('contenido')
 
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
-                <h1 class="display-4 mb-4">Bienvenido a MiServicio</h1>
                 <p class="lead mb-5">
                     MiServicio es una plataforma innovadora que conecta a clientes con especialistas en diversas áreas, permitiéndote contratar servicios de manera sencilla y rápida desde la comodidad de tu hogar.
                 </p>

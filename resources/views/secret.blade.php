@@ -1,31 +1,11 @@
-@extends('layouts.plantilla')
+@extends('layouts.plantillain')
 
 @section('titulo')
     MiServicio | Panel
 @endsection
 
-@section('ruta')
-<div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-        Mi Cuenta
-    </button>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-item" href="{{ route('home') }}" style="color: black;">Perfil</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{{ route('home') }}" style="color: black;">Nueva empresa</a></li>
-        <li><a class="dropdown-item" href="{{ route('home') }}" style="color: black;">Mis empresas</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="{{ route('home') }}" style="color: black;">Buscar servicio</a></li>
-        <li><a class="dropdown-item" href="{{ route('home') }}" style="color: black;">Mis turnos</a></li>
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">Salir</a></li>
-    </ul>
-</div>
-
-@endsection
 
 @section('contenido')
-
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
@@ -82,5 +62,4 @@
             </div>
         </div>
     </div>
-
 @endsection

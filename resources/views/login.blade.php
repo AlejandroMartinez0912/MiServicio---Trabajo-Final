@@ -4,9 +4,6 @@
     Inicio de Sesión
 @endsection
 
-@section('ruta')
-@endsection
-
 @section('contenido')
 
     <div class="d-flex justify-content-center align-items-center vh-100">
