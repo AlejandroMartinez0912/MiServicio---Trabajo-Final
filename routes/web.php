@@ -4,6 +4,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PersonaController;
 use Illuminate\Support\Facades\Route;
 
+
 // Ruta de página principal llamada Home
 Route::view('/', "home")->name('home');
 

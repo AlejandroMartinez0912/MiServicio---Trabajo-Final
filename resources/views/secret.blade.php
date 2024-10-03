@@ -1,65 +1,108 @@
 @extends('layouts.plantillain')
 
 @section('titulo')
-    MiServicio | Panel
+    Bienvenido a MiServicio
 @endsection
 
-
 @section('contenido')
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 text-center">
-                <h1 class="display-4 mb-4">Bienvenido a MiServicio</h1>
-                <p class="lead mb-5">
-                    Nos alegra que estés de vuelta. Aquí puedes gestionar tus servicios, actualizar tu perfil y descubrir nuevas ofertas.
-                </p>
-            </div>
-        </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h4 class="card-title text-center mb-3">Panel de Usuario</h4>
-                        <p class="card-text text-center">
-                            En este panel puedes gestionar todas tus actividades, desde la contratación de servicios hasta la actualización de tu perfil.
-                        </p>
-                        <p class="text-center">
-                            Aprovecha las nuevas ofertas y especialistas disponibles en la plataforma. Estamos aquí para ayudarte a encontrar la solución perfecta para tus necesidades.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+<style>
+    .card {
+        background-color: #3f3fd1; /* Azul personalizado */
+        color: #f8f9fa; /* Blanco suave */
+        border-radius: 15px;
+        transition: all 0.3s ease-in-out;
+    }
 
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Mis Servicios</h5>
-                        <p class="card-text">Consulta y gestiona los servicios que has contratado de manera sencilla.</p>
-                        //Ruta
-                    </div>
-                </div>
+    .card:hover {
+        transform: scale(1.05); /* Efecto hover en las tarjetas */
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+    }
+
+    .btn-primary {
+        background-color: #0d6efd; /* Azul Bootstrap */
+        border-radius: 50px; /* Bordes redondeados */
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #0a58ca; /* Azul más oscuro */
+    }
+
+    .welcome-message {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .quick-actions {
+        font-family: 'Roboto', sans-serif;
+        font-size: 1.1rem;
+        margin-top: 20px;
+    }
+
+    .quick-actions a {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+
+    .quick-actions a:hover {
+        color: #0a58ca;
+        text-decoration: underline;
+    }
+
+    /* Animación sutil en el botón */
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+    }
+
+    h2, h3 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+    }
+
+    p, label {
+        font-family: 'Roboto', sans-serif;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="width: 28rem;">
+        <h2 class="text-center mb-4">¡Bienvenido de nuevo, {{ Auth::user()->persona->nombre }}!</h2>
+        <p class="text-center mb-3">Estamos encantados de tenerte de vuelta. Aquí tienes algunas acciones rápidas que puedes realizar:</p>
+
+        <!-- Mostrar mensajes de error si existen -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Perfil</h5>
-                        <p class="card-text">Actualiza tu información personal y preferencias.</p>
-                        //Ruta                    
-                    </div>
-                </div>
+        @endif
+
+        <div class="card-body">
+            <h3 class="text-center mb-4">Acciones rápidas</h3>
+            
+            <!-- Acciones rápidas después de iniciar sesión -->
+            <div class="d-grid gap-2">
+                <a href="{{ route('perfil') }}" class="btn btn-primary">Editar Perfil</a>
+                <a href="{{ route('home') }}" class="btn btn-primary">Gestionar Mis Empresas</a>
+                <a href="{{ route('home') }}" class="btn btn-primary">Ver Mis Turnos</a>
+                <a href="{{ route('home') }}" class="btn btn-primary">Buscar Nuevos Servicios</a>
             </div>
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Nuevas Ofertas</h5>
-                        <p class="card-text">Descubre las nuevas ofertas y servicios disponibles.</p>
-                        //Ruta
-                    </div>
-                </div>
+
+            <div class="quick-actions text-center mt-4">
+                <p>¿Necesitas ayuda? Visita nuestra <a href="#">sección de soporte</a>.</p>
             </div>
         </div>
     </div>
+</div>
+
 @endsection
+

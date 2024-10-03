@@ -8,60 +8,112 @@
     <a class="nav-link" href="{{ route('login') }}">Iniciar Sesión</a>
 @endsection
 
-
 @section('contenido')
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8 text-center">
-                <p class="lead mb-5">
-                    MiServicio es una plataforma innovadora que conecta a clientes con especialistas en diversas áreas, permitiéndote contratar servicios de manera sencilla y rápida desde la comodidad de tu hogar.
-                </p>
-            </div>
-        </div>
+<style>
+    .card {
+        background-color: #343a40; /* Gris oscuro */
+        color: #f8f9fa; /* Blanco suave */
+        border-radius: 15px;
+        transition: all 0.3s ease-in-out;
+    }
 
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h4 class="card-title text-center mb-3">¿Quiénes somos?</h4>
-                        <p class="card-text text-center">
-                            Somos una plataforma comprometida en ofrecer soluciones rápidas y eficaces para todos tus problemas domésticos o profesionales. Con MiServicio, podrás contratar expertos en áreas como plomería, electricidad, carpintería y mucho más.
-                        </p>
-                        <p class="text-center">
-                            Nuestra misión es brindar una experiencia de calidad tanto para los clientes como para los especialistas que se unen a nuestra plataforma, asegurando confianza, seguridad y eficiencia en cada servicio ofrecido.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    .card:hover {
+        transform: scale(1.05); /* Animación de hover */
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
+    }
 
-        <div class="row justify-content-center mt-5">
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Fácil de usar</h5>
-                        <p class="card-text">Encuentra especialistas rápidamente y gestiona tus servicios en solo unos clics.</p>
-                    </div>
+    .btn-primary {
+        background-color: #0d6efd; /* Azul Bootstrap */
+        border-radius: 50px; /* Bordes redondeados */
+        border: none; /* Sin bordes */
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #0a58ca; /* Azul oscuro */
+    }
+
+    .form-control {
+        border-radius: 10px; /* Bordes redondeados para los inputs */
+    }
+
+    .form-check-input {
+        border-radius: 5px; /* Bordes redondeados para el checkbox */
+    }
+
+    /* Animación sutil en el botón */
+    .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+    }
+
+    h2, h3 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+    }
+
+    p, label {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    a {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #0a58ca;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card p-4 shadow-lg" style="width: 28rem;">
+        <h2 class="text-center mb-4">Bienvenido a <span class="text-primary">MiServicio</span></h2>
+        <p class="text-center mb-3">Inicia sesión para formar parte de nuestra comunidad.</p>
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
+            
+            <!-- Mostrar mensajes de error si existen -->
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Confianza y Seguridad</h5>
-                        <p class="card-text">Todos nuestros especialistas están verificados para ofrecerte la mejor calidad y seguridad.</p>
-                    </div>
+            @endif
+            
+            <form method="POST" action="{{ route('inicia-sesion') }}">
+                @csrf
+                <div class="mb-3">
+                    <label for="emailInput" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="emailInput" name="email" value="{{ old('email') }}" required>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Soporte 24/7</h5>
-                        <p class="card-text">Estamos aquí para ayudarte en cualquier momento, con atención al cliente de calidad.</p>
-                    </div>
+
+                <div class="mb-3">
+                    <label for="passwordInput" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="passwordInput" name="password" required>
                 </div>
-            </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="rememberCheck" name="remember">
+                    <label class="form-check-label" for="rememberCheck">Mantener sesión iniciada</label>
+                </div>
+
+                <div class="mb-3 text-center">
+                    <p>¿No tienes cuenta? <a href="{{ route('registro') }}">Regístrate</a></p>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Acceder</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
 @endsection

@@ -73,7 +73,7 @@ class LoginController extends Controller
         }
 
         // Redirigir de vuelta a la página de inicio de sesión con un mensaje de error
-        return redirect()->route('login')->withErrors(['email' => 'Las credenciales proporcionadas son incorrectas.']);
+        return redirect()->route('home')->withErrors(['email' => 'Las credenciales proporcionadas son incorrectas.']);
     }
 
     /**
