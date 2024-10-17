@@ -41,7 +41,7 @@ class LoginController extends Controller
         // Iniciar sesión automáticamente después de registrarse
         Auth::login($user); 
         // Redirigir a la ruta privada
-        return redirect()->route('privada');
+        return redirect()->route('perfil');
     }
 
     /**

@@ -55,7 +55,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-lg p-4 mb-5">
-                <h2 class="text-center mb-4">Editar Perfil</h2>
+                <h2 class="text-center mb-4">
+                    <i class='bx bx-user'></i>  Editar Perfil</h2>
 
                 <!-- Mostrar mensajes de éxito o error si existen -->
                 @if (session('success'))
@@ -91,11 +92,6 @@
                         <div class="mb-3">
                             <label for="apellido" class="form-label">Apellido</label>
                             <input type="text" class="form-control" id="apellido" name="apellido" value="{{ $persona->apellido }}" required maxlength="50">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}" required maxlength="100">
                         </div>
 
                         <div class="mb-3">

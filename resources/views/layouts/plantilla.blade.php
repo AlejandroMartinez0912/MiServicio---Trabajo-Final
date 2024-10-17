@@ -40,9 +40,11 @@
 
     /* Estilos del contenido principal */
     .content {
-      background-color: #f8f9fa; /* Fondo blanco claro */
+      background-color: #e0e0e0; /* Fondo gris más oscuro */
       padding: 20px;
       min-height: 80vh;
+      border-radius: 8px; /* Agrega un borde redondeado */
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
     }
 
     /* Footer moderno */

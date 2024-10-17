@@ -5,7 +5,7 @@
 @endsection
 
 @section('ruta')
-    <a class="nav-link" href="{{ route('login') }}">Iniciar Sesión</a>
+    
 @endsection
 
 @section('contenido')

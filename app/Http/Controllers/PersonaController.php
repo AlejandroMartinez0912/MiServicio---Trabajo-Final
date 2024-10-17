@@ -13,7 +13,7 @@ class PersonaController extends Controller
     public function edit()
     {
         $persona = Auth::user()->persona;
-        return view('perfil', compact('persona'));
+        return view('Perfil/perfil', compact('persona'));
     }
 
     // Actualizar perfil

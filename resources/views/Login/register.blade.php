@@ -1,7 +1,7 @@
 @extends('layouts.plantilla')
 
 @section('titulo')
-    MiServicio | Registrarse
+    Registrarse
 @endsection
 
 @section('ruta')

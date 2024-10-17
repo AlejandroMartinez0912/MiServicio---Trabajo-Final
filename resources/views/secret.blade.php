@@ -1,7 +1,7 @@
 @extends('layouts.plantillain')
 
 @section('titulo')
-    Bienvenido a MiServicio
+MiServicio
 @endsection
 
 @section('contenido')
@@ -92,7 +92,7 @@
             <!-- Acciones rápidas después de iniciar sesión -->
             <div class="d-grid gap-2">
                 <a href="{{ route('perfil') }}" class="btn btn-primary">Editar Perfil</a>
-                <a href="{{ route('home') }}" class="btn btn-primary">Gestionar Mis Empresas</a>
+                <a href="{{ route('gestionar-empresas') }}" class="btn btn-primary">Gestionar Mis Empresas</a>
                 <a href="{{ route('home') }}" class="btn btn-primary">Ver Mis Turnos</a>
                 <a href="{{ route('home') }}" class="btn btn-primary">Buscar Nuevos Servicios</a>
             </div>
