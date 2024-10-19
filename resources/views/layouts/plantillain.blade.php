@@ -3,23 +3,26 @@
 <head>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Boxicons para íconos modernos -->
+
+  <!-- Boxicons para íconos modernos (opcional) -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <!-- Select2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-  <!-- jQuery (necesario para Select2) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <!-- jQuery (necesario si usas Select2) -->
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-  <!-- Select2 JS -->
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+   <!-- Select2 CSS y JS -->
+   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+ 
+   <!-- Popper.js -->
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+ 
   <title>@yield('titulo')</title>
 
   <style>
     /* Estilos generales */
     body {
-      background-color: #f8f9fa; /* Fondo claro */
+      background-color: black; /* Fondo negro */
       margin: 0;
       padding: 0;
       min-height: 100vh;
@@ -90,25 +93,11 @@
 
     /* Estilos del contenido */
     .content {
-      background-color: #e0e0e0; /* Fondo gris más oscuro */
+      background-color: grey; /* Fondo gris más oscuro */
       padding: 20px;
       min-height: 80vh;
       border-radius: 8px; /* Bordes redondeados */
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    }
-
-    /* Estilos para el botón del menú */
-    .navbar-toggler {
-      border: none;
-      outline: none;
-    }
-
-    .navbar-toggler-icon {
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .navbar-toggler:hover .navbar-toggler-icon {
-      transform: rotate(90deg); /* Animación en el icono de menú */
     }
   </style>
 </head>
@@ -125,36 +114,34 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class='bx bx-home-alt-2'></i>
-                {{ Auth::user()->persona->nombre }}
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="{{ route('perfil') }}">
-                  <i class='bx bx-user'></i>  Perfil</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" role="button" 
+               data-bs-toggle="dropdown" aria-expanded="false">
+              <i class='bx bx-home-alt-2'></i> {{ Auth::user()->persona->nombre }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+              <li><a class="dropdown-item" href="{{ route('perfil') }}">
+                <i class='bx bx-user'></i>  Perfil</a></li>
 
-                <li><hr class="dropdown-divider"></li>
+              <li><hr class="dropdown-divider"></li>
 
-                <li><a class="dropdown-item" href="{{ route('crear-empresa') }}">
-                  <i class='bx bx-store-alt'></i>  Nueva empresa</a></li>
+              <li><a class="dropdown-item" href="{{ route('crear-empresa') }}">
+                <i class='bx bx-store-alt'></i>  Nueva empresa</a></li>
 
-                <li><a class="dropdown-item" href="{{ route('gestionar-empresas') }}">
-                  <i class='bx bxs-store-alt' ></i>  Mis empresas</a></li>
+              <li><a class="dropdown-item" href="{{ route('gestionar-empresas') }}">
+                <i class='bx bxs-store-alt'></i>  Mis empresas</a></li>
 
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{ route('home') }}">
-                  <i class='bx bx-search-alt-2'></i>  Buscar servicio</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ route('home') }}">
+                <i class='bx bx-search-alt-2'></i>  Buscar servicio</a></li>
 
-                <li><a class="dropdown-item" href="{{ route('home') }}">
-                  <i class='bx bxs-edit'></i>  Mis turnos</a></li>
+              <li><a class="dropdown-item" href="{{ route('home') }}">
+                <i class='bx bxs-edit'></i>  Mis turnos</a></li>
 
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">
-                  <i class='bx bx-exit'></i>  Salir</a></li>
-              </ul>
-            </div>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">
+                <i class='bx bx-exit'></i>  Salir</a></li>
+            </ul>
           </li>
         </ul>
       </div>

@@ -8,8 +8,8 @@ MiServicio
 
 <style>
     .card {
-        background-color: #3f3fd1; /* Azul personalizado */
-        color: #f8f9fa; /* Blanco suave */
+        background-color: #343a40; /* Azul personalizado */
+        color: whitesmoke; /* Blanco suave */
         border-radius: 15px;
         transition: all 0.3s ease-in-out;
     }

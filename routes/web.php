@@ -22,13 +22,12 @@ Route::get('/perfil', [PersonaController::class, 'edit'])->name('perfil')->middl
 Route::put('/perfil-update', [PersonaController::class, 'update'])->name('perfil-update')->middleware('auth');
 
 // RUTAS DE EMPRESA
-//Crear y guardar empresa
+// Crear y guardar empresa
 Route::get('/empresa/crear', [EmpresaController::class, 'create'])->name('crear-empresa')->middleware('auth');
 Route::post('/empresa/guardar', [EmpresaController::class, 'store'])->name('guardar-empresa')->middleware('auth');
-//Gestion de empresa
+// Gestión de empresas
 Route::get('/gestionar', [EmpresaController::class, 'gestionar'])->name('gestionar-empresas')->middleware('auth');
-//Editar empresa
+// Editar empresa
 Route::get('/editar/{id}', [EmpresaController::class, 'edit'])->name('editar-empresa')->middleware('auth');
-
 // Eliminar una empresa
 Route::delete('/eliminar-empresa/{id}', [EmpresaController::class, 'destroy'])->name('eliminar-empresa')->middleware('auth');

@@ -40,7 +40,7 @@
 
     /* Estilos del contenido principal */
     .content {
-      background-color: #e0e0e0; /* Fondo gris más oscuro */
+      background-color: grey; /* Fondo gris más oscuro */
       padding: 20px;
       min-height: 80vh;
       border-radius: 8px; /* Agrega un borde redondeado */
