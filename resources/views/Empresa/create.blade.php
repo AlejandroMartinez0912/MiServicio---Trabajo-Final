@@ -124,6 +124,20 @@
         align-items: center; /* Centra verticalmente el icono */
         justify-content: center; /* Centra horizontalmente el icono */
     }
+    .dias-semana {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px; /* Mayor separación entre los días */
+    }
+
+    .dia {
+        flex: 1;
+        text-align: center;
+    }
+
+    .mb-2 {
+        margin-bottom: 20px; /* Mayor separación entre cada hora */
+    }
 </style>
 
 <div class="container mt-5">
@@ -197,50 +211,34 @@
                         </div>
 
                         <h3 class="text-center mb-3">Horarios de Atención</h3>
-@foreach(['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'] as $dia)
-    <div class="mb-3">
-        <label class="form-label">{{ ucfirst($dia) }}</label>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="hora_inicio_{{ $dia }}_1">Hora de inicio (Turno 1)</label>
-                <select name="horarios[{{ $dia }}][hora_inicio]" class="form-control" id="hora_inicio_{{ $dia }}_1" required>
-                    @for($i = 0; $i < 24; $i++)
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
-                    @endfor
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label for="hora_fin_{{ $dia }}_1">Hora de fin (Turno 1)</label>
-                <select name="horarios[{{ $dia }}][hora_fin]" class="form-control" id="hora_fin_{{ $dia }}_1" required>
-                    @for($i = 0; $i < 24; $i++)
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
-                    @endfor
-                </select>
-            </div>
-            <!-- Campos para el segundo horario -->
-            <div class="col-md-4">
-                <label for="hora_inicio_{{ $dia }}_2">Hora de inicio (Turno 2)</label>
-                <select name="horarios[{{ $dia }}][hora_inicio_2]" class="form-control" id="hora_inicio_{{ $dia }}_2">
-                    @for($i = 0; $i < 24; $i++)
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
-                    @endfor
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label for="hora_fin_{{ $dia }}_2">Hora de fin (Turno 2)</label>
-                <select name="horarios[{{ $dia }}][hora_fin_2]" class="form-control" id="hora_fin_{{ $dia }}_2">
-                    @for($i = 0; $i < 24; $i++)
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
-                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
-                    @endfor
-                </select>
-            </div>
-        </div>
-    </div>
-@endforeach
+                        <div class="dias-semana">
+                            @foreach(['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'] as $dia)
+                                <div class="dia">
+                                    <label class="form-label">{{ ucfirst($dia) }}</label>
+                                    <div class="turno-group" id="turnos_{{ $dia }}">
+                                        <div class="row mb-2">
+                                            <div class="col-md-12">
+                                                <select name="horarios[{{ $dia }}][hora_inicio][]" class="form-control" id="hora_inicio_{{ $dia }}_1" required>
+                                                    @for($i = 0; $i < 24; $i++)
+                                                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <select name="horarios[{{ $dia }}][hora_fin][]" class="form-control" id="hora_fin_{{ $dia }}_1" required>
+                                                    @for($i = 0; $i < 24; $i++)
+                                                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                                        <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" onclick="addTurno('{{ $dia }}')">+</button>
+                                </div>
+                            @endforeach
+                        </div>
 
 
                         <div class="d-flex justify-content-between">
@@ -285,6 +283,48 @@
             $('#empresaForm').submit();
         });
     });
+</script>
+
+<!-- Script para horarios-->
+<script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+
+    function addTurno(dia) {
+        const turnoGroup = document.getElementById(`turnos_${dia}`);
+        const index = turnoGroup.children.length + 1; // Sumar uno para el nuevo índice
+        const newTurno = `
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label for="hora_inicio_${dia}_${index}">Hora de inicio (Turno ${index})</label>
+                    <select name="horarios[${dia}][hora_inicio][]" class="form-control" id="hora_inicio_${dia}_${index}" required>
+                        @for($i = 0; $i < 24; $i++)
+                            <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                            <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="hora_fin_${dia}_${index}">Hora de fin (Turno ${index})</label>
+                    <select name="horarios[${dia}][hora_fin][]" class="form-control" id="hora_fin_${dia}_${index}" required>
+                        @for($i = 0; $i < 24; $i++)
+                            <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                            <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-danger mt-4" onclick="removeTurno(this)">-</button>
+                </div>
+            </div>
+        `;
+        turnoGroup.insertAdjacentHTML('beforeend', newTurno);
+    }
+
+    function removeTurno(button) {
+        button.parentElement.parentElement.remove();
+    }
 </script>
 
 @endsection

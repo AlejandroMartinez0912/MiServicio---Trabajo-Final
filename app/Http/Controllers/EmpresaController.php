@@ -33,10 +33,11 @@ class EmpresaController extends Controller
             'rubros' => 'required|array',
             'rubros.*' => 'exists:rubros,id',
             'horarios' => 'nullable|array',
-            'horarios.*.hora_inicio' => 'nullable|date_format:H:i',
-            'horarios.*.hora_fin' => 'nullable|date_format:H:i|after:horarios.*.hora_inicio',
-            'horarios.*.hora_inicio_2' => 'nullable|date_format:H:i',
-            'horarios.*.hora_fin_2' => 'nullable|date_format:H:i|after:horarios.*.hora_inicio_2',
+            // Ajustar la validación para múltiples turnos
+            'horarios.*.hora_inicio' => 'nullable|array',
+            'horarios.*.hora_fin' => 'nullable|array',
+            'horarios.*.hora_inicio.*' => 'nullable|date_format:H:i',
+            'horarios.*.hora_fin.*' => 'nullable|date_format:H:i|after:horarios.*.hora_inicio.*',
         ]);
 
         // Crear la empresa
@@ -53,40 +54,31 @@ class EmpresaController extends Controller
         // Guardar los horarios de atención (si se ingresaron)
         if ($request->has('horarios')) {
             foreach ($request->horarios as $dia => $horario) {
-                if (isset($horario['hora_inicio']) && isset($horario['hora_fin'])) {
-                    // Cambiar el día a su ID correspondiente
-                    $diaId = DiasSemana::where('nombre', ucfirst($dia))->first()->id;
+                // Cambiar el día a su ID correspondiente
+                $diaId = DiasSemana::where('nombre', ucfirst($dia))->first()->id;
 
-                    // Determinar el turno basado en las horas
-                    $turno = $this->determinarTurno($horario['hora_inicio'], $horario['hora_fin']);
+                // Iterar sobre los horarios del día
+                foreach ($horario['hora_inicio'] as $index => $horaInicio) {
+                    if (isset($horaInicio) && isset($horario['hora_fin'][$index])) {
+                        // Determinar el turno basado en las horas
+                        $turno = $this->determinarTurno($horaInicio, $horario['hora_fin'][$index]);
 
-                    HorariosEmpresa::create([
-                        'empresa_id' => $empresa->id,
-                        'dia_semana_id' => $diaId,
-                        'hora_inicio' => $horario['hora_inicio'],
-                        'hora_fin' => $horario['hora_fin'],
-                        'turno' => $turno,
-                    ]);
-                }
-
-                // Verificar si hay un segundo horario
-                if (isset($horario['hora_inicio_2']) && isset($horario['hora_fin_2'])) {
-                    $turno2 = $this->determinarTurno($horario['hora_inicio_2'], $horario['hora_fin_2']);
-                    
-                    HorariosEmpresa::create([
-                        'empresa_id' => $empresa->id,
-                        'dia_semana_id' => $diaId,
-                        'hora_inicio' => $horario['hora_inicio_2'],
-                        'hora_fin' => $horario['hora_fin_2'],
-                        'turno' => $turno2,
-                    ]);
+                        HorariosEmpresa::create([
+                            'empresa_id' => $empresa->id,
+                            'dia_semana_id' => $diaId,
+                            'hora_inicio' => $horaInicio,
+                            'hora_fin' => $horario['hora_fin'][$index],
+                            'turno' => $turno,
+                        ]);
+                    }
                 }
             }
         }
 
         // Redireccionar con mensaje de éxito
-        return redirect()->route('gestionar-empresas')->with('success', 'Empresa creada exitosamente con sus horarios.');
+        return redirect()->route('gestionar-empresas')->with('success', 'Empresa creada exitosamente.');
     }
+
 
 
     /**
