@@ -20,7 +20,6 @@ class EmpresaController extends Controller
         return view('Empresa.create', compact('rubros')); // Asegúrate de pasar $rubros a la vista
     }
 
-
     /**
      * Guardar una nueva empresa en la base de datos.
      */
@@ -36,7 +35,8 @@ class EmpresaController extends Controller
             'horarios' => 'nullable|array',
             'horarios.*.hora_inicio' => 'nullable|date_format:H:i',
             'horarios.*.hora_fin' => 'nullable|date_format:H:i|after:horarios.*.hora_inicio',
-            'horarios.*.turno' => 'nullable|in:mañana,tarde',
+            'horarios.*.hora_inicio_2' => 'nullable|date_format:H:i',
+            'horarios.*.hora_fin_2' => 'nullable|date_format:H:i|after:horarios.*.hora_inicio_2',
         ]);
 
         // Crear la empresa
@@ -57,12 +57,28 @@ class EmpresaController extends Controller
                     // Cambiar el día a su ID correspondiente
                     $diaId = DiasSemana::where('nombre', ucfirst($dia))->first()->id;
 
+                    // Determinar el turno basado en las horas
+                    $turno = $this->determinarTurno($horario['hora_inicio'], $horario['hora_fin']);
+
                     HorariosEmpresa::create([
                         'empresa_id' => $empresa->id,
                         'dia_semana_id' => $diaId,
                         'hora_inicio' => $horario['hora_inicio'],
                         'hora_fin' => $horario['hora_fin'],
-                        'turno' => $horario['turno'],
+                        'turno' => $turno,
+                    ]);
+                }
+
+                // Verificar si hay un segundo horario
+                if (isset($horario['hora_inicio_2']) && isset($horario['hora_fin_2'])) {
+                    $turno2 = $this->determinarTurno($horario['hora_inicio_2'], $horario['hora_fin_2']);
+                    
+                    HorariosEmpresa::create([
+                        'empresa_id' => $empresa->id,
+                        'dia_semana_id' => $diaId,
+                        'hora_inicio' => $horario['hora_inicio_2'],
+                        'hora_fin' => $horario['hora_fin_2'],
+                        'turno' => $turno2,
                     ]);
                 }
             }
@@ -73,6 +89,33 @@ class EmpresaController extends Controller
     }
 
 
+    /**
+     * Determinar el turno según la hora de inicio y fin.
+     */
+    private function determinarTurno($horaInicio, $horaFin)
+    {
+        // Convertir a timestamps para facilitar la comparación
+        $inicio = strtotime($horaInicio);
+        $fin = strtotime($horaFin);
+
+        // Definir los rangos de tiempo para mañana y tarde
+        $mananaInicio = strtotime('00:00');
+        $mananaFin = strtotime('12:30');
+        $tardeInicio = strtotime('13:00');
+        $tardeFin = strtotime('23:30');
+
+        // Comprobar en qué turno se encuentra el horario
+        if ($inicio >= $mananaInicio && $fin <= $mananaFin) {
+            return 'mañana';
+        } elseif ($inicio >= $tardeInicio && $fin <= $tardeFin) {
+            return 'tarde';
+        } elseif($inicio <= $mananaFin && $fin >= $tardeFin) {
+            return 'completo';
+        }
+
+        return null; // O lanzar una excepción si es necesario
+    }
+
     // Mostrar la lista de empresas creadas por el usuario
     public function gestionar()
     {
@@ -80,14 +123,14 @@ class EmpresaController extends Controller
         return view('Empresa.gestionar', compact('empresas'));
     }
 
-     // Mostrar el formulario de edición de una empresa
-     public function edit($id)
-     {
-         $empresa = Empresa::where('user_id', Auth::id())->findOrFail($id);
-         return view('Empresa.editar', compact('empresa'));
-     }
+    // Mostrar el formulario de edición de una empresa
+    public function edit($id)
+    {
+        $empresa = Empresa::where('user_id', Auth::id())->findOrFail($id);
+        return view('Empresa.editar', compact('empresa'));
+    }
 
-     // Eliminar una empresa
+    // Eliminar una empresa
     public function destroy($id)
     {
         $empresa = Empresa::where('user_id', Auth::id())->findOrFail($id);

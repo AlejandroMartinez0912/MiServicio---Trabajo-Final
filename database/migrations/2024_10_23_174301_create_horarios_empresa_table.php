@@ -29,7 +29,7 @@ return new class extends Migration
             $table->time('hora_fin');
 
             // Opcionalmente, puedes añadir un campo para definir si hay turno (mañana/tarde/noche)
-            $table->enum('turno', ['mañana', 'tarde', 'noche'])->nullable();
+            $table->enum('turno', ['mañana', 'tarde', 'completo'])->nullable();
 
             $table->timestamps();
         });
