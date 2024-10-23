@@ -196,6 +196,41 @@
                                 placeholder="Dirección de la empresa" required>
                         </div>
 
+                        <h3 class="text-center mb-3">Horarios de Atención</h3>
+                        @foreach(['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'] as $dia)
+                            <div class="mb-3">
+                                <label class="form-label">{{ ucfirst($dia) }}</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="hora_inicio_{{ $dia }}">Hora de inicio</label>
+                                        <select name="horarios[{{ $dia }}][hora_inicio]" class="form-control" id="hora_inicio_{{ $dia }}" required>
+                                            @for($i = 0; $i < 24; $i++)
+                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="hora_fin_{{ $dia }}">Hora de fin</label>
+                                        <select name="horarios[{{ $dia }}][hora_fin]" class="form-control" id="hora_fin_{{ $dia }}" required>
+                                            @for($i = 0; $i < 24; $i++)
+                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="turno_{{ $dia }}">Turno</label>
+                                        <select name="horarios[{{ $dia }}][turno]" class="form-control" id="turno_{{ $dia }}">
+                                            <option value="mañana">Mañana</option>
+                                            <option value="tarde">Tarde</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+
                         <div class="d-flex justify-content-between">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">Crear Empresa</button>
                             <a href="{{ route('gestionar-empresas') }}" class="btn btn-secondary">Volver</a>

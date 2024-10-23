@@ -6,6 +6,8 @@ use App\Models\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Rubro;
+use App\Models\DiasSemana;
+use App\Models\HorariosEmpresa;
 
 class EmpresaController extends Controller
 {
@@ -24,16 +26,20 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar los datos ingresados en el formulario
+        // Validar los datos del formulario
         $request->validate([
             'nombre' => 'required|string|max:255',
             'slogan' => 'nullable|string|max:255',
             'ubicacion' => 'required|string|max:255',
-            'rubros' => 'required|array', // Validar que se seleccionen rubros
-            'rubros.*' => 'exists:rubros,id', // Validar que los rubros existan
+            'rubros' => 'required|array',
+            'rubros.*' => 'exists:rubros,id',
+            'horarios' => 'nullable|array',
+            'horarios.*.hora_inicio' => 'nullable|date_format:H:i',
+            'horarios.*.hora_fin' => 'nullable|date_format:H:i|after:horarios.*.hora_inicio',
+            'horarios.*.turno' => 'nullable|in:mañana,tarde',
         ]);
 
-        // Crear una nueva empresa asociada al usuario autenticado
+        // Crear la empresa
         $empresa = Empresa::create([
             'nombre' => $request->nombre,
             'slogan' => $request->slogan,
@@ -41,11 +47,29 @@ class EmpresaController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        // Asociar los rubros a la empresa
+        // Asociar los rubros seleccionados a la empresa
         $empresa->rubros()->attach($request->rubros);
 
-        // Redireccionar a una página después de la creación
-        return redirect()->route('gestionar-empresas')->with('success', 'Empresa creada exitosamente.');
+        // Guardar los horarios de atención (si se ingresaron)
+        if ($request->has('horarios')) {
+            foreach ($request->horarios as $dia => $horario) {
+                if (isset($horario['hora_inicio']) && isset($horario['hora_fin'])) {
+                    // Cambiar el día a su ID correspondiente
+                    $diaId = DiasSemana::where('nombre', ucfirst($dia))->first()->id;
+
+                    HorariosEmpresa::create([
+                        'empresa_id' => $empresa->id,
+                        'dia_semana_id' => $diaId,
+                        'hora_inicio' => $horario['hora_inicio'],
+                        'hora_fin' => $horario['hora_fin'],
+                        'turno' => $horario['turno'],
+                    ]);
+                }
+            }
+        }
+
+        // Redireccionar con mensaje de éxito
+        return redirect()->route('gestionar-empresas')->with('success', 'Empresa creada exitosamente con sus horarios.');
     }
 
 

@@ -24,4 +24,12 @@ class Empresa extends Model
     {
         return $this->belongsToMany(Rubro::class, 'empresa_rubro');
     }
+    /**
+     * Relacion de empresa con horarios
+     */
+    // Relación: Una empresa puede tener muchos horarios de trabajo
+    public function horarios()
+    {
+        return $this->hasMany(HorariosEmpresa::class, 'empresa_id');
+    }
 }
