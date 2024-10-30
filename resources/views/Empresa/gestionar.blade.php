@@ -74,6 +74,9 @@
                         <!-- Botón de editar -->
                         <a href="{{ route('editar-empresa', $empresa->id) }}" class="btn btn-primary">Editar</a>
 
+                        <!-- Botón de ver empresa-->
+                        <a href="{{ route('gestion-empresa', $empresa->id) }}" class="btn btn-primary">Ver empresa</a>
+
                         <!-- Botón de eliminar (abre modal) -->
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar{{ $empresa->id }}">
                             Eliminar

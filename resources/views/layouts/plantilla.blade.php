@@ -6,7 +6,6 @@
   <!-- Boxicons para íconos modernos -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <title>@yield('titulo')</title>
-
   <style>
     /* Estilos del contenedor principal */
     .container-fluid {

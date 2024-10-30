@@ -133,11 +133,37 @@
     .dia {
         flex: 1;
         text-align: center;
+        margin-bottom: 15px;
+    }
+    .form-control.hora {
+    width: 70px; /* Tamaño más pequeño para los inputs de hora */
+    padding: 3px; /* Menor padding */
+    }
+
+    .dias-semana {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px; /* Mayor separación entre días */
     }
 
     .mb-2 {
-        margin-bottom: 20px; /* Mayor separación entre cada hora */
+        margin-bottom: 15px; /* Mayor separación entre inputs */
     }
+
+    .button-transparent {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 0.9rem;
+        padding: 5px; /* Tamaño reducido */
+    }
+
+    .turno-row {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Separación entre inputs de inicio y fin */
+    }
+
 </style>
 
 <div class="container mt-5">
@@ -215,10 +241,24 @@
                             @foreach(['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'] as $dia)
                                 <div class="dia">
                                     <label class="form-label">{{ ucfirst($dia) }}</label>
+                                    
+                                    <!-- Checkbox para activar/desactivar horarios de este día -->
+                                    <div class="form-check form-switch d-flex justify-content-center mb-2">
+                                        <input type="checkbox" class="form-check-input" id="confirmar_{{ $dia }}" 
+                                            name="dias_confirmados[{{ $dia }}]" 
+                                            {{ in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'checked' : '' }}
+                                            onchange="toggleHorarios('{{ $dia }}')">
+                                        <label class="form-check-label" for="confirmar_{{ $dia }}"></label>
+                                    </div>
+
+                                    <!-- Selects de Horario -->
                                     <div class="turno-group" id="turnos_{{ $dia }}">
                                         <div class="row mb-2">
                                             <div class="col-md-12">
-                                                <select name="horarios[{{ $dia }}][hora_inicio][]" class="form-control" id="hora_inicio_{{ $dia }}_1" required>
+                                                <select name="horarios[{{ $dia }}][hora_inicio][]" 
+                                                        class="form-control hora {{ !in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'disabled' : '' }}" 
+                                                        id="hora_inicio_{{ $dia }}_1" required>
+                                                    <option value="08:00" selected>08:00</option>
                                                     @for($i = 0; $i < 24; $i++)
                                                         <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
                                                         <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
@@ -226,7 +266,10 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-12">
-                                                <select name="horarios[{{ $dia }}][hora_fin][]" class="form-control" id="hora_fin_{{ $dia }}_1" required>
+                                                <select name="horarios[{{ $dia }}][hora_fin][]" 
+                                                        class="form-control hora {{ !in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'disabled' : '' }}" 
+                                                        id="hora_fin_{{ $dia }}_1" required>
+                                                    <option value="17:00" selected>17:00</option>
                                                     @for($i = 0; $i < 24; $i++)
                                                         <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
                                                         <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
@@ -235,7 +278,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-secondary" onclick="addTurno('{{ $dia }}')">+</button>
+                                    
+                                    <div class="d-flex justify-content-center mt-2">
+                                        <button type="button" id="button-add-{{ $dia }}" class="button-transparent mx-2" onclick="addTurno('{{ $dia }}')">
+                                            <i class='bx bx-plus-medical'></i>
+                                        </button>
+                                        <button type="button" id="button-remove-{{ $dia }}" class="button-transparent d-none mx-2" onclick="removeTurno('{{ $dia }}')">
+                                            <i class='bx bx-minus'></i>
+                                        </button>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -287,43 +338,69 @@
 
 <!-- Script para horarios-->
 <script>
+    function toggleHorarios(dia) {
+        const checkbox = document.getElementById(`confirmar_${dia}`);
+        const horarios = document.querySelectorAll(`#turnos_${dia} .form-control`);
+        
+        horarios.forEach(horario => {
+            horario.disabled = !checkbox.checked;
+        });
+    }
+    </script>
+<script>
     $(document).ready(function() {
         $('.select2').select2();
     });
 
     function addTurno(dia) {
         const turnoGroup = document.getElementById(`turnos_${dia}`);
-        const index = turnoGroup.children.length + 1; // Sumar uno para el nuevo índice
+        const index = turnoGroup.children.length + 1;
         const newTurno = `
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label for="hora_inicio_${dia}_${index}">Hora de inicio (Turno ${index})</label>
-                    <select name="horarios[${dia}][hora_inicio][]" class="form-control" id="hora_inicio_${dia}_${index}" required>
+            <div class="row mb-2 turno-row">
+                <div class="col-md-6">
+                    <select name="horarios[${dia}][hora_inicio][]" class="form-control hora" required>
+                        <option value="08:00" selected>08:00</option>
                         @for($i = 0; $i < 24; $i++)
                             <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
                             <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
                         @endfor
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label for="hora_fin_${dia}_${index}">Hora de fin (Turno ${index})</label>
-                    <select name="horarios[${dia}][hora_fin][]" class="form-control" id="hora_fin_${dia}_${index}" required>
+                <div class="col-md-6">
+                    <select name="horarios[${dia}][hora_fin][]" class="form-control hora" required>
+                        <option value="17:00" selected>17:00</option>
                         @for($i = 0; $i < 24; $i++)
                             <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
                             <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
                         @endfor
                     </select>
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-danger mt-4" onclick="removeTurno(this)">-</button>
                 </div>
             </div>
         `;
         turnoGroup.insertAdjacentHTML('beforeend', newTurno);
+        updateButtons(dia);
     }
 
-    function removeTurno(button) {
-        button.parentElement.parentElement.remove();
+    function updateButtons(dia) {
+        const turnoGroup = document.getElementById(`turnos_${dia}`);
+        const addButton = document.querySelector(`#button-add-${dia}`);
+        const removeButton = document.querySelector(`#button-remove-${dia}`);
+
+        if (turnoGroup.children.length > 1) {
+            addButton.classList.add("d-none");
+            removeButton.classList.remove("d-none");
+        } else {
+            addButton.classList.remove("d-none");
+            removeButton.classList.add("d-none");
+        }
+    }
+
+    function removeTurno(dia) {
+        const turnoGroup = document.getElementById(`turnos_${dia}`);
+        if (turnoGroup.children.length > 1) {
+            turnoGroup.removeChild(turnoGroup.lastElementChild);
+        }
+        updateButtons(dia);
     }
 </script>
 

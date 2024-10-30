@@ -81,6 +81,10 @@
         text-align: left; /* Alinear a la izquierda para los campos del formulario */
         margin-bottom: 1rem; /* Espaciado inferior */
     }
+    .btn-custom-gray {
+    background-color: grey; 
+    color: white;
+}
 </style>
 
 <div class="container mt-5">
@@ -154,6 +158,7 @@
                 </div>
                 <div class="d-grid gap-2 mt-3">
                     <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#confirmModal">Guardar Cambios</button>
+                    <a href="{{ route('privada') }}" class="btn btn-secondary btn-lg">Volver</a>
                 </div>
             </div>
         </div>

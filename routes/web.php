@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\GestionEmpresaController;
 use Illuminate\Support\Facades\Route;
 
 // Ruta de página principal llamada Home
@@ -26,8 +27,18 @@ Route::put('/perfil-update', [PersonaController::class, 'update'])->name('perfil
 Route::get('/empresa/crear', [EmpresaController::class, 'create'])->name('crear-empresa')->middleware('auth');
 Route::post('/empresa/guardar', [EmpresaController::class, 'store'])->name('guardar-empresa')->middleware('auth');
 // Gestión de empresas
-Route::get('/gestionar', [EmpresaController::class, 'gestionar'])->name('gestionar-empresas')->middleware('auth');
-// Editar empresa
-Route::get('/editar/{id}', [EmpresaController::class, 'edit'])->name('editar-empresa')->middleware('auth');
+Route::get('/empresa/gestionar', [EmpresaController::class, 'gestionar'])->name('gestionar-empresas')->middleware('auth');
 // Eliminar una empresa
-Route::delete('/eliminar-empresa/{id}', [EmpresaController::class, 'destroy'])->name('eliminar-empresa')->middleware('auth');
+Route::delete('/empresa/eliminar/{id}', [EmpresaController::class, 'destroy'])->name('eliminar-empresa')->middleware('auth');
+
+
+// Ruta de gestion de empresa
+Route::get('/empresa/gestion/{id}', [GestionEmpresaController::class, 'index'])->name('gestion-empresa')->middleware('auth');
+
+// Rutas de creación y almacenamiento de servicios
+Route::get('/empresa/{empresaId}/servicio/crear', [GestionEmpresaController::class, 'createService'])->name('crear-servicio')->middleware('auth');
+Route::post('/empresa/{empresaId}/servicio/guardar', [GestionEmpresaController::class, 'storeService'])->name('guardar-servicio')->middleware('auth');
+
+//Rutas para ver y editar datos de la empresa
+Route::get('/empresa/{id}/editar', [EmpresaController::class, 'editar'])->name('editar-empresa');
+Route::put('/empresa/{id}', [EmpresaController::class, 'actualizar'])->name('actualizar-empresa');

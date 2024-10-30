@@ -3,52 +3,85 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Servicio;
 use App\Models\Rubro;
+Use App\Models\HorariosEmpresa;
 use App\Models\DiasSemana;
-use App\Models\HorariosEmpresa;
+use Illuminate\Http\Request;
 
-class EmpresaController extends Controller
+class GestionEmpresaController extends Controller
 {
     /**
-     * Mostrar el formulario de creación de empresas.
+     * Mostrar el formulario de gestión de empresas.
      */
-    public function create()
+    public function index($empresaId)
     {
+        $empresa = Empresa::findOrFail($empresaId); // Obtiene la empresa por su ID o lanza un error si no la encuentra
         $rubros = Rubro::all(); // Obtener todos los rubros
-        return view('Empresa.create', compact('rubros')); // Asegúrate de pasar $rubros a la vista
+        $servicios = $empresa->servicios; // Obtener los servicios relacionados con la empresa
+
+        return view('Empresa.gestion', compact('empresa', 'rubros', 'servicios')); // Pasa la empresa y los rubros a la vista
+    }
+
+
+    /**
+     * LOGICA SERVICIOS
+     */
+    public function showServices($empresaId)
+    {
+        $empresa = Empresa::findOrFail($empresaId);
+        $servicios = $empresa->servicios; // Obtener los servicios relacionados con la empresa
+
+        return view('Empresa.gestion', compact('empresa', 'servicios'));
     }
 
     /**
-     * Guardar una nueva empresa en la base de datos.
+     * LOGICA PARA EDITAR EMPRESA
      */
-    public function store(Request $request)
+    /**
+     * Mostrar el formulario de edición de una empresa.
+     */
+    public function editar($id)
+    {
+        $empresa = Empresa::findOrFail($id); // Obtener la empresa
+        $rubros = Rubro::all(); // Obtener todos los rubros
+        $horarios = HorariosEmpresa::all(); // Obtener horarios de la empresa
+
+        return view('Empresa.gestion', compact('empresa', 'rubros', 'horarios')); // Pasar datos a la vista
+    }
+    /**
+     * Actualizar una empresa existente.
+     */
+    public function actualizar(Request $request, $id)
     {
         // Validar los datos del formulario
         $request->validate($this->rules());
-
-        // Crear la empresa
-        $empresa = Empresa::create([
-            'nombre' => $request->nombre,
-            'slogan' => $request->slogan,
-            'ubicacion' => $request->ubicacion,
-            'user_id' => Auth::id(),
-        ]);
+        
+        try{
+        $empresa = Empresa::findOrFail($id);
+        
+        // Actualizar la empresa con los datos generales
+        $empresa->update($request->only(['nombre', 'slogan', 'ubicacion']));
 
         // Asociar los rubros seleccionados a la empresa
-        $empresa->rubros()->attach($request->rubros);
+        $empresa->rubros()->sync($request->rubros);
+
+        // Limpiar los horarios existentes de la empresa
+        $empresa->horarios()->delete();
 
         // Guardar los horarios de atención (si se ingresaron)
         $this->guardarHorarios($empresa, $request->horarios);
 
-        
         // Redireccionar con mensaje de éxito
-        return redirect()->route('gestionar-empresas')->with('success', 'Empresa creada exitosamente.');
+        return response()->json(['success' => true, 'message' => 'La empresa se actualizó correctamente.']);
+        } catch (\Exception $e) {
+            // Retornar un mensaje de error como respuesta JSON
+            return response()->json(['success' => false, 'message' => 'Ocurrió un error al actualizar la empresa: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
-     * Guardar horarios de atención de la empresa.
+     * Funciones especiales
      */
     private function guardarHorarios($empresa, $horarios)
     {
@@ -140,60 +173,5 @@ class EmpresaController extends Controller
         ];
     }
 
-    // Mostrar la lista de empresas creadas por el usuario
-    public function gestionar()
-    {
-        $empresas = Empresa::where('user_id', Auth::id())->get();
-        return view('Empresa.gestionar', compact('empresas'));
-    }
 
-    /**
-     * Mostrar el formulario de edición de una empresa.
-     */
-    public function editar($id)
-    {
-        $empresa = Empresa::findOrFail($id); // Obtener la empresa
-        $rubros = Rubro::all(); // Obtener todos los rubros
-        $horarios = $empresa->horarios_empresa; // Obtener horarios de la empresa
-
-        return view('Empresa.editar', compact('empresa', 'rubros', 'horarios')); // Pasar datos a la vista
-    }
-
-    
-    /**
-     * Actualizar una empresa existente.
-     */
-    public function actualizar(Request $request, $id)
-    {
-        // Validar los datos del formulario
-        $request->validate($this->rules());
-
-        $empresa = Empresa::findOrFail($id);
-        
-        // Actualizar la empresa con los datos generales
-        $empresa->update($request->only(['nombre', 'slogan', 'ubicacion']));
-
-        // Asociar los rubros seleccionados a la empresa
-        $empresa->rubros()->sync($request->rubros);
-
-        // Limpiar los horarios existentes de la empresa
-        $empresa->horarios()->delete();
-
-        // Guardar los horarios de atención (si se ingresaron)
-        $this->guardarHorarios($empresa, $request->horarios);
-
-        // Redireccionar con mensaje de éxito
-        return redirect()->route('gestionar-empresas', $empresa->id)->with('success', 'Empresa actualizada con éxito.');
-    }
-
-
-
-    // Eliminar una empresa
-    public function destroy($id)
-    {
-        $empresa = Empresa::where('user_id', Auth::id())->findOrFail($id);
-        $empresa->delete();
-
-        return redirect()->route('gestionar-empresas')->with('success', 'Empresa eliminada exitosamente');
-    }
 }
