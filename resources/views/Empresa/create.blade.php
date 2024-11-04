@@ -321,7 +321,7 @@
         </div>
     </div>
 </div>
-
+<!-- Script para select2 -->
 <script>
     $(document).ready(function() {
         $('#rubros').select2({

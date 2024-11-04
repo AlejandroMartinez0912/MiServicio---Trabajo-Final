@@ -4,7 +4,9 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\GestionEmpresaController;
+use App\Http\Controllers\ServicioController;
 use Illuminate\Support\Facades\Route;
+
 
 // Ruta de página principal llamada Home
 Route::view('/', "home")->name('home');
@@ -35,15 +37,18 @@ Route::delete('/empresa/eliminar/{id}', [EmpresaController::class, 'destroy'])->
 // Ruta de gestion de empresa
 Route::get('/empresa/gestion/{id}', [GestionEmpresaController::class, 'index'])->name('gestion-empresa')->middleware('auth');
 
-// Rutas de creación y almacenamiento de servicios
-Route::get('/empresa/{empresaId}/servicio/crear', [GestionEmpresaController::class, 'createService'])->name('crear-servicio')->middleware('auth');
-Route::post('/empresa/{empresaId}/servicio/guardar', [GestionEmpresaController::class, 'storeService'])->name('guardar-servicio')->middleware('auth');
-// Rutas de edición y actualización de servicios
-Route::get('/empresa/{empresaId}/servicio/{servicioId}/editar', [GestionEmpresaController::class, 'editService'])->name('editar-servicio');
-Route::put('/empresa/{empresaId}/servicio/{servicioId}', [GestionEmpresaController::class, 'updateService'])->name('actualizar-servicio');
-Route::delete('/empresa/{empresaId}/servicio/{servicioId}', [GestionEmpresaController::class, 'deleteService'])->name('eliminar-servicio');
+// RUTAS DE SERVICIOS
+Route::middleware('auth')->group(function () {
+    Route::get('/empresa/gestion/{empresaId}/servicio/crear', [ServicioController::class, 'createService'])->name('crear-servicio');
+    Route::post('/empresa/gestion/{empresaId}/servicio/guardar', [ServicioController::class, 'storeService'])->name('guardar-servicio');
+    
+    Route::get('/empresa/gestion/{empresaId}/servicio/{servicioId}/editar', [ServicioController::class, 'editService'])->name('editar-servicio');
+    Route::put('/empresa/gestion/{empresaId}/servicio/{servicioId}', [ServicioController::class, 'updateService'])->name('actualizar-servicio');
+    Route::delete('/empresa/{empresaId}/servicio/{servicioId}', [ServicioController::class, 'deleteService'])->name('eliminar-servicio');
+});
+
 
 
 //Rutas para ver y editar datos de la empresa
-Route::get('/empresa/{id}/editar', [GestionEmpresaController::class, 'editar'])->name('editar-empresa');
-Route::put('/empresa/{id}', [GestionEmpresaController::class, 'actualizar'])->name('actualizar-empresa');
+Route::get('/empresa/{id}/editar', [EmpresaController::class, 'editar'])->name('editar-empresa');
+Route::put('/empresa/{id}', [EmpresaController::class, 'actualizar'])->name('actualizar-empresa');

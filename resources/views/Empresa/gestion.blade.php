@@ -164,20 +164,18 @@
                                     <!-- Botones de acciones (editar o eliminar, con estilo más moderno) -->
                                     <div class="d-flex">
                                         <button class="btn btn-primary btn-sm me-2 d-flex align-items-center" 
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#editarServicioModal" 
-                                                onclick="editarServicio({{ $servicio->id }}, '{{ $servicio->nombre }}', '{{ $servicio->precio }}', '{{ $servicio->duracion }}', '{{ $servicio->modalidad }}', '{{ $servicio->descripcion }}')">
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editarServicioModal" 
+                                            onclick="editarServicio({{ $servicio->id }}, '{{ $servicio->nombre }}', '{{ $servicio->precio }}', '{{ $servicio->duracion }}', '{{ $servicio->modalidad }}', '{{ $servicio->descripcion }}')">
                                             <i class="bx bx-edit-alt me-1"></i>
                                             Modificar
                                         </button>
-
                                         <!-- Botón de Eliminar -->
                                         <button class="btn btn-danger btn-sm d-flex align-items-center" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#eliminarServicioModal" 
-                                            onclick="setServicioId({{ $servicio->id }})">
-                                            <i class="bx bx-trash me-1"></i>
-                                            Eliminar
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#eliminarServicioModal" 
+                                        onclick="setServicioId({{ $empresa->id }}, {{ $servicio->id }})">
+                                        <i class="bx bx-trash me-1"></i> Eliminar
                                         </button>
                                     </div>
 
@@ -257,18 +255,24 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form id="editarServicioForm" action="{{ route('actualizar-servicio', ['empresaId' => $empresa->id, 'servicioId' => $servicio->id]) }}" method="POST">
+                            <form id="editarServicioForm" action="" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <input type="hidden" name="servicio_id" id="servicio_id">
+                                
+                                <!-- Campo Nombre -->
                                 <div class="mb-3">
                                     <label for="edit_nombre" class="form-label">Nombre del servicio</label>
                                     <input type="text" name="nombre" id="edit_nombre" class="form-control" required>
                                 </div>
+                                
+                                <!-- Campo Precio -->
                                 <div class="mb-3">
                                     <label for="edit_precio" class="form-label">Presupuesto estimado ($)</label>
-                                    <input type="text" name="precio" id="edit_precio" class="form-control" required placeholder="0,00">
+                                    <input type="text" name="precio" id="edit_precio" class="form-control" required placeholder="0,00" pattern="\d*">
                                 </div>
+                                
+                                <!-- Campos de Duración -->
                                 <div class="mb-3">
                                     <label class="form-label">Duración</label>
                                     <div class="d-flex">
@@ -277,21 +281,24 @@
                                         <input type="number" name="minutos" id="edit_minutos" class="form-control" placeholder="Minutos" min="0" max="59" required>
                                     </div>
                                 </div>
-                                <!-- Modalidad-->
+                                
+                                <!-- Modalidad -->
                                 <div class="mb-3">
                                     <label class="form-label">Modalidad</label>
                                     <div class="d-flex justify-content-between">
-                                        <button type="button" class="modalidad-btn" onclick="marcarModalidadSeleccionada('Presencial', 'edit_modalidad')">Presencial</button>
-                                        <button type="button" class="modalidad-btn" onclick="marcarModalidadSeleccionada('Online', 'edit_modalidad')">Online</button>
-                                        <button type="button" class="modalidad-btn" onclick="marcarModalidadSeleccionada('A domicilio', 'edit_modalidad')">A domicilio</button>
+                                        <button type="button" class="modalidad-btn" onclick="selectEditModalidad('Presencial')">Presencial</button>
+                                        <button type="button" class="modalidad-btn" onclick="selectEditModalidad('Online')">Online</button>
+                                        <button type="button" class="modalidad-btn" onclick="selectEditModalidad('A domicilio')">A domicilio</button>
                                     </div>
-                                    <input type="hidden" name="modalidad" id="edit_modalidad" value="{{ $servicio->modalidad }}" required>
+                                    <input type="hidden" name="modalidad" id="edit_modalidad" required>
                                 </div>
                                 
+                                <!-- Campo Descripción -->
                                 <div class="mb-3">
                                     <label for="edit_descripcion" class="form-label">Descripción del servicio</label>
-                                    <textarea name="descripcion" id="edit_descripcion" class="form-control" rows="3" required></textarea>
+                                    <textarea name="descripcion" id="edit_descripcion" class="form-control" rows="3"></textarea>
                                 </div>
+                                
                                 <div class="d-flex justify-content-between">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -301,6 +308,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Modal para Confirmar Eliminación -->
             <div class="modal fade" id="eliminarServicioModal" tabindex="-1" aria-labelledby="eliminarServicioModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -323,7 +331,7 @@
                     </div>
                 </div>
             </div>
-            
+            <!-- Script para marcar la selección del botón de modalidad -->
             <script>
                 function selectModalidad(modalidad) {
                     // Limpiar la selección actual
@@ -340,6 +348,7 @@
                     document.getElementById('modalidad').value = modalidad;
                 }
             </script>
+            <!-- Script para formatear la duración en formato "HH:MM:SS" -->
             <script>
                 document.querySelector('form').addEventListener('submit', function(event) {
                     const horas = document.getElementById('horas').value || 0;
@@ -351,40 +360,46 @@
                 });
 
             </script>
+            <!-- Script para editar un servicio -->
             <script>
                 function editarServicio(servicioId, nombre, precio, duracion, modalidad, descripcion) {
+                    // Establece la URL de acción del formulario usando los parámetros de empresa y servicio
+                    const empresaId = "{{ $empresa->id }}";
+                    document.getElementById('editarServicioForm').action = `/empresa/gestion/${empresaId}/servicio/${servicioId}`;
+                    
+                    // Rellena los valores en los campos del formulario
                     document.getElementById('servicio_id').value = servicioId;
                     document.getElementById('edit_nombre').value = nombre;
                     document.getElementById('edit_precio').value = precio;
-                    document.getElementById('edit_duracion').value = duracion;
-                    document.getElementById('edit_modalidad').value = modalidad;
                     document.getElementById('edit_descripcion').value = descripcion;
-                    
+
+                    // Asigna la duración (separando en horas y minutos)
                     const [horas, minutos] = duracion.split(':');
                     document.getElementById('edit_horas').value = parseInt(horas, 10);
                     document.getElementById('edit_minutos').value = parseInt(minutos, 10);
 
+                    // Selecciona la modalidad usando la función auxiliar
                     selectEditModalidad(modalidad);
                 }
 
                 function selectEditModalidad(modalidad) {
                     document.getElementById('edit_modalidad').value = modalidad;
+
+                    // Ajusta la clase CSS para resaltar el botón seleccionado
                     const modalidadButtons = document.querySelectorAll('.modalidad-btn');
                     modalidadButtons.forEach(button => {
-                        if (button.textContent.trim() === modalidad) {
-                            button.classList.add('active');
-                        } else {
-                            button.classList.remove('active');
-                        }
+                        button.classList.toggle('active', button.textContent.trim() === modalidad);
                     });
                 }
             </script>
+            <!-- Script para eliminar un servicio -->
             <script>
-                function setServicioId(servicioId) {
+                function setServicioId(empresaId, servicioId) {
                     const form = document.getElementById('eliminarServicioForm');
-                    form.action = "{{ url('/empresa/' . $empresa->id . '/servicio') }}/" + servicioId;
+                    form.action = `/empresa/${empresaId}/servicio/${servicioId}`;
                 }
-            </script> 
+            </script>
+            <!-- Script para marcar la selección del botón de modalidad -->
             <script>
                 function marcarModalidadSeleccionada(modalidad, inputId) {
                     // Limpiar la selección actual
@@ -666,9 +681,62 @@
                                         value="{{ old('ubicacion', $empresa->ubicacion) }}" 
                                         placeholder="Dirección de la empresa" required>
                                 </div>
-        
+
                                 <h3 class="text-center mb-3">Horarios de Atención</h3>
-                                
+                                <div class="dias-semana">
+                                    @foreach(['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'] as $dia)
+                                        <div class="dia">
+                                            <label class="form-label">{{ ucfirst($dia) }}</label>
+                                            
+                                            <!-- Checkbox para activar/desactivar horarios de este día -->
+                                            <div class="form-check form-switch d-flex justify-content-center mb-2">
+                                                <input type="checkbox" class="form-check-input" id="confirmar_{{ $dia }}" 
+                                                    name="dias_confirmados[{{ $dia }}]" 
+                                                    {{ in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'checked' : '' }}
+                                                    onchange="toggleHorarios('{{ $dia }}')">
+                                                <label class="form-check-label" for="confirmar_{{ $dia }}"></label>
+                                            </div>
+
+                                            <!-- Selects de Horario -->
+                                            <div class="turno-group" id="turnos_{{ $dia }}">
+                                                <div class="row mb-2">
+                                                    <div class="col-md-12">
+                                                        <select name="horarios[{{ $dia }}][hora_inicio][]" 
+                                                                class="form-control hora {{ !in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'disabled' : '' }}" 
+                                                                id="hora_inicio_{{ $dia }}_1" required>
+                                                            <option value="08:00" selected>08:00</option>
+                                                            @for($i = 0; $i < 24; $i++)
+                                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                                            @endfor
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <select name="horarios[{{ $dia }}][hora_fin][]" 
+                                                                class="form-control hora {{ !in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'disabled' : '' }}" 
+                                                                id="hora_fin_{{ $dia }}_1" required>
+                                                            <option value="17:00" selected>17:00</option>
+                                                            @for($i = 0; $i < 24; $i++)
+                                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
+                                                                <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:30</option>
+                                                            @endfor
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="d-flex justify-content-center mt-2">
+                                                <button type="button" id="button-add-{{ $dia }}" class="button-transparent mx-2" onclick="addTurno('{{ $dia }}')">
+                                                    <i class='bx bx-plus-medical'></i>
+                                                </button>
+                                                <button type="button" id="button-remove-{{ $dia }}" class="button-transparent d-none mx-2" onclick="removeTurno('{{ $dia }}')">
+                                                    <i class='bx bx-minus'></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
         
                                 <div class="d-flex justify-content-between mt-4">
                                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
@@ -695,6 +763,17 @@
                     $('#empresaForm').submit();
                 });
             });
+        </script>
+        <!-- Script para horarios-->
+        <script>
+            function toggleHorarios(dia) {
+                const checkbox = document.getElementById(`confirmar_${dia}`);
+                const horarios = document.querySelectorAll(`#turnos_${dia} .form-control`);
+                
+                horarios.forEach(horario => {
+                    horario.disabled = !checkbox.checked;
+                });
+            }
         </script>
         
     </div>

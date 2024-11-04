@@ -152,6 +152,47 @@ class EmpresaController extends Controller
         return view('Empresa.gestionar', compact('empresas'));
     }
 
+    /**
+     * Mostrar el formulario de edición de una empresa.
+     */
+    public function editar($id)
+    {
+        $empresa = Empresa::findOrFail($id); // Obtener la empresa
+        $rubros = Rubro::all(); // Obtener todos los rubros
+        $horarios = HorariosEmpresa::all(); // Obtener horarios de la empresa
+
+        return view('Empresa.gestion', compact('empresa', 'rubros', 'horarios')); // Pasar datos a la vista
+    }
+    /**
+     * Actualizar una empresa existente.
+     */
+    public function actualizar(Request $request, $id)
+    {
+        // Validar los datos del formulario
+        $request->validate($this->rules());
+   
+        $empresa = Empresa::findOrFail($id);
+
+        try{
+        // Actualizar la empresa con los datos generales
+        $empresa->update($request->only(['nombre', 'slogan', 'ubicacion']));
+
+        // Asociar los rubros seleccionados a la empresa
+        $empresa->rubros()->sync($request->rubros);
+
+        // Limpiar los horarios existentes de la empresa
+        $empresa->horarios()->delete();
+
+        // Guardar los horarios de atención (si se ingresaron)
+        $this->guardarHorarios($empresa, $request->horarios);
+
+        // Redireccionar con mensaje de éxito
+        return redirect()->route('gestion-empresa', ['id' => $empresa->id])->with('success', 'Empresa actualizada con éxito.');
+        } catch (\Exception $e) {
+            return redirect()->route('gestion-empresa', ['id' => $empresa->id])->with('error', 'Hubo un problema al actualizar la empresa.');
+        }
+    }
+
 
     // Eliminar una empresa
     public function destroy($id)
