@@ -1,6 +1,6 @@
 @extends('layouts.plantillain')
 
-@section('titulo', 'Gestión de empresa')
+@section('titulo', 'Gestión de negocio')
 
 @section('contenido')
     <style>
@@ -131,9 +131,12 @@
         </style>
             <div class="container">
                 <h2 class="text-center mb-4">Servicios de {{ $empresa->nombre }}</h2>
-        
+                <!-- Comprobar si hay servicios activos (estado: 1) -->
+                @php
+                $serviciosActivos = $servicios->where('estado', 1);
+                @endphp
                 <!-- Comprobar si hay servicios -->
-                @if($servicios->isEmpty())
+                @if($serviciosActivos->isEmpty())
                     <div class="alert alert-info text-center">
                         No tiene servicios creados. <a href="#" data-bs-toggle="modal" data-bs-target="#crearServicioModal">Crear uno aquí</a>.
                     </div>
@@ -153,7 +156,15 @@
                                         <!-- Precio y duración en una fila -->
                                         <div class="d-flex justify-content-start">
                                             <div class="me-4">
-                                                <p class="mb-0"><strong>Precio:</strong> ${{ number_format($servicio->precio, 2) }}</p>
+                                                <p class="mb-0"><strong>Precio:</strong>
+                                                    @if ($servicio->precio_fijo !== null)
+                                                        ${{ number_format($servicio->precio_fijo, 2) }} - Fijo
+                                                    @elseif ($servicio->precio_hora !== null)
+                                                        ${{ number_format($servicio->precio_hora, 2) }} - Por hora
+                                                    @else
+                                                        No disponible
+                                                    @endif
+                                                </p>
                                             </div>
                                             <div>
                                                 <p class="mb-0"><strong>Modalidad:</strong> {{($servicio->modalidad) }}</p>
@@ -166,7 +177,7 @@
                                         <button class="btn btn-primary btn-sm me-2 d-flex align-items-center" 
                                             data-bs-toggle="modal" 
                                             data-bs-target="#editarServicioModal" 
-                                            onclick="editarServicio({{ $servicio->id }}, '{{ $servicio->nombre }}', '{{ $servicio->precio }}', '{{ $servicio->duracion }}', '{{ $servicio->modalidad }}', '{{ $servicio->descripcion }}')">
+                                            onclick="editarServicio({{ $servicio->id }}, '{{ $servicio->nombre }}', '{{ $servicio->precio_fijo }}', '{{ $servicio->precio_hora }}', '{{ $servicio->duracion }}', '{{ $servicio->modalidad }}', '{{ $servicio->descripcion }}')">
                                             <i class="bx bx-edit-alt me-1"></i>
                                             Modificar
                                         </button>
@@ -188,8 +199,7 @@
                         Crear Nuevo Servicio
                     </button>
                 @endif
-            </div>
-        
+            </div>    
             <!-- Modal para crear un nuevo servicio -->
             <div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -206,9 +216,21 @@
                                     <input type="text" name="nombre" id="nombre" class="form-control" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="precio" class="form-label">Presupuesto estimado ($)</label>
-                                    <input type="text" name="precio" id="precio" class="form-control" required placeholder="0,00">
-                                    <small class="form-text text-muted">Ejemplo: 1.000,00 o 10.000,00</small>
+                                    <label class="form-label">Presupuesto ($)</label>
+                                    <select class="form-select" id="tipoPresupuesto" name="tipo_presupuesto" required onchange="togglePresupuestoInput()">
+                                        <option value="fijo">Fijo</option>
+                                        <option value="hora">Por hora</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3" id="presupuestoFijoInput" style="display: block;">
+                                    <label for="presupuesto_fijo" class="form-label">Presupuesto fijo ($)</label>
+                                    <input type="text" name="presupuesto_fijo" id="presupuesto_fijo" class="form-control" placeholder="0,00">
+                                </div>
+                                
+                                <div class="mb-3" id="presupuestoHoraInput" style="display: none;">
+                                    <label for="presupuesto_hora" class="form-label">Presupuesto por hora ($)</label>
+                                    <input type="text" name="presupuesto_hora" id="presupuesto_hora" class="form-control" placeholder="0,00">
                                 </div>
                                 
                                 <div class="mb-3">
@@ -266,10 +288,25 @@
                                     <input type="text" name="nombre" id="edit_nombre" class="form-control" required>
                                 </div>
                                 
-                                <!-- Campo Precio -->
+                                <!-- Selección de tipo de presupuesto -->
                                 <div class="mb-3">
-                                    <label for="edit_precio" class="form-label">Presupuesto estimado ($)</label>
-                                    <input type="text" name="precio" id="edit_precio" class="form-control" required placeholder="0,00" pattern="\d*">
+                                    <label class="form-label">Tipo de Presupuesto</label>
+                                    <select name="tipo_presupuesto" id="edit_tipo_presupuesto" class="form-select" onchange="togglePrecioFields()" required>
+                                        <option value="fijo">Precio Fijo</option>
+                                        <option value="hora">Precio por Hora</option>
+                                    </select>
+                                </div>
+
+                                <!-- Campo Precio Fijo -->
+                                <div class="mb-3" id="precio_fijo_field">
+                                    <label for="edit_precio_fijo" class="form-label">Presupuesto Fijo ($)</label>
+                                    <input type="number" name="precio_fijo" id="edit_precio_fijo" class="form-control" placeholder="0.00" min="0" step="0.01">
+                                </div>
+
+                                <!-- Campo Precio por Hora -->
+                                <div class="mb-3" id="precio_hora_field" style="display: none;">
+                                    <label for="edit_precio_hora" class="form-label">Presupuesto por Hora ($)</label>
+                                    <input type="number" name="precio_hora" id="edit_precio_hora" class="form-control" placeholder="0.00" min="0" step="0.01">
                                 </div>
                                 
                                 <!-- Campos de Duración -->
@@ -360,18 +397,23 @@
                 });
 
             </script>
-            <!-- Script para editar un servicio -->
+            <!--Script para editar el servicio-->
             <script>
-                function editarServicio(servicioId, nombre, precio, duracion, modalidad, descripcion) {
+                function editarServicio(servicioId, nombre, tipoPresupuesto, precioFijo, precioHora, duracion, modalidad, descripcion) {
                     // Establece la URL de acción del formulario usando los parámetros de empresa y servicio
                     const empresaId = "{{ $empresa->id }}";
                     document.getElementById('editarServicioForm').action = `/empresa/gestion/${empresaId}/servicio/${servicioId}`;
-                    
+
                     // Rellena los valores en los campos del formulario
                     document.getElementById('servicio_id').value = servicioId;
                     document.getElementById('edit_nombre').value = nombre;
-                    document.getElementById('edit_precio').value = precio;
                     document.getElementById('edit_descripcion').value = descripcion;
+
+                    // Establece tipo de presupuesto y ajusta campos visibles
+                    document.getElementById('edit_tipo_presupuesto').value = tipoPresupuesto;
+                    togglePrecioFields();
+                    document.getElementById('edit_precio_fijo').value = precioFijo || '';
+                    document.getElementById('edit_precio_hora').value = precioHora || '';
 
                     // Asigna la duración (separando en horas y minutos)
                     const [horas, minutos] = duracion.split(':');
@@ -390,6 +432,12 @@
                     modalidadButtons.forEach(button => {
                         button.classList.toggle('active', button.textContent.trim() === modalidad);
                     });
+                }
+
+                function togglePrecioFields() {
+                    const tipoPresupuesto = document.getElementById('edit_tipo_presupuesto').value;
+                    document.getElementById('precio_fijo_field').style.display = tipoPresupuesto === 'fijo' ? 'block' : 'none';
+                    document.getElementById('precio_hora_field').style.display = tipoPresupuesto === 'hora' ? 'block' : 'none';
                 }
             </script>
             <!-- Script para eliminar un servicio -->
@@ -428,6 +476,14 @@
                         marcarModalidadSeleccionada(modalidadActual, 'edit_modalidad');
                     }
                 });
+            </script>
+            <!--Script para mostrar o ocultar el campo de presupuesto -->
+            <script>
+                function togglePresupuestoInput() {
+                    const tipoPresupuesto = document.getElementById('tipoPresupuesto').value;
+                    document.getElementById('presupuestoFijoInput').style.display = tipoPresupuesto === 'fijo' ? 'block' : 'none';
+                    document.getElementById('presupuestoHoraInput').style.display = tipoPresupuesto === 'hora' ? 'block' : 'none';
+                }
             </script>
 
      
@@ -610,7 +666,7 @@
                 <div class="col-md-8">
                     <div class="card shadow-lg p-4 mb-5">
                         <h2 class="text-center mb-4">
-                            <i class='bx bxs-business'></i> Empresa
+                            <i class='bx bxs-business'></i> Negocio
                         </h2>
         
                         @if (session('success'))
@@ -632,23 +688,7 @@
                             <form id="empresaForm" action="{{ route('actualizar-empresa', $empresa->id)  }}#editar" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                <h3 class="text-center mb-3">Información de la Empresa</h3>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label for="nombre" class="form-label">Nombre de la empresa</label>
-                                            <input type="text" name="nombre" class="form-control" id="nombre" 
-                                                value="{{ old('nombre', $empresa->nombre) }}" 
-                                                placeholder="Nombre de la empresa" required>
-                                        </div>
-        
-                                        <div class="mb-3">
-                                            <label for="slogan" class="form-label">Slogan</label>
-                                            <input type="text" name="slogan" class="form-control" id="slogan" 
-                                                value="{{ old('slogan', $empresa->slogan) }}" 
-                                                placeholder="Slogan de la empresa">
-                                        </div>
-                                    </div>
+                                <h3 class="text-center mb-3">Información del Negocio</h3>
                                     <div class="col-md-6 text-center">
                                         <label class="form-label">Logo</label>
                                         <div class="profile-pic" onclick="document.getElementById('logo').click()">
@@ -659,7 +699,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                </div>
+                                
         
                                 <h3 class="text-center mb-3">Rubro/s</h3>
                                 <div class="mb-3">

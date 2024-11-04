@@ -11,8 +11,26 @@ class Servicio extends Model
 
     protected $table = 'servicios';
 
-    protected $fillable = ['empresa_id', 'nombre', 'precio', 'duracion', 'modalidad', 'descripcion'];
+    protected $fillable = ['empresa_id', 'nombre', 'precio_hora','precio_fijo', '
+            duracion', 'modalidad', 'descripcion', 'estado'];
 
+    // Accesor para obtener el presupuesto dependiendo del tipo
+        public function getPresupuestoAttribute()
+        {
+            return $this->precio ?? $this->precio_hora;
+        }
+    
+        // Mutador para asignar presupuesto fijo o por hora
+        public function setPresupuestoAttribute($value)
+        {
+            if ($this->attributes['tipo_presupuesto'] === 'fijo') {
+                $this->attributes['precio'] = $value;
+                $this->attributes['precio_hora'] = null;
+            } else {
+                $this->attributes['precio_hora'] = $value;
+                $this->attributes['precio'] = null;
+            }
+        }
     /**
      * Relacion con la tabla 'empresas'
      */

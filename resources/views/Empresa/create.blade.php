@@ -171,7 +171,7 @@
         <div class="col-md-8">
             <div class="card shadow-lg p-4 mb-5">
                 <h2 class="text-center mb-4">
-                    <i class='bx bxs-business'></i> Crear Empresa
+                    <i class='bx bxs-business'></i> Crear Negocio
                 </h2>
 
                 @if (session('success'))
@@ -192,11 +192,11 @@
                 <div class="card-body">
                     <form id="empresaForm" action="{{ route('guardar-empresa') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <h3 class="text-center mb-3">Información de la Empresa</h3>
+                        <h3 class="text-center mb-3">Información del Negocio</h3>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="nombre" class="form-label">Nombre de la empresa</label>
+                                    <label for="nombre" class="form-label">Nombre del Negocio</label>
                                     <input type="text" name="nombre" class="form-control" id="nombre" 
                                         value="{{ old('nombre') }}" 
                                         placeholder="Nombre de la empresa" required>

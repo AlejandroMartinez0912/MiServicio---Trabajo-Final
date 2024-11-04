@@ -45,7 +45,7 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h2 class="text-center mb-4" style="color: whitesmoke">Gestionar Mis Empresas</h2>
+            <h2 class="text-center mb-4" style="color: whitesmoke">Gestionar Mis Negocios</h2>
 
             <!-- Mensaje de éxito -->
             @if (session('success'))
@@ -72,7 +72,7 @@
 
                     <div class="d-flex justify-content-end gap-2">
                         <!-- Botón de ver empresa-->
-                        <a href="{{ route('gestion-empresa', $empresa->id) }}" class="btn btn-primary">Ver empresa</a>
+                        <a href="{{ route('gestion-empresa', $empresa->id) }}" class="btn btn-primary">Ver negocio</a>
 
                         <!-- Botón de eliminar (abre modal) -->
                         <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar{{ $empresa->id }}">
@@ -90,7 +90,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                ¿Estás seguro de que deseas eliminar la empresa "{{ $empresa->nombre }}"?
+                                ¿Estás seguro de que deseas eliminar el negocio "{{ $empresa->nombre }}"?
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -105,14 +105,14 @@
                 </div>
             @empty
                 <div class="alert alert-info text-center">
-                    No tienes empresas creadas. <a href="{{ route('crear-empresa') }}">Crea una aquí</a>.
+                    No tienes un negocio creadas. <a href="{{ route('crear-empresa') }}">Crea una aquí</a>.
                 </div>
             @endforelse
 
             <!-- Botón para agregar nueva empresa si hay empresas existentes -->
             @if ($empresas->isNotEmpty())
                 <div class="text-center mt-4">
-                    <a href="{{ route('crear-empresa') }}" class="btn btn-new">Agregar Nueva Empresa</a>
+                    <a href="{{ route('crear-empresa') }}" class="btn btn-new">Agregar Nuevo Negocio</a>
                 </div>
             @endif
         </div>
