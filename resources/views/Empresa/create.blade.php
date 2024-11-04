@@ -346,7 +346,8 @@
             horario.disabled = !checkbox.checked;
         });
     }
-    </script>
+</script>
+<!-- Script para agregar turnos -->
 <script>
     $(document).ready(function() {
         $('.select2').select2();
@@ -403,5 +404,6 @@
         updateButtons(dia);
     }
 </script>
+
 
 @endsection

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('nombre');
-            $table->double('precio');
+            $table->float('precio');
             $table->time('duracion')->nullable();
             $table->string('modalidad')->nullable();
             $table->string('descripcion')->nullable();

@@ -1,6 +1,6 @@
 @extends('layouts.plantillain')
 
-@section('titulo', 'Panel de gestión de empresa')
+@section('titulo', 'Gestión de empresa')
 
 @section('contenido')
     <style>
@@ -60,71 +60,365 @@
 
     <!-- Servicios -->
     <div id="servicios" class="content-section d-none">
-        <div class="container">
-            <h2>Servicios de {{ $empresa->nombre }}</h2>
+        <style>
+            /* Estilos personalizados para la sección de servicios */
+            .content-section {
+                background-color: gray; /* Color de fondo claro */
+                border-radius: 15px;
+                padding: 20px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            }
         
-            <!-- Comprobar si hay servicios -->
-            @if($servicios->isEmpty())
-                <p>No tiene servicios creados. <a href="#" data-bs-toggle="modal" data-bs-target="#crearServicioModal">Crear uno aquí</a>.</p>
-            @else
-                <div class="list-group">
-                    @foreach($servicios as $servicio)
-                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5>{{ $servicio->nombre }}</h5>
-                                <p>{{ $servicio->descripcion }}</p>
-                                <p><strong>Precio:</strong> ${{ number_format($servicio->precio, 2) }}</p>
-                                <p><strong>Duración:</strong> {{ $servicio->duracion ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
+            .list-group-item {
+                background-color: #3f3fd1; /* Color del fondo de los ítems */
+                color: #f8f9fa;
+                border-radius: 10px;
+                transition: all 0.3s ease-in-out;
+            }
         
-            <!-- Botón para crear un nuevo servicio -->
-            <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#crearServicioModal">
-                Crear Nuevo Servicio
-            </button>
-        </div>
+            .list-group-item:hover {
+                transform: scale(1.02);
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+            }
         
-        <!-- Modal para crear un nuevo servicio -->
-        <div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="crearServicioModalLabel">Crear Nuevo Servicio</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            .alert {
+                border-radius: 10px;
+            }
+        
+            .btn-primary {
+                background-color: #0d6efd; /* Color del botón */
+            }
+        
+            .btn-primary:hover {
+                background-color: #0a58ca; /* Color al pasar el mouse */
+            }
+        
+            .btn-secondary {
+                background-color: #6c757d; /* Color gris */
+            }
+        
+            .btn-secondary:hover {
+                background-color: #5a6268; /* Color gris más oscuro al pasar el mouse */
+            }
+            .modalidad-btn {
+                flex: 1;
+                margin: 0 5px;
+                padding: 10px;
+                border: 1px solid #007bff;
+                background-color: #fff;
+                color: #007bff;
+                border-radius: 5px;
+                cursor: pointer;
+                text-align: center;
+                transition: background-color 0.3s, color 0.3s;
+            }
+
+            .modalidad-btn:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .modalidad-btn.selected {
+                background-color: #007bff;
+                color: white;
+                border-color: #0056b3;
+            }
+            .modal-footer .btn {
+                min-width: 150px; 
+                padding: 10px 20px; 
+                font-size: 1rem; 
+            }
+        </style>
+            <div class="container">
+                <h2 class="text-center mb-4">Servicios de {{ $empresa->nombre }}</h2>
+        
+                <!-- Comprobar si hay servicios -->
+                @if($servicios->isEmpty())
+                    <div class="alert alert-info text-center">
+                        No tiene servicios creados. <a href="#" data-bs-toggle="modal" data-bs-target="#crearServicioModal">Crear uno aquí</a>.
                     </div>
-                    <div class="modal-body">
-                        <form action="{{ route('guardar-servicio', $empresa->id) }}" method="POST">
-                            @csrf
-                            <div class="form-group">
-                                <label for="nombre">Nombre del servicio</label>
-                                <input type="text" name="nombre" id="nombre" class="form-control" required>
+                @else
+                    <div class="list-group">
+                        @foreach($servicios as $servicio)
+                            <div class="card mb-3 shadow-sm border-0">
+                                <div class="card-body d-flex align-items-center">
+                                    <!-- Icono decorativo para cada servicio -->
+                                    <div class="me-3 text-primary">
+                                        <i class="bi bi-briefcase-fill" style="font-size: 2rem;"></i>
+                                    </div>
+                    
+                                    <div class="flex-grow-1">
+                                        <!-- Nombre del servicio -->
+                                        <h3 class="card-title mb-1 text-white">{{ $servicio->nombre }}</h3>
+                                        <!-- Precio y duración en una fila -->
+                                        <div class="d-flex justify-content-start">
+                                            <div class="me-4">
+                                                <p class="mb-0"><strong>Precio:</strong> ${{ number_format($servicio->precio, 2) }}</p>
+                                            </div>
+                                            <div>
+                                                <p class="mb-0"><strong>Modalidad:</strong> {{($servicio->modalidad) }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                    
+                                    <!-- Botones de acciones (editar o eliminar, con estilo más moderno) -->
+                                    <div class="d-flex">
+                                        <button class="btn btn-primary btn-sm me-2 d-flex align-items-center" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#editarServicioModal" 
+                                                onclick="editarServicio({{ $servicio->id }}, '{{ $servicio->nombre }}', '{{ $servicio->precio }}', '{{ $servicio->duracion }}', '{{ $servicio->modalidad }}', '{{ $servicio->descripcion }}')">
+                                            <i class="bx bx-edit-alt me-1"></i>
+                                            Modificar
+                                        </button>
+
+                                        <!-- Botón de Eliminar -->
+                                        <button class="btn btn-danger btn-sm d-flex align-items-center" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#eliminarServicioModal" 
+                                            onclick="setServicioId({{ $servicio->id }})">
+                                            <i class="bx bx-trash me-1"></i>
+                                            Eliminar
+                                        </button>
+                                    </div>
+
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="precio">Precio</label>
-                                <input type="number" name="precio" id="precio" class="form-control" required min="0" step="0.01">
-                            </div>
-                            <div class="form-group">
-                                <label for="duracion">Duración</label>
-                                <input type="time" name="duracion" id="duracion" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="modalidad">Modalidad</label>
-                                <input type="text" name="modalidad" id="modalidad" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="descripcion">Descripción</label>
-                                <textarea name="descripcion" id="descripcion" class="form-control"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Guardar Servicio</button>
-                        </form>
+                        @endforeach
+                    </div>
+                    <!-- Botón para crear un nuevo servicio --> 
+                    <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#crearServicioModal">
+                        Crear Nuevo Servicio
+                    </button>
+                @endif
+            </div>
+        
+            <!-- Modal para crear un nuevo servicio -->
+            <div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="crearServicioModalLabel">Nuevo Servicio</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('guardar-servicio', $empresa->id) }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre del servicio</label>
+                                    <input type="text" name="nombre" id="nombre" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="precio" class="form-label">Presupuesto estimado ($)</label>
+                                    <input type="text" name="precio" id="precio" class="form-control" required placeholder="0,00">
+                                    <small class="form-text text-muted">Ejemplo: 1.000,00 o 10.000,00</small>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Duración</label>
+                                    <div class="d-flex">
+                                        <input type="number" name="horas" id="horas" class="form-control" placeholder="Horas" min="0" required>
+                                        <span class="mx-2">:</span>
+                                        <input type="number" name="minutos" id="minutos" class="form-control" placeholder="Minutos" min="0" max="59" required>
+                                    </div>
+                                </div>
+                                
+                                <!-- Campo oculto para la duración combinada -->
+                                <input type="hidden" name="duracion" id="duracion">
+                            
+                                <div class="mb-3">
+                                    <label class="form-label">Modalidad</label>
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="modalidad-btn" onclick="selectModalidad('Presencial')">Presencial</button>
+                                        <button type="button" class="modalidad-btn" onclick="selectModalidad('Online')">Online</button>
+                                        <button type="button" class="modalidad-btn" onclick="selectModalidad('A domicilio')">A domicilio</button>
+                                    </div>
+                                    <input type="hidden" name="modalidad" id="modalidad" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción del servicio</label>
+                                    <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="Escriba una breve descripción del servicio" required></textarea>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Crear Servicio</button>
+                                </div>
+                            </form>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- Modal para editar un servicio -->
+            <div class="modal fade" id="editarServicioModal" tabindex="-1" aria-labelledby="editarServicioModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editarServicioModalLabel">Modificar Servicio</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editarServicioForm" action="{{ route('actualizar-servicio', ['empresaId' => $empresa->id, 'servicioId' => $servicio->id]) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="servicio_id" id="servicio_id">
+                                <div class="mb-3">
+                                    <label for="edit_nombre" class="form-label">Nombre del servicio</label>
+                                    <input type="text" name="nombre" id="edit_nombre" class="form-control" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit_precio" class="form-label">Presupuesto estimado ($)</label>
+                                    <input type="text" name="precio" id="edit_precio" class="form-control" required placeholder="0,00">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Duración</label>
+                                    <div class="d-flex">
+                                        <input type="number" name="horas" id="edit_horas" class="form-control" placeholder="Horas" min="0" required>
+                                        <span class="mx-2">:</span>
+                                        <input type="number" name="minutos" id="edit_minutos" class="form-control" placeholder="Minutos" min="0" max="59" required>
+                                    </div>
+                                </div>
+                                <!-- Modalidad-->
+                                <div class="mb-3">
+                                    <label class="form-label">Modalidad</label>
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="modalidad-btn" onclick="marcarModalidadSeleccionada('Presencial', 'edit_modalidad')">Presencial</button>
+                                        <button type="button" class="modalidad-btn" onclick="marcarModalidadSeleccionada('Online', 'edit_modalidad')">Online</button>
+                                        <button type="button" class="modalidad-btn" onclick="marcarModalidadSeleccionada('A domicilio', 'edit_modalidad')">A domicilio</button>
+                                    </div>
+                                    <input type="hidden" name="modalidad" id="edit_modalidad" value="{{ $servicio->modalidad }}" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="edit_descripcion" class="form-label">Descripción del servicio</label>
+                                    <textarea name="descripcion" id="edit_descripcion" class="form-control" rows="3" required></textarea>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal para Confirmar Eliminación -->
+            <div class="modal fade" id="eliminarServicioModal" tabindex="-1" aria-labelledby="eliminarServicioModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="eliminarServicioModalLabel">Eliminar Servicio</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-danger">¿Estás seguro de que deseas eliminar este servicio? Esta acción no se puede deshacer.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                            <form id="eliminarServicioForm" action="" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                function selectModalidad(modalidad) {
+                    // Limpiar la selección actual
+                    const buttons = document.querySelectorAll('.modalidad-btn');
+                    buttons.forEach(button => {
+                        button.classList.remove('selected');
+                    });
+
+                    // Marcar el botón seleccionado
+                    const selectedButton = Array.from(buttons).find(button => button.textContent === modalidad);
+                    selectedButton.classList.add('selected');
+
+                    // Actualizar el valor del input oculto
+                    document.getElementById('modalidad').value = modalidad;
+                }
+            </script>
+            <script>
+                document.querySelector('form').addEventListener('submit', function(event) {
+                    const horas = document.getElementById('horas').value || 0;
+                    const minutos = document.getElementById('minutos').value || 0;
+            
+                    // Formatea la duración en formato "HH:MM:SS"
+                    const duracion = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:00`;
+                    document.getElementById('duracion').value = duracion;
+                });
+
+            </script>
+            <script>
+                function editarServicio(servicioId, nombre, precio, duracion, modalidad, descripcion) {
+                    document.getElementById('servicio_id').value = servicioId;
+                    document.getElementById('edit_nombre').value = nombre;
+                    document.getElementById('edit_precio').value = precio;
+                    document.getElementById('edit_duracion').value = duracion;
+                    document.getElementById('edit_modalidad').value = modalidad;
+                    document.getElementById('edit_descripcion').value = descripcion;
+                    
+                    const [horas, minutos] = duracion.split(':');
+                    document.getElementById('edit_horas').value = parseInt(horas, 10);
+                    document.getElementById('edit_minutos').value = parseInt(minutos, 10);
+
+                    selectEditModalidad(modalidad);
+                }
+
+                function selectEditModalidad(modalidad) {
+                    document.getElementById('edit_modalidad').value = modalidad;
+                    const modalidadButtons = document.querySelectorAll('.modalidad-btn');
+                    modalidadButtons.forEach(button => {
+                        if (button.textContent.trim() === modalidad) {
+                            button.classList.add('active');
+                        } else {
+                            button.classList.remove('active');
+                        }
+                    });
+                }
+            </script>
+            <script>
+                function setServicioId(servicioId) {
+                    const form = document.getElementById('eliminarServicioForm');
+                    form.action = "{{ url('/empresa/' . $empresa->id . '/servicio') }}/" + servicioId;
+                }
+            </script> 
+            <script>
+                function marcarModalidadSeleccionada(modalidad, inputId) {
+                    // Limpiar la selección actual
+                    const buttons = document.querySelectorAll('.modalidad-btn');
+                    buttons.forEach(button => {
+                        button.classList.remove('selected');
+                    });
+
+                    // Marcar el botón seleccionado
+                    const selectedButton = Array.from(buttons).find(button => button.textContent.trim() === modalidad);
+                    if (selectedButton) {
+                        selectedButton.classList.add('selected');
+                    }
+
+                    // Actualizar el valor del input oculto
+                    document.getElementById(inputId).value = modalidad;
+                }
+
+                // Configurar evento para cuando se abre el modal
+                document.getElementById('editarServicioModal').addEventListener('show.bs.modal', function () {
+                    // Obtener el valor actual de modalidad del input oculto
+                    const modalidadActual = document.getElementById("edit_modalidad").value;
+
+                    // Marcar el botón correspondiente
+                    if (modalidadActual) {
+                        marcarModalidadSeleccionada(modalidadActual, 'edit_modalidad');
+                    }
+                });
+            </script>
+
+     
     </div>
+
+    
 
     <!-- Informes -->
     <div id="informes" class="content-section d-none">
@@ -320,7 +614,7 @@
                         @endif
         
                         <div class="card-body">
-                            <form id="empresaForm" action="{{ route('actualizar-empresa', $empresa->id) }}" method="POST" enctype="multipart/form-data">
+                            <form id="empresaForm" action="{{ route('actualizar-empresa', $empresa->id)  }}#editar" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <h3 class="text-center mb-3">Información de la Empresa</h3>
@@ -426,3 +720,46 @@
         document.querySelector(`.nav-button[onclick="showSection('${sectionId}')"]`).classList.add('active-tab');
     }
 </script>
+
+<!-- Script para alerta con mensaje de exitos o error-->
+<script>
+    document.getElementById('form-actualizar').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: data.success,
+                    timer: 2000,
+                    showConfirmButton: false,
+                    position: 'top-end',
+                    toast: true
+                });
+            } else if (data.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error,
+                    timer: 2000,
+                    showConfirmButton: false,
+                    position: 'top-end',
+                    toast: true
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+

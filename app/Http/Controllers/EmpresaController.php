@@ -28,6 +28,7 @@ class EmpresaController extends Controller
         // Validar los datos del formulario
         $request->validate($this->rules());
 
+        try{
         // Crear la empresa
         $empresa = Empresa::create([
             'nombre' => $request->nombre,
@@ -45,6 +46,10 @@ class EmpresaController extends Controller
         
         // Redireccionar con mensaje de éxito
         return redirect()->route('gestionar-empresas')->with('success', 'Empresa creada exitosamente.');
+        } catch (\Exception $e) {
+            // Mensaje de error
+            return redirect()->back()->with('error', 'Hubo un problema al crear la empresa.');
+        }
     }
 
     /**
@@ -146,46 +151,6 @@ class EmpresaController extends Controller
         $empresas = Empresa::where('user_id', Auth::id())->get();
         return view('Empresa.gestionar', compact('empresas'));
     }
-
-    /**
-     * Mostrar el formulario de edición de una empresa.
-     */
-    public function editar($id)
-    {
-        $empresa = Empresa::findOrFail($id); // Obtener la empresa
-        $rubros = Rubro::all(); // Obtener todos los rubros
-        $horarios = $empresa->horarios_empresa; // Obtener horarios de la empresa
-
-        return view('Empresa.editar', compact('empresa', 'rubros', 'horarios')); // Pasar datos a la vista
-    }
-
-    
-    /**
-     * Actualizar una empresa existente.
-     */
-    public function actualizar(Request $request, $id)
-    {
-        // Validar los datos del formulario
-        $request->validate($this->rules());
-
-        $empresa = Empresa::findOrFail($id);
-        
-        // Actualizar la empresa con los datos generales
-        $empresa->update($request->only(['nombre', 'slogan', 'ubicacion']));
-
-        // Asociar los rubros seleccionados a la empresa
-        $empresa->rubros()->sync($request->rubros);
-
-        // Limpiar los horarios existentes de la empresa
-        $empresa->horarios()->delete();
-
-        // Guardar los horarios de atención (si se ingresaron)
-        $this->guardarHorarios($empresa, $request->horarios);
-
-        // Redireccionar con mensaje de éxito
-        return redirect()->route('gestionar-empresas', $empresa->id)->with('success', 'Empresa actualizada con éxito.');
-    }
-
 
 
     // Eliminar una empresa

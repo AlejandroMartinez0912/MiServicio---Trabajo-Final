@@ -43,6 +43,7 @@ class PersonaController extends Controller
             $persona->foto = basename($filename);
         }
 
+        try {
         // Actualizar otros datos
         $persona->update($request->only([
             'nombre', 
@@ -52,7 +53,11 @@ class PersonaController extends Controller
             'documento', 
             'telefono'
         ]));
-
+        // Mensaje de exito.
         return redirect()->route('perfil')->with('success', 'Perfil actualizado correctamente.');
+        } catch (\Exception $e) {
+            // Mensaje de error
+            return redirect()->back()->with('error', 'Hubo un problema al guardar los datos.');
+        }
     }
 }

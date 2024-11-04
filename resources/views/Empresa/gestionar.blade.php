@@ -71,9 +71,6 @@
                     </p>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <!-- Botón de editar -->
-                        <a href="{{ route('editar-empresa', $empresa->id) }}" class="btn btn-primary">Editar</a>
-
                         <!-- Botón de ver empresa-->
                         <a href="{{ route('gestion-empresa', $empresa->id) }}" class="btn btn-primary">Ver empresa</a>
 
