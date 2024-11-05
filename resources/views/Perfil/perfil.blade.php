@@ -6,85 +6,80 @@
 
 <style>
     .card {
-        background-color: #3f3fd1; /* Color de fondo de la tarjeta */
-        color: whitesmoke; /* Color del texto */
-        border-radius: 15px; /* Bordes redondeados */
-        transition: all 0.3s ease-in-out; /* Transición suave */
-        padding: 20px; /* Espaciado interno */
+        background-color: #3f3fd1;
+        color: whitesmoke;
+        border-radius: 15px;
+        transition: all 0.3s ease-in-out;
+        padding: 20px;
     }
 
     .card-body {
-        display: flex; /* Hacer que el cuerpo de la tarjeta use flexbox */
-        align-items: center; /* Alinear elementos verticalmente */
+        display: flex;
+        align-items: center;
     }
 
     .form-container {
-        flex: 1; /* Ocupa el espacio restante */
-        margin-right: 20px; /* Espacio entre el formulario y la imagen */
+        flex: 1;
+        margin-right: 20px;
     }
 
     .form-control {
-        border-radius: 10px; /* Bordes redondeados para los inputs */
-        width: 100%; /* Asegura que los campos ocupen el ancho completo de su contenedor */
-        max-width: 400px; /* Limitar el ancho máximo de los inputs */
+        border-radius: 10px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .form-control[readonly] {
+        background-color: #e9ecef; /* Fondo gris claro para campos de solo lectura */
+        color: #495057;
     }
 
     .profile-pic {
-        width: 100px; /* Ancho de la imagen de perfil */
-        height: 100px; /* Alto de la imagen de perfil */
-        border-radius: 50%; /* Hacer que sea circular */
-        background-color: grey; /* Color de fondo cuando no hay imagen */
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: grey;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer; /* Cambiar el cursor para indicar que es clickable */
-        margin-left: 20px; /* Espacio a la izquierda de la imagen */
-    }
-
-    .profile-pic img {
-        border-radius: 50%; /* Asegurar que la imagen también sea circular */
-        width: 100%; /* Asegura que la imagen se ajuste al contenedor */
-        height: auto; /* Mantiene la proporción de la imagen */
+        cursor: pointer;
+        margin-left: 20px;
     }
 
     .btn-primary {
-        background-color: #0d6efd; /* Azul Bootstrap */
-        border-radius: 50px; /* Bordes redondeados */
-        border: none; /* Sin bordes */
-        padding: 10px 20px; /* Espaciado interno */
-        font-size: 1.2rem; /* Tamaño de fuente */
-        transition: background-color 0.3s ease-in-out; /* Transición de color */
+        background-color: #0d6efd;
+        border-radius: 50px;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        transition: background-color 0.3s ease-in-out;
     }
 
     .btn-primary:hover {
-        background-color: #0a58ca; /* Azul más oscuro al pasar el ratón */
+        background-color: #0a58ca;
     }
 
     .welcome-message {
         font-family: 'Poppins', sans-serif;
-        font-size: 1.5rem; /* Tamaño del mensaje de bienvenida */
-        font-weight: bold; /* Negrita */
-        margin-bottom: 20px; /* Espaciado inferior */
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
     }
 
     h2, h3 {
-        font-family: 'Poppins', sans-serif; /* Fuente para los títulos */
-        font-weight: bold; /* Negrita */
-        text-align: center; /* Centrar el texto */
+        font-family: 'Poppins', sans-serif;
+        font-weight: bold;
+        text-align: center;
     }
 
     p, label {
-        font-family: 'Roboto', sans-serif; /* Fuente para párrafos y etiquetas */
+        font-family: 'Roboto', sans-serif;
     }
 
     .form-group {
-        text-align: left; /* Alinear a la izquierda para los campos del formulario */
-        margin-bottom: 1rem; /* Espaciado inferior */
+        text-align: left;
+        margin-bottom: 1rem;
     }
-    .btn-custom-gray {
-    background-color: grey; 
-    color: white;
-}
 </style>
 
 <div class="container mt-5">
@@ -96,7 +91,6 @@
                         <h2 class="mb-4 text-center">
                             <i class='bx bx-user'></i> Editar Perfil</h2>
 
-                        <!-- Mostrar mensajes de éxito o error si existen -->
                         @if (session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}
@@ -116,29 +110,31 @@
                             @csrf
                             @method('PUT')
 
+                            <!-- Campos solo visualización -->
                             <div class="form-group">
                                 <label for="nombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ $persona->nombre }}" required maxlength="50">
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ $persona->nombre }}" readonly>
                             </div>
 
                             <div class="form-group">
                                 <label for="apellido" class="form-label">Apellido</label>
-                                <input type="text" class="form-control" id="apellido" name="apellido" value="{{ $persona->apellido }}" required maxlength="50">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="domicilio" class="form-label">Domicilio</label>
-                                <input type="text" class="form-control" id="domicilio" name="domicilio" value="{{ $persona->domicilio }}" required maxlength="100">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ $persona->fecha_nacimiento }}" required>
+                                <input type="text" class="form-control" id="apellido" name="apellido" value="{{ $persona->apellido }}" readonly>
                             </div>
 
                             <div class="form-group">
                                 <label for="documento" class="form-label">Documento</label>
-                                <input type="number" class="form-control" id="documento" name="documento" value="{{ $persona->documento }}" required maxlength="20">
+                                <input type="text" class="form-control" id="documento" name="documento" value="{{ $persona->documento }}" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ $persona->fecha_nacimiento }}" readonly>
+                            </div>
+
+                            <!-- Campos editables -->
+                            <div class="form-group">
+                                <label for="domicilio" class="form-label">Domicilio</label>
+                                <input type="text" class="form-control" id="domicilio" name="domicilio" value="{{ $persona->domicilio }}" required maxlength="100">
                             </div>
 
                             <div class="form-group">
@@ -152,7 +148,7 @@
                         @if ($persona->foto)
                             <img src="{{ asset('storage/' . $persona->foto) }}" alt="Foto de Perfil">
                         @else
-                            <i class='bx bx-user' style="color: white; font-size: 50px;"></i> <!-- Ícono de usuario si no hay foto -->
+                            <i class='bx bx-user' style="color: white; font-size: 50px;"></i>
                         @endif
                     </div>
                 </div>
@@ -215,7 +211,7 @@
         document.getElementById('editProfileForm').submit();
     });
 </script>
-<!--  Script de alertas-->
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         @if(session('success'))

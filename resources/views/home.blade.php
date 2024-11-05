@@ -52,15 +52,6 @@
         border-radius: 10px; /* Bordes redondeados para los inputs */
     }
 
-    .form-check-input {
-        border-radius: 5px; /* Bordes redondeados para el checkbox */
-    }
-
-    /* Animación sutil en el botón */
-    .btn:focus {
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
-    }
-
     h2, h3 {
         font-family: 'Poppins', sans-serif;
         font-weight: bold;
@@ -79,15 +70,7 @@
         color: #0a58ca;
         text-decoration: underline;
     }
-
-    /* Estilos para los pasos */
-    .step {
-        display: none;
-    }
-
-    .step.active {
-        display: block;
-    }
+    
 </style>
 
 <div class="d-flex justify-content-center align-items-center vh-100">
@@ -137,75 +120,61 @@
     </div>
 </div>
 
-<!-- Modal de registro con pasos -->
+<!-- Modal de registro mejorado -->
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg"> <!-- Tamaño del modal ampliado -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">Registrarse</h5>
+                <h5 class="modal-title text-center w-100" id="registerModalLabel">Regístrate en <span class="text-primary">MiServicio</span></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="registrationForm" method="POST" action="{{ route('validar-registro') }}">
                     @csrf
-
-                    <!-- Paso 1: Correo y Contraseña -->
-                    <div class="step active">
-                        <h5>Completar Correo y Contraseña</h5>
-                        <div class="mb-3">
+                    <div class="row g-3"> <!-- Distribución en dos columnas -->
+                        <div class="col-md-6">
                             <label for="emailRegister" class="form-label">Correo electrónico</label>
-                            <input type="email" class="form-control" id="emailRegister" name="email" value="{{ old('email') }}" required placeholder="Ingresa tu correo">
+                            <input type="email" class="form-control" id="emailRegister" name="email" required placeholder="Ingresa tu correo">
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-md-6">
                             <label for="passwordRegister" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" id="passwordRegister" name="password" required placeholder="Crea una contraseña">
                         </div>
-                    </div>
 
-                    <!-- Paso 2: Nombre y Apellido -->
-                    <div class="step">
-                        <h5>Completar Nombre y Apellido</h5>
-                        <div class="mb-3">
+                        <div class="col-md-6">
                             <label for="nombreRegister" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombreRegister" name="nombre" value="{{ old('nombre') }}" required placeholder="Ingresa tu nombre">
+                            <input type="text" class="form-control" id="nombreRegister" name="nombre" required placeholder="Ingresa tu nombre">
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-md-6">
                             <label for="apellidoRegister" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellidoRegister" name="apellido" value="{{ old('apellido') }}" required placeholder="Ingresa tu apellido">
+                            <input type="text" class="form-control" id="apellidoRegister" name="apellido" required placeholder="Ingresa tu apellido">
                         </div>
-                    </div>
 
-                    <!-- Paso 3: Datos Adicionales -->
-                    <div class="step">
-                        <h5>Completar Datos Adicionales</h5>
-                        <div class="mb-3">
+                        <div class="col-md-6">
                             <label for="documentoRegister" class="form-label">Documento</label>
-                            <input type="number" class="form-control" id="documentoRegister" name="documento" value="{{ old('documento') }}" required placeholder="Ingresa tu documento">
+                            <input type="number" class="form-control" id="documentoRegister" name="documento" required placeholder="Ingresa tu documento">
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-md-6">
                             <label for="telefonoRegister" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" id="telefonoRegister" name="telefono" value="{{ old('telefono') }}" required placeholder="Ingresa tu teléfono">
+                            <input type="text" class="form-control" id="telefonoRegister" name="telefono" required placeholder="Ingresa tu teléfono">
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-md-6">
                             <label for="domicilioRegister" class="form-label">Domicilio</label>
-                            <input type="text" class="form-control" id="domicilioRegister" name="domicilio" value="{{ old('domicilio') }}" required placeholder="Ingresa tu domicilio">
+                            <input type="text" class="form-control" id="domicilioRegister" name="domicilio" required placeholder="Ingresa tu domicilio">
                         </div>
 
-                        <div class="mb-3">
+                        <div class="col-md-6">
                             <label for="fechaNacimientoRegister" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="fechaNacimientoRegister" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" required>
+                            <input type="date" class="form-control" id="fechaNacimientoRegister" name="fecha_nacimiento" required>
                         </div>
                     </div>
-
-                    <!-- Controles de navegación -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="prevBtn" style="display:none;">Anterior</button>
-                        <button type="button" class="btn btn-primary" id="nextBtn">Siguiente</button>
-                        <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">Registrarse</button>
+                    
+                    <div class="modal-footer mt-4">
+                        <button type="submit" class="btn btn-primary w-100">Registrarse</button>
                     </div>
                 </form>
             </div>
@@ -213,37 +182,5 @@
     </div>
 </div>
 
-<script>
-    let currentStep = 0;
-    const steps = document.querySelectorAll(".step");
-    const nextBtn = document.getElementById("nextBtn");
-    const prevBtn = document.getElementById("prevBtn");
-    const submitBtn = document.getElementById("submitBtn");
-
-    function showStep(step) {
-        steps.forEach((s, index) => {
-            s.classList.toggle("active", index === step);
-        });
-        prevBtn.style.display = step === 0 ? "none" : "inline-block";
-        nextBtn.style.display = step === steps.length - 1 ? "none" : "inline-block";
-        submitBtn.style.display = step === steps.length - 1 ? "inline-block" : "none"; // Mostrar botón "Registrarse" solo en el último paso
-    }
-
-    nextBtn.addEventListener("click", () => {
-        if (currentStep < steps.length - 1) {
-            currentStep++;
-            showStep(currentStep);
-        }
-    });
-
-    prevBtn.addEventListener("click", () => {
-        if (currentStep > 0) {
-            currentStep--;
-            showStep(currentStep);
-        }
-    });
-
-    showStep(currentStep); // Inicializa el primer paso
-</script>
 
 @endsection

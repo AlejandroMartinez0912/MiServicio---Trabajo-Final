@@ -86,8 +86,9 @@ class ServicioController extends Controller
             'nombre' => 'required',
             'descripcion' => 'nullable',
             'tipo_presupuesto' => 'required|in:fijo,hora',
-            'duracion' => 'required',
             'modalidad' => 'required',
+            'horas' => 'required|numeric|min:0',
+            'minutos' => 'required|numeric|min:0|max:59',
             'presupuesto_fijo' => 'required_if:tipo_presupuesto,fijo|nullable|numeric',
             'presupuesto_hora' => 'required_if:tipo_presupuesto,hora|nullable|numeric',
         ]);
@@ -109,8 +110,8 @@ class ServicioController extends Controller
         }
 
         // Procesar y guardar la duración
-        $horas = $request->input('horas');
-        $minutos = $request->input('minutos');
+        $horas = (int) $request->input('horas');
+        $minutos = (int) $request->input('minutos');
         $servicio->duracion = sprintf('%02d:%02d:00', $horas, $minutos);
 
         try {
@@ -121,39 +122,6 @@ class ServicioController extends Controller
         }
     }
 
-        /**
-     * Actualizar un servicio existente.
-     */
-    /**public function updateService(Request $request, $empresaId, $servicioId)
-    {
-        // Validaciones
-        $request->validate([
-            'nombre' => 'required',
-            'descripcion' => 'nullable',
-            'precio_fijo' => 'required',
-            'precio_hora' => 'required',
-            'horas' => 'required|integer|min:0',
-            'minutos' => 'required|integer|min:0|max:59',
-            'modalidad' => 'required'
-        ]);
-
-        $servicio = Servicio::findOrFail($servicioId);
-        $servicio->nombre = $request->input('nombre');
-        $servicio->descripcion = $request->input('descripcion');
-        $servicio->precio = $request->input('precio_fijo');
-        $servicio->precio_hora = $request->input('precio_hora');
-        $horas = $request->input('horas');
-        $minutos = $request->input('minutos');
-        $servicio->duracion = sprintf('%02d:%02d:00', $horas, $minutos);
-        $servicio->modalidad = $request->input('modalidad');
-
-        try {
-            $servicio->save();
-            return redirect()->route('gestion-empresa', ['id' => $empresaId])->with('success', 'Servicio actualizado con éxito');
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors('Hubo un error al actualizar el servicio.');
-        }
-    } */
 
     /**
      * Mostrar formulario para editar un servicio.

@@ -60,75 +60,98 @@
 
     <!-- Servicios -->
     <div id="servicios" class="content-section d-none">
-        <style>
-            /* Estilos personalizados para la sección de servicios */
-            .content-section {
-                background-color: gray; /* Color de fondo claro */
-                border-radius: 15px;
-                padding: 20px;
-                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            }
-        
-            .list-group-item {
-                background-color: #3f3fd1; /* Color del fondo de los ítems */
-                color: #f8f9fa;
-                border-radius: 10px;
-                transition: all 0.3s ease-in-out;
-            }
-        
-            .list-group-item:hover {
-                transform: scale(1.02);
-                box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-            }
-        
-            .alert {
-                border-radius: 10px;
-            }
-        
-            .btn-primary {
-                background-color: #0d6efd; /* Color del botón */
-            }
-        
-            .btn-primary:hover {
-                background-color: #0a58ca; /* Color al pasar el mouse */
-            }
-        
-            .btn-secondary {
-                background-color: #6c757d; /* Color gris */
-            }
-        
-            .btn-secondary:hover {
-                background-color: #5a6268; /* Color gris más oscuro al pasar el mouse */
-            }
-            .modalidad-btn {
-                flex: 1;
-                margin: 0 5px;
-                padding: 10px;
-                border: 1px solid #007bff;
-                background-color: #fff;
-                color: #007bff;
-                border-radius: 5px;
-                cursor: pointer;
-                text-align: center;
-                transition: background-color 0.3s, color 0.3s;
-            }
+            <style>
+                /* Estilos personalizados para la sección de servicios */
+                .content-section {
+                    background-color: gray; /* Color de fondo */
+                    border-radius: 15px;
+                    padding: 20px;
+                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                }
+            
+                .list-group-item {
+                    background-color: #3f3fd1; /* Fondo de los ítems */
+                    color: #f8f9fa;
+                    border-radius: 10px;
+                    transition: all 0.3s ease-in-out;
+                }
+            
+                .list-group-item:hover {
+                    transform: scale(1.02);
+                    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+                }
+            
+                .alert {
+                    border-radius: 10px;
+                }
+            
+                /* Estilos para botones primarios y secundarios */
+                .btn-primary {
+                    background-color: #0d6efd; /* Color principal del botón */
+                    transition: background-color 0.3s ease;
+                }
+            
+                .btn-primary:hover {
+                    background-color: #0a58ca; /* Hover principal */
+                }
+            
+                .btn-secondary {
+                    background-color: #6c757d; /* Color gris */
+                    transition: background-color 0.3s ease;
+                }
+            
+                .btn-secondary:hover {
+                    background-color: #5a6268; /* Hover gris oscuro */
+                }
+            
+                /* Estilos para los botones de modalidad */
+                .modalidad-btn {
+                    flex: 1;
+                    margin: 0 5px;
+                    padding: 10px;
+                    border: 1px solid #007bff;
+                    background-color: #fff;
+                    color: #007bff;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-align: center;
+                    transition: background-color 0.3s, color 0.3s;
+                }
+            
+                .modalidad-btn:hover, .modalidad-btn.selected {
+                    background-color: #007bff;
+                    color: white;
+                    border-color: #0056b3;
+                }
+            
+                /* Estilos para botones en el modal */
+                /* Estilos para el modal */
+                .modal-footer .btn {
+                    min-width: 150px; 
+                    padding: 10px 20px; 
+                    font-size: 1rem;
+                }
 
-            .modalidad-btn:hover {
-                background-color: #007bff;
-                color: white;
-            }
+                /* Estilo de botones de modalidad */
+                .modalidad-btn {
+                    flex: 1;
+                    margin: 0 5px;
+                    padding: 10px;
+                    border: 1px solid #007bff;
+                    background-color: #fff;
+                    color: #007bff;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    text-align: center;
+                    transition: background-color 0.3s, color 0.3s;
+                }
 
-            .modalidad-btn.selected {
-                background-color: #007bff;
-                color: white;
-                border-color: #0056b3;
-            }
-            .modal-footer .btn {
-                min-width: 150px; 
-                padding: 10px 20px; 
-                font-size: 1rem; 
-            }
-        </style>
+                .modalidad-btn:hover, .modalidad-btn.selected {
+                    background-color: #007bff;
+                    color: white;
+                    border-color: #0056b3;
+                }
+            </style>
             <div class="container">
                 <h2 class="text-center mb-4">Servicios de {{ $empresa->nombre }}</h2>
                 <!-- Comprobar si hay servicios activos (estado: 1) -->
@@ -142,7 +165,7 @@
                     </div>
                 @else
                     <div class="list-group">
-                        @foreach($servicios as $servicio)
+                        @foreach($serviciosActivos as $servicio)
                             <div class="card mb-3 shadow-sm border-0">
                                 <div class="card-body d-flex align-items-center">
                                     <!-- Icono decorativo para cada servicio -->
@@ -202,8 +225,8 @@
             </div>    
             <!-- Modal para crear un nuevo servicio -->
             <div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content card">
                         <div class="modal-header">
                             <h5 class="modal-title" id="crearServicioModalLabel">Nuevo Servicio</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -211,60 +234,64 @@
                         <div class="modal-body">
                             <form action="{{ route('guardar-servicio', $empresa->id) }}" method="POST">
                                 @csrf
-                                <div class="mb-3">
-                                    <label for="nombre" class="form-label">Nombre del servicio</label>
-                                    <input type="text" name="nombre" id="nombre" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Presupuesto ($)</label>
-                                    <select class="form-select" id="tipoPresupuesto" name="tipo_presupuesto" required onchange="togglePresupuestoInput()">
-                                        <option value="fijo">Fijo</option>
-                                        <option value="hora">Por hora</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3" id="presupuestoFijoInput" style="display: block;">
-                                    <label for="presupuesto_fijo" class="form-label">Presupuesto fijo ($)</label>
-                                    <input type="text" name="presupuesto_fijo" id="presupuesto_fijo" class="form-control" placeholder="0,00">
-                                </div>
-                                
-                                <div class="mb-3" id="presupuestoHoraInput" style="display: none;">
-                                    <label for="presupuesto_hora" class="form-label">Presupuesto por hora ($)</label>
-                                    <input type="text" name="presupuesto_hora" id="presupuesto_hora" class="form-control" placeholder="0,00">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Duración</label>
-                                    <div class="d-flex">
-                                        <input type="number" name="horas" id="horas" class="form-control" placeholder="Horas" min="0" required>
-                                        <span class="mx-2">:</span>
-                                        <input type="number" name="minutos" id="minutos" class="form-control" placeholder="Minutos" min="0" max="59" required>
+                                <div class="d-flex flex-column flex-md-row gap-4">
+                                    <!-- Columna Izquierda -->
+                                    <div class="flex-fill">
+                                        <div class="mb-3">
+                                            <label for="nombre" class="form-label">Nombre del servicio</label>
+                                            <input type="text" name="nombre" id="nombre" class="form-control" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="presupuesto_fijo" class="form-label">Presupuesto ($)</label>
+                                            <select class="form-select" id="tipoPresupuesto" name="tipo_presupuesto" required onchange="togglePresupuestoInput()">
+                                                <option value="fijo">Fijo</option>
+                                                <option value="hora">Por hora</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Campo de presupuesto fijo -->
+                                        <div class="mb-3" id="presupuestoFijoInput" style="display: block;">
+                                            <input type="text" name="presupuesto_fijo" id="presupuesto_fijo" class="form-control" placeholder="0,00">
+                                        </div>
+                                        
+                                        <!-- Campo de presupuesto por hora -->
+                                        <div class="mb-3" id="presupuestoHoraInput" style="display: none;">
+                                            <input type="text" name="presupuesto_hora" id="presupuesto_hora" class="form-control" placeholder="0,00">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Duración</label>
+                                            <div class="d-flex">
+                                                <input type="number" name="horas" id="horas" class="form-control" placeholder="Horas" min="0" required>
+                                                <span class="mx-2">:</span>
+                                                <input type="number" name="minutos" id="minutos" class="form-control" placeholder="Minutos" min="0" max="59" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Columna Derecha -->
+                                    <div class="flex-fill">
+                                        <div class="mb-3">
+                                            <label class="form-label">Modalidad</label>
+                                            <div class="d-flex justify-content-between">
+                                                <button type="button" class="modalidad-btn" onclick="selectModalidad('Presencial')">Presencial</button>
+                                                <button type="button" class="modalidad-btn" onclick="selectModalidad('Online')">Online</button>
+                                                <button type="button" class="modalidad-btn" onclick="selectModalidad('A domicilio')">A domicilio</button>
+                                            </div>
+                                            <input type="hidden" name="modalidad" id="modalidad" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descripcion" class="form-label">Descripción del servicio</label>
+                                            <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="Escriba una breve descripción del servicio" required></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <!-- Campo oculto para la duración combinada -->
-                                <input type="hidden" name="duracion" id="duracion">
-                            
-                                <div class="mb-3">
-                                    <label class="form-label">Modalidad</label>
-                                    <div class="d-flex justify-content-between">
-                                        <button type="button" class="modalidad-btn" onclick="selectModalidad('Presencial')">Presencial</button>
-                                        <button type="button" class="modalidad-btn" onclick="selectModalidad('Online')">Online</button>
-                                        <button type="button" class="modalidad-btn" onclick="selectModalidad('A domicilio')">A domicilio</button>
-                                    </div>
-                                    <input type="hidden" name="modalidad" id="modalidad" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="descripcion" class="form-label">Descripción del servicio</label>
-                                    <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="Escriba una breve descripción del servicio" required></textarea>
-                                </div>
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between mt-4">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <button type="submit" class="btn btn-primary">Crear Servicio</button>
                                 </div>
                             </form>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -368,6 +395,16 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Script para mostrar u ocultar el campo de presupuesto -->
+            <script>
+                function togglePresupuestoInput() {
+                    const tipoPresupuesto = document.getElementById('tipoPresupuesto').value;
+                    document.getElementById('presupuestoFijoInput').style.display = tipoPresupuesto === 'fijo' ? 'block' : 'none';
+                    document.getElementById('presupuestoHoraInput').style.display = tipoPresupuesto === 'hora' ? 'block' : 'none';
+                }
+            </script>
+
             <!-- Script para marcar la selección del botón de modalidad -->
             <script>
                 function selectModalidad(modalidad) {
@@ -385,6 +422,15 @@
                     document.getElementById('modalidad').value = modalidad;
                 }
             </script>
+
+            <!-- Script para mostrar o ocultar el campo de presupuesto -->
+            <script>
+                function togglePresupuestoInput() {
+                    const tipoPresupuesto = document.getElementById('tipoPresupuesto').value;
+                    document.getElementById('presupuestoFijoInput').style.display = tipoPresupuesto === 'fijo' ? 'block' : 'none';
+                    document.getElementById('presupuestoHoraInput').style.display = tipoPresupuesto === 'hora' ? 'block' : 'none';
+                }
+            </script>
             <!-- Script para formatear la duración en formato "HH:MM:SS" -->
             <script>
                 document.querySelector('form').addEventListener('submit', function(event) {
@@ -397,6 +443,7 @@
                 });
 
             </script>
+
             <!--Script para editar el servicio-->
             <script>
                 function editarServicio(servicioId, nombre, tipoPresupuesto, precioFijo, precioHora, duracion, modalidad, descripcion) {
@@ -447,44 +494,7 @@
                     form.action = `/empresa/${empresaId}/servicio/${servicioId}`;
                 }
             </script>
-            <!-- Script para marcar la selección del botón de modalidad -->
-            <script>
-                function marcarModalidadSeleccionada(modalidad, inputId) {
-                    // Limpiar la selección actual
-                    const buttons = document.querySelectorAll('.modalidad-btn');
-                    buttons.forEach(button => {
-                        button.classList.remove('selected');
-                    });
 
-                    // Marcar el botón seleccionado
-                    const selectedButton = Array.from(buttons).find(button => button.textContent.trim() === modalidad);
-                    if (selectedButton) {
-                        selectedButton.classList.add('selected');
-                    }
-
-                    // Actualizar el valor del input oculto
-                    document.getElementById(inputId).value = modalidad;
-                }
-
-                // Configurar evento para cuando se abre el modal
-                document.getElementById('editarServicioModal').addEventListener('show.bs.modal', function () {
-                    // Obtener el valor actual de modalidad del input oculto
-                    const modalidadActual = document.getElementById("edit_modalidad").value;
-
-                    // Marcar el botón correspondiente
-                    if (modalidadActual) {
-                        marcarModalidadSeleccionada(modalidadActual, 'edit_modalidad');
-                    }
-                });
-            </script>
-            <!--Script para mostrar o ocultar el campo de presupuesto -->
-            <script>
-                function togglePresupuestoInput() {
-                    const tipoPresupuesto = document.getElementById('tipoPresupuesto').value;
-                    document.getElementById('presupuestoFijoInput').style.display = tipoPresupuesto === 'fijo' ? 'block' : 'none';
-                    document.getElementById('presupuestoHoraInput').style.display = tipoPresupuesto === 'hora' ? 'block' : 'none';
-                }
-            </script>
 
      
     </div>

@@ -252,12 +252,14 @@
                                     </div>
 
                                     <!-- Selects de Horario -->
-                                    <div class="turno-group" id="turnos_{{ $dia }}">
+                                    <div class="turno-group" id="turnos_{{ $dia }}" style="{{ !in_array($dia, $request->dias_confirmados ?? []) ? 'display: none;' : '' }}">
                                         <div class="row mb-2">
                                             <div class="col-md-12">
-                                                <select name="horarios[{{ $dia }}][hora_inicio][]" 
-                                                        class="form-control hora {{ !in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'disabled' : '' }}" 
-                                                        id="hora_inicio_{{ $dia }}_1" required>
+                                                <select name="horarios[{{ $dia }}][hora_inicio][]"
+                                                        class="form-control hora"
+                                                        id="hora_inicio_{{ $dia }}_1"
+                                                        {{ !in_array($dia, $request->dias_confirmados ?? []) ? 'disabled' : '' }}
+                                                        required>
                                                     <option value="08:00" selected>08:00</option>
                                                     @for($i = 0; $i < 24; $i++)
                                                         <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
@@ -266,9 +268,11 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-12">
-                                                <select name="horarios[{{ $dia }}][hora_fin][]" 
-                                                        class="form-control hora {{ !in_array($dia, ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']) ? 'disabled' : '' }}" 
-                                                        id="hora_fin_{{ $dia }}_1" required>
+                                                <select name="horarios[{{ $dia }}][hora_fin][]"
+                                                        class="form-control hora"
+                                                        id="hora_fin_{{ $dia }}_1"
+                                                        {{ !in_array($dia, $request->dias_confirmados ?? []) ? 'disabled' : '' }}
+                                                        required>
                                                     <option value="17:00" selected>17:00</option>
                                                     @for($i = 0; $i < 24; $i++)
                                                         <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}:00</option>
@@ -278,6 +282,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     
                                     <div class="d-flex justify-content-center mt-2">
                                         <button type="button" id="button-add-{{ $dia }}" class="button-transparent mx-2" onclick="addTurno('{{ $dia }}')">
@@ -339,13 +344,23 @@
 <!-- Script para horarios-->
 <script>
     function toggleHorarios(dia) {
-        const checkbox = document.getElementById(`confirmar_${dia}`);
-        const horarios = document.querySelectorAll(`#turnos_${dia} .form-control`);
-        
-        horarios.forEach(horario => {
-            horario.disabled = !checkbox.checked;
-        });
+        const confirmarDia = document.getElementById(`confirmar_${dia}`);
+        const turnos = document.getElementById(`turnos_${dia}`);
+        const selects = turnos.querySelectorAll('select');
+
+        if (confirmarDia.checked) {
+            turnos.style.display = 'block';
+            selects.forEach(select => select.removeAttribute('disabled'));
+        } else {
+            turnos.style.display = 'none';
+            selects.forEach(select => select.setAttribute('disabled', 'disabled'));
+        }
     }
+
+    // Ejecutar la función al cargar la página para reflejar los estados de los checkboxes.
+    document.addEventListener('DOMContentLoaded', function() {
+        ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'].forEach(toggleHorarios);
+    });
 </script>
 <!-- Script para agregar turnos -->
 <script>

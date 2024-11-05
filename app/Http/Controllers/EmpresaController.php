@@ -43,7 +43,7 @@ class EmpresaController extends Controller
         // Guardar los horarios de atención (si se ingresaron)
         $this->guardarHorarios($empresa, $request->horarios);
 
-        
+
         // Redireccionar con mensaje de éxito
         return redirect()->route('gestionar-empresas')->with('success', 'Empresa creada exitosamente.');
         } catch (\Exception $e) {
@@ -59,20 +59,34 @@ class EmpresaController extends Controller
     {
         if ($horarios) {
             foreach ($horarios as $dia => $horario) {
-                // Cambiar el día a su ID correspondiente
                 $diaId = DiasSemana::where('nombre', ucfirst($dia))->first()->id;
+                $lastHoraFin = null;
 
-                // Iterar sobre los horarios del día
                 foreach ($horario['hora_inicio'] as $index => $horaInicio) {
-                    if (isset($horaInicio) && isset($horario['hora_fin'][$index])) {
+                    $horaFin = $horario['hora_fin'][$index] ?? null;
+
+                    if ($horaInicio && $horaFin) {
+                        // Validar que la hora de inicio no sea mayor que la hora de fin
+                        if (strtotime($horaInicio) >= strtotime($horaFin)) {
+                            throw new \Exception("La hora de inicio no puede ser mayor o igual que la hora de fin para el día {$dia}.");
+                        }
+
+                        // Validar que no se solapen horarios
+                        if ($lastHoraFin && strtotime($horaInicio) <= strtotime($lastHoraFin)) {
+                            throw new \Exception("Los horarios no deben solaparse para el día {$dia}.");
+                        }
+
+                        // Actualizar el último horario de fin
+                        $lastHoraFin = $horaFin;
+
                         // Determinar el turno basado en las horas
-                        $turno = $this->determinarTurno($horaInicio, $horario['hora_fin'][$index]);
+                        $turno = $this->determinarTurno($horaInicio, $horaFin);
 
                         HorariosEmpresa::create([
                             'empresa_id' => $empresa->id,
                             'dia_semana_id' => $diaId,
                             'hora_inicio' => $horaInicio,
-                            'hora_fin' => $horario['hora_fin'][$index],
+                            'hora_fin' => $horaFin,
                             'turno' => $turno,
                         ]);
                     }
@@ -80,6 +94,7 @@ class EmpresaController extends Controller
             }
         }
     }
+
 
     /**
      * Determinar el turno según la hora de inicio y fin.

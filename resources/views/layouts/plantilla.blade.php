@@ -123,5 +123,37 @@
 
   <!-- Bootstrap JS Bundle con Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script para alertas-->
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          @if(session('success'))
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Éxito',
+                  text: '{{ session('success') }}',
+                  confirmButtonText: 'Aceptar'
+              });
+          @endif
+  
+          @if(session('error'))
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: '{{ session('error') }}',
+                  confirmButtonText: 'Aceptar'
+              });
+          @endif
+  
+          @if(session('info'))
+              Swal.fire({
+                  icon: 'info',
+                  title: 'Información',
+                  text: '{{ session('info') }}',
+                  confirmButtonText: 'Aceptar'
+              });
+          @endif
+      });
+    </script>
 </body>
+
 </html>
