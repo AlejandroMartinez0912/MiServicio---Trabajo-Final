@@ -92,7 +92,7 @@ MiServicio
             <!-- Acciones rápidas después de iniciar sesión -->
             <div class="d-grid gap-2">
                 <a href="{{ route('perfil') }}" class="btn btn-primary">Editar Perfil</a>
-                <a href="{{ route('gestionar-empresas') }}" class="btn btn-primary">Gestionar Mis Negocios</a>
+                <a href="{{ route('gestion-servicios') }}" class="btn btn-primary">Gestionar Mis Servicios</a>
                 <a href="{{ route('home') }}" class="btn btn-primary">Ver Mis Turnos</a>
                 <a href="{{ route('home') }}" class="btn btn-primary">Buscar Nuevos Servicios</a>
             </div>

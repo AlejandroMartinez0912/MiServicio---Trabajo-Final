@@ -51,4 +51,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(Persona::class, 'user_id');
     }
+
+    /**
+     * Relación de uno a uno con DatosProfesionales.s
+     */
+    public function datosProfesionales()
+    {
+        return $this->hasOne(DatosProfesionales::class, 'user_id');
+    }
 }

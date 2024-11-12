@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empresa_rubro', function (Blueprint $table) {
+        Schema::create('datos_rubro', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('empresa_id');
-            $table->unsignedBigInteger('rubro_id');
+            
+            //Llave datos_profesional_id
+            $table->unsignedBigInteger('datos_profesional_id');
+            $table->foreign('datos_profesional_id')->references('id')->on('datos_profesionales')->onDelete('cascade');
 
-            // Claves foráneas
-            $table->foreign('empresa_id')->references('id')->on('empresa')->onDelete('cascade');
+            //Llave rubro_id
+            $table->unsignedBigInteger('rubro_id');
             $table->foreign('rubro_id')->references('id')->on('rubros')->onDelete('cascade');
 
             $table->timestamps();

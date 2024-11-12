@@ -2,13 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Empresa;
+use App\Models\DatosProfesionales;
 use App\Models\Servicio;
+use App\Models\Rubro;
+use App\Models\User;
+use App\Models\DiasSemana;
 
 use Illuminate\Http\Request;
 
 class ServicioController extends Controller
 {
+    /**
+     * Funcion index
+     */
+    public function index()
+    {
+        
+        $diasSemana = DiasSemana::all();
+        $rubros = Rubro::all();
+        return view('Servicios.gestion', compact('rubros', 'diasSemana'));
+    }
+
     /**
      * LOGICA SERVICIOS
      */
@@ -17,14 +31,15 @@ class ServicioController extends Controller
      */
     public function showServices($empresaId)
     {
-        $empresa = Empresa::findOrFail($empresaId);
-        $servicios = $empresa->servicios; // Obtener los servicios relacionados con la empresa
-
+        /*
+        $datosProfesionales = DatosProfesionales::findOrFail($datosProfesionales);
+        $servicios = $datosProfesionales->servicios; // Obtener los servicios relacionados con la empresa
+        
         foreach ($servicios as $servicio) {
             $servicio->duracion_formateada = $this->formatDuration($servicio->duracion);
-        }
+        } */
 
-        return view('Empresa.gestion', compact('empresa', 'servicios'));
+        return view('Servicios.gestion', compact('datosProfesionales', 'servicios'));
     }
     /**
      * Funcion para mostrar la duracion de un servicio
@@ -79,7 +94,7 @@ class ServicioController extends Controller
             return redirect()->back()->withErrors('Hubo un error al guardar el servicio.');
         }
     } */
-    public function storeService(Request $request, $id)
+    public function guardarServicio(Request $request, $id)
     {
         // Validaciones
         $request->validate([
@@ -116,7 +131,7 @@ class ServicioController extends Controller
 
         try {
             $servicio->save();
-            return redirect()->route('gestion-empresa', ['id' => $id])->with('success', 'Servicio creado con éxito');
+            return redirect()->route('', ['id' => $id])->with('success', 'Servicio creado con éxito');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors('Hubo un error al guardar el servicio.');
         }
@@ -126,16 +141,16 @@ class ServicioController extends Controller
     /**
      * Mostrar formulario para editar un servicio.
      */
-    public function editService($empresaId, $servicioId)
+    public function editarServicio($empresaId, $servicioId)
     {
-        $empresa = Empresa::findOrFail($empresaId);
+        $datosProfesionales = datosProfesionales::findOrFail($empresaId);
         $servicio = Servicio::findOrFail($servicioId);
         return view('Empresa.edit_service', compact('empresa', 'servicio'));
     }
     /**
      * Actualizar un servicio existente.
      */
-    public function updateService(Request $request, $empresaId, $servicioId)
+    public function actualizarServicio(Request $request, $empresaId, $servicioId)
     {
         // Validaciones
         $request->validate([
@@ -175,7 +190,7 @@ class ServicioController extends Controller
     /**
      * Eliminar un servicio existente.
      */
-    public function deleteService($empresaId, $servicioId)
+    public function eliminarServicio ($empresaId, $servicioId)
     {
         $servicio = Servicio::findOrFail($servicioId);
         try {

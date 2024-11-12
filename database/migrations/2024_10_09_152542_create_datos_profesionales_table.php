@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empresa', function (Blueprint $table) {
+        Schema::create('datos_profesionales', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('nombre');
+            $table->string('nombre_fantasia');
             $table->string('slogan')->nullable();
             $table->string('ubicacion');
+            $table->boolean('estado')->default(0);
             
             // Definir la columna 'user_id'
             $table->unsignedBigInteger('user_id');
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empresa');
+        Schema::dropIfExists('datos_profesionales');
     }
 };

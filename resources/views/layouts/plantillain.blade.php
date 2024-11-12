@@ -128,10 +128,10 @@
 
               <li><hr class="dropdown-divider"></li>
 
-              <li><a class="dropdown-item" href="{{ route('crear-empresa') }}">
+              <li><a class="dropdown-item" href="{{ route('home') }}">
                 <i class='bx bx-store-alt'></i>  Nueva empresa</a></li>
 
-              <li><a class="dropdown-item" href="{{ route('gestionar-empresas') }}">
+              <li><a class="dropdown-item" href="{{ route('home') }}">
                 <i class='bx bxs-store-alt'></i>  Mis empresas</a></li>
 
               <li><hr class="dropdown-divider"></li>

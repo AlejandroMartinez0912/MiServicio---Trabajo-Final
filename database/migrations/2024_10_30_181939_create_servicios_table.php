@@ -15,16 +15,15 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('nombre');
-            $table->float('precio_fijo')->nullable();
-            $table->float('precio_hora')->nullable();
+            $table->float('precio');
+            $table->enum('modalidad', ['fijo', 'por hora']);
             $table->time('duracion');
-            $table->string('modalidad');
             $table->string('descripcion')->nullable();
             $table->boolean('estado')->default(1);
 
             // Relación con la tabla 'empresa'
-            $table->foreignId('empresa_id')
-                  ->constrained('empresa')
+            $table->foreignId('datos_profesionales_id')
+                  ->constrained('datos_profesionales')
                   ->onDelete('cascade');  // Borra los horarios si la empresa es eliminada
         });
     }

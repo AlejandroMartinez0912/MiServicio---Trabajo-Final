@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Servicio extends Model
 {
     use HasFactory;
 
     protected $table = 'servicios';
 
-    protected $fillable = ['empresa_id', 'nombre', 'precio_hora','precio_fijo', '
+    protected $fillable = ['datos_profesionales_id', 'nombre', 'precio_hora','precio_fijo', '
             duracion', 'modalidad', 'descripcion', 'estado'];
 
     // Accesor para obtener el presupuesto dependiendo del tipo
@@ -34,11 +35,10 @@ class Servicio extends Model
     /**
      * Relacion con la tabla 'empresas'
      */
-    public function empresa()
+    public function datosProfesionales()
     {
-        return $this->belongsTo(Empresa::class);
+        return $this->belongsTo(DatosProfesionales::class, 'datos_profesionales_id');
     }
-
 
 
 }
