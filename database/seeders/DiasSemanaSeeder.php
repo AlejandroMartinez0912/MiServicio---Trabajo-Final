@@ -12,7 +12,7 @@ class DiasSemanaSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('dias_semana')->insert([
+        DB::table('dias')->insert([
             ['nombre' => 'Lunes', 'abreviatura' => 'Lun', 'orden' => 1],
             ['nombre' => 'Martes', 'abreviatura' => 'Mar', 'orden' => 2],
             ['nombre' => 'Miércoles', 'abreviatura' => 'Mié', 'orden' => 3],

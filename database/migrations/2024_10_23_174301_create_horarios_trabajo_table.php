@@ -14,19 +14,19 @@ return new class extends Migration
         Schema::create('horarios_trabajo', function (Blueprint $table) {
             $table->id();
 
-            // Relación con la tabla 'datos_profesionales'
-            $table->foreignId('datos_profesionales_id')
-                  ->constrained('datos_profesionales')
+            // Relación con la tabla 'datos_profesion'
+            $table->foreignId('datos_profesion_id')
+                  ->constrained('datos_profesion')
                   ->onDelete('cascade');
 
 
             // Relación con la tabla 'dias_semana'
-            $table->foreignId('dia_semana_id')
-                  ->constrained('dias_semana')
+            $table->foreignId('dias_id')
+                  ->constrained('dias')
                   ->onDelete('cascade');  // Borra los horarios si el día es eliminado
 
             //Indice para mejorar la busqueda      
-            $table->index(['datos_profesionales_id', 'dia_semana_id']);
+            $table->index(['datos_profesion_id', 'dias_id']);
             // Horarios de trabajo (hora de inicio y hora de fin)
             $table->time('hora_inicio');
             $table->time('hora_fin');
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->time ('hora_fin1')->nullable();
 
             // Opcionalmente, puedes añadir un campo para definir si hay turno (mañana/tarde/full)
-            $table->enum('turno1', ['mañana', 'tarde', 'corrido']);
+            $table->enum('turno1', ['mañana', 'tarde', 'corrido'])->nullable();
             $table->enum('turno2', ['mañana', 'tarde', 'corrido'])->nullable();
 
             $table->timestamps();

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('fecha_nacimiento');
             $table->integer('documento')->unique(); // Documento único
             $table->string('telefono');
+            $table->boolean('estado_profesional')->default(0);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Relación con la tabla users
             $table->timestamps(); // Añade created_at y updated_at
         });

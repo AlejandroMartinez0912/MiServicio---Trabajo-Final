@@ -19,6 +19,16 @@
  
    <!-- swealert2 -->
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
+   <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- jQuery (necesario para los componentes de Bootstrap) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
 
   <title>@yield('titulo')</title>
 

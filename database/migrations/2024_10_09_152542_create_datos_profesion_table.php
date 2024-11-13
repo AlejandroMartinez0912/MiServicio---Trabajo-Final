@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('datos_profesionales', function (Blueprint $table) {
+        Schema::create('datos_profesion', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('nombre_fantasia');
+            $table->string('nombre_fantasia')->nullable();
             $table->string('slogan')->nullable();
             $table->string('ubicacion');
+            $table->string('telefono',15)->nullable();
+            $table->integer('experiencia');
+            $table->decimal('calificacion', 2,1)->default(0);
             $table->boolean('estado')->default(0);
             
             // Definir la columna 'user_id'

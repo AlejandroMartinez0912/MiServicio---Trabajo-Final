@@ -20,6 +20,7 @@ class Persona extends Model
         'telefono',
         'user_id',
         'foto',
+        'estado_profesional',
     ];
 
     public function user(){
