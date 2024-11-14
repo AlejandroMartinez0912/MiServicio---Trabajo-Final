@@ -31,6 +31,7 @@ class DatosProfesionController extends Controller
             'telefono' => 'nullable|string|max:255',
             'experiencia' => 'required|integer|min:0',
             'estado' => 'required|boolean',
+
         ]);
         // Crear un nuevo registro de datos profesionales
         $datosProfesion = new DatosProfesion();
@@ -52,6 +53,7 @@ class DatosProfesionController extends Controller
             //actualizar estado en persona
             Persona::where('user_id', $userId)->update(['estado_profesional' => 1]);
         }
+
 
         // Devolver una respuesta
         return redirect()->route('gestion-servicios')->with('success', 'Datos guardados correctamente.');

@@ -30,7 +30,7 @@ class DatosProfesion extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasOne(User::class, 'user_id');
     }
 
     /**
@@ -41,4 +41,13 @@ class DatosProfesion extends Model
     {
         return $this->hasMany(HorarioTrabajo::class, 'datos_profesion_id');
     }
+    /**
+     * Relación con el modelo Dias a través de HorarioTrabajo
+     * Un dato de profesión tiene horarios de trabajo en días específicos.
+     */
+    public function dias()
+    {
+        return $this->hasManyThrough(Dias::class, HorarioTrabajo::class, 'datos_profesion_id', 'id', 'id', 'dias_id');
+}
+
 }

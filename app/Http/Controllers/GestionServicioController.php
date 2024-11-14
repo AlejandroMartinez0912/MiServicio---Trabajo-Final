@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\DatosProfesion;
 use App\Models\Persona;
 use App\Models\User;
+use App\Models\HorarioTrabajo;
+use App\Models\Dias;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -16,14 +18,26 @@ class GestionServicioController extends Controller
      * Mostrar Gestion de Servicios 
      */
 
-    public function index()
-    {
-        $userId = Auth::id();         // Obtiene el id del usuario autenticado
-        $datosProfesion = DatosProfesion::where('user_id', $userId)->first();
-        $promedio = $this-> calificacionTotal();
-
-        return view('Servicios.gestion', compact('userId', 'datosProfesion', 'promedio'));
-    }
+     public function index()
+     {
+         $userId = Auth::id();  // Obtiene el id del usuario autenticado
+         
+         // Obtener los datos de la profesión del usuario
+         $datosProfesion = DatosProfesion::where('user_id', $userId)->first();
+         
+         // Obtener los horarios de trabajo relacionados con los datos de la profesión
+         $horariosTrabajo = $datosProfesion ? $datosProfesion->horariosTrabajo : collect();  // Si no hay datos, se pasa una colección vacía
+     
+         // Obtener el promedio de calificación (ajusta este método según tu implementación)
+         $promedio = $this->calificacionTotal();
+         
+         // Obtener todos los días (si es necesario)
+         $dias = Dias::all();
+     
+         // Pasar los datos a la vista
+         return view('Servicios.gestion', compact('userId', 'datosProfesion', 'dias', 'promedio', 'horariosTrabajo'));
+     }
+     
 
     public function calificacionTotal()
     {

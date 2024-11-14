@@ -18,6 +18,6 @@ class Servicio extends Model
      */
     public function datosProfesionales()
     {
-        return $this->belongsTo(DatosProfesionales::class, 'datos_profesionales_id');
+        return $this->belongsTo(DatosProfesion::class, 'datos_profesionales_id');
     }
 }

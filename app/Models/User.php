@@ -57,6 +57,6 @@ class User extends Authenticatable
      */
     public function datosProfesionales()
     {
-        return $this->hasOne(DatosProfesionales::class, 'user_id');
+        return $this->hasOne(DatosProfesion::class, 'user_id');
     }
 }

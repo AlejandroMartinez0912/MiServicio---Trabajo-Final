@@ -37,6 +37,8 @@ return new class extends Migration
             $table->enum('turno1', ['mañana', 'tarde', 'corrido'])->nullable();
             $table->enum('turno2', ['mañana', 'tarde', 'corrido'])->nullable();
 
+            //estado activo o inactivo
+            $table->boolean('estado');
             $table->timestamps();
         });
     }

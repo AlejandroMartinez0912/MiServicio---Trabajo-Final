@@ -5,6 +5,7 @@ use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\DatosProfesionController;
 use App\Http\Controllers\GestionServicioController;
 use App\Http\Controllers\ServicioController;
+use App\Http\Controllers\HorarioTrabajoController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,15 @@ Route::get('/gestion-servicios', [GestionServicioController::class, 'index'])->n
 // RUTAS DE DATOS PROFESIONALES
 Route::post('/gestion-servicios/datos-profesionales', [DatosProfesionController::class, 'guardarDatos'])->name('guardar-datos')->middleware('auth');
 Route::put('/gestion-servicios/datos-profesionales/{id}', [DatosProfesionController::class, 'actualizarDatos'])->name('actualizar-datos')->middleware('auth');
+
+//RUTAS PARA HORARIOS
+// Ruta para guardar un nuevo horario
+Route::post('/horarios', [HorarioTrabajoController::class, 'guardarHorario'])->name('guardar-horario');
+
+// Ruta para actualizar un horario existente
+Route::put('/horarios/{id}', [HorarioTrabajoController::class, 'actualizarHorario'])->name('actualizar-horario');
+// Ruta para eliminar un horario
+Route::delete('/horarios/{id}', [HorarioTrabajoController::class, 'EliminarHorario'])->name('eliminar-horario');
+
+// Ruta para anular un horario
+Route::patch('/horarios/anular/{id}', [HorarioTrabajoController::class, 'AnularHorario'])->name('anular-horario');
