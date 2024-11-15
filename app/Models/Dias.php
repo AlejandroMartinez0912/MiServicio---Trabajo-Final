@@ -27,4 +27,5 @@ class Dias extends Model
     {
         return $this->hasMany(HorarioTrabajo::class, 'dias_id');
     }
+
 }

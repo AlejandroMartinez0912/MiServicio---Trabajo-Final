@@ -417,6 +417,12 @@
         .btn-action.anular:hover{
             background-color: blue;
         }
+        .btn-action.activar{
+            background-color: green;
+        }
+        .btn-action.activar:hover{
+            background-color: green;
+        }
 
         /* Mensaje de cuando no hay horarios */
         .no-horarios-msg {
@@ -442,6 +448,7 @@
         .btn-crear-horario:hover {
             background-color: #2c2ca5;
         }
+
     </style>
 
     <!-- Modal para Crear Horario -->
@@ -523,27 +530,39 @@
                         <th>Día</th>
                         <th>Hora de Inicio</th>
                         <th>Hora de Fin</th>
-                        <th>Hora de Inicio (segunda franja)</th>
-                        <th>Hora de Fin (segunda franja)</th>
+                        <th>Hora de Inicio segundo horario</th>
+                        <th>Hora de Fin segundo horario</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $diasSemana = [
+                            1 => 'Lunes',
+                            2 => 'Martes',
+                            3 => 'Miércoles',
+                            4 => 'Jueves',
+                            5 => 'Viernes',
+                            6 => 'Sábado',
+                            7 => 'Domingo',
+                        ];
+                    @endphp
                     @foreach($horariosTrabajo as $horario)
-                        @if($horario->estado == 1)
                             <tr>
-                                <td>{{ $ $horario->dia->abreviatura ?? 'Día no especificado' }}</td>
-                                <td>{{ $horario->hora_inicio }}</td>
+                                <td>{{ $diasSemana[$horario->dias_id] ?? 'N/A' }}</td>  
+                                <td>{{ $horario->hora_inicio }}</td> 
                                 <td>{{ $horario->hora_fin }}</td>
                                 <td>{{ $horario->hora_inicio1 ?? 'N/A' }}</td>
                                 <td>{{ $horario->hora_fin1 ?? 'N/A' }}</td>
+                                <td>{{ $horario->estado == 1 ? 'Activo' : 'Inactivo' }}</td> 
                                 <td>
-                                    <!-- Botones de Edición -->
+                                    <!-- Botón de Edición -->
                                     <button 
                                         data-toggle="modal" 
                                         data-target="#editarHorarioModal" 
                                         data-id="{{ $horario->id }}"
-                                        data-dia="{{ $horario->dias_id }}"
+                                        data-dia="{{ $horario->dia_id }}"
                                         data-hora_inicio="{{ $horario->hora_inicio }}"
                                         data-hora_fin="{{ $horario->hora_fin }}"
                                         data-hora_inicio1="{{ $horario->hora_inicio1 }}"
@@ -551,6 +570,7 @@
                                         class="btn-action edit">
                                         Editar
                                     </button>
+
                                     <!-- Modal para editar el horario -->
                                     <div class="modal fade" id="editarHorarioModal" tabindex="-1" role="dialog" aria-labelledby="editarHorarioModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
@@ -570,7 +590,7 @@
                                                         <!-- Día -->
                                                         <div class="form-group">
                                                             <label for="dia_id">Día</label>
-                                                            <select name="dia_id" id="dia_id" class="form-control">
+                                                            <select name="dia_id" id="dia_id" class="form-control" required>
                                                                 <option value="">Seleccionar Día</option>
                                                                 @foreach($dias as $dia)
                                                                     <option value="{{ $dia->id }}">{{ $dia->nombre }}</option>
@@ -611,7 +631,6 @@
                                         </div>
                                     </div>
                                     <script>
-                                        // Este script se ejecutará cuando el modal se active
                                         $('#editarHorarioModal').on('show.bs.modal', function (event) {
                                             var button = $(event.relatedTarget); // El botón que abrió el modal
                                             var horarioId = button.data('id'); // El ID del horario
@@ -621,70 +640,126 @@
                                             var horaInicio1 = button.data('hora_inicio1'); // La hora de inicio adicional
                                             var horaFin1 = button.data('hora_fin1'); // La hora de fin adicional
 
-                                            // Llenar el formulario con los datos del horario
+                                            // Actualizar la acción del formulario
                                             var formAction = '{{ route("actualizar-horario", ":id") }}';
                                             formAction = formAction.replace(':id', horarioId);
                                             $('#form-editar-horario').attr('action', formAction);
 
+                                            // Llenar los campos del formulario con los datos obtenidos
                                             $('#horario-id').val(horarioId);
                                             $('#dia_id').val(diaId);
                                             $('#hora_inicio').val(horaInicio);
                                             $('#hora_fin').val(horaFin);
-                                            $('#hora_inicio1').val(horaInicio1);
-                                            $('#hora_fin1').val(horaFin1);
+                                            $('#hora_inicio1').val(horaInicio1 || '');
+                                            $('#hora_fin1').val(horaFin1 || '');
                                         });
                                     </script>
 
-                                    <!-- Botón de Anular -->
-                                    <button 
-                                        data-toggle="modal" 
-                                        data-target="#anularHorarioModal" 
-                                        data-id="{{ $horario->id }}" 
-                                        class="btn-action anular">Anular
-                                    </button>
-                                    <!-- Modal para anular el horario -->
-                                    <div class="modal fade" id="anularHorarioModal" tabindex="-1" role="dialog" aria-labelledby="anularHorarioModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="anularHorarioModalLabel">Anular Horario</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+
+
+                                    <!-- Boton de anular/activar-->
+                                    @if ($horario->estado == 1)
+                                        <!-- Botón de Anular -->
+                                        <button 
+                                            data-toggle="modal" 
+                                            data-target="#anularHorarioModal" 
+                                            data-id="{{ $horario->id }}" 
+                                            class="btn-action anular">Anular
+                                        </button>
+                                        <!-- Modal para anular el horario -->
+                                        <div class="modal fade" id="anularHorarioModal" tabindex="-1" role="dialog" aria-labelledby="anularHorarioModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="anularHorarioModalLabel">Anular Horario</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{{ route('anular-horario', ':id') }}" method="POST" id="form-anular-horario">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <div class="modal-body">
+                                                            <p>¿Estás seguro de que deseas anular este horario? Esta acción cambiará su estado a inactivo.</p>
+                                                            <input type="hidden" id="horario-id" name="id" value="">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                            <button type="submit" class="btn btn-danger">Anular</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                                <form action="{{ route('anular-horario', ':id') }}" method="POST" id="form-anular-horario">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <div class="modal-body">
-                                                        <p>¿Estás seguro de que deseas anular este horario? Esta acción cambiará su estado a inactivo.</p>
-                                                        <input type="hidden" id="horario-id" name="id" value="">
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                                        <button type="submit" class="btn btn-danger">Anular</button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                    <script>
-                                        // Este script se ejecutará cuando el modal se active
-                                        $('#anularHorarioModal').on('show.bs.modal', function (event) {
-                                            var button = $(event.relatedTarget); // El botón que abrió el modal
-                                            var horarioId = button.data('id'); // El ID del horario
+                                        <script>
+                                            // Este script se ejecutará cuando el modal se active
+                                            $('#anularHorarioModal').on('show.bs.modal', function (event) {
+                                                var button = $(event.relatedTarget); // El botón que abrió el modal
+                                                var horarioId = button.data('id'); // El ID del horario
 
-                                            // Actualizar la acción del formulario y el valor oculto con el ID del horario
-                                            var formAction = '{{ route("anular-horario", ":id") }}';
-                                            formAction = formAction.replace(':id', horarioId);
-                                            $('#form-anular-horario').attr('action', formAction);
+                                                // Actualizar la acción del formulario y el valor oculto con el ID del horario
+                                                var formAction = '{{ route("anular-horario", ":id") }}';
+                                                formAction = formAction.replace(':id', horarioId);
+                                                $('#form-anular-horario').attr('action', formAction);
 
-                                            // Llenar el campo oculto con el ID del horario
-                                            $('#horario-id').val(horarioId);
-                                        });
-                                    </script>
+                                                // Llenar el campo oculto con el ID del horario
+                                                $('#horario-id').val(horarioId);
+                                            });
+                                        </script>
+                                    @else
+                                        <!-- Botón de Activar -->
+                                        <button 
+                                            data-toggle="modal" 
+                                            data-target="#activarHorarioModal" 
+                                            data-id="{{ $horario->id }}" 
+                                            class="btn-action activar">Activar
+                                        </button>
 
+                                        <!-- Modal para activar el horario -->
+                                        <div class="modal fade" id="activarHorarioModal" tabindex="-1" role="dialog" aria-labelledby="activarHorarioModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="activarHorarioModalLabel">Activar Horario</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="{{ route('activar-horario', ':id') }}" method="POST" id="form-activar-horario">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <div class="modal-body">
+                                                            <p>¿Estás seguro de que deseas activar este horario? Esta acción cambiará su estado a activo.</p>
+                                                            <input type="hidden" id="activar-horario-id" name="id" value="">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                            <button type="submit" class="btn btn-success">Activar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            // Este script se ejecutará cuando el modal se active
+                                            $('#activarHorarioModal').on('show.bs.modal', function (event) {
+                                                var button = $(event.relatedTarget); // El botón que abrió el modal
+                                                var horarioId = button.data('id'); // El ID del horario
+
+                                                // Actualizar la acción del formulario y el valor oculto con el ID del horario
+                                                var formAction = '{{ route("activar-horario", ":id") }}';
+                                                formAction = formAction.replace(':id', horarioId);
+                                                $('#form-activar-horario').attr('action', formAction);
+
+                                                // Llenar el campo oculto con el ID del horario
+                                                $('#activar-horario-id').val(horarioId);
+                                            });
+                                        </script>
+
+                                    @endif
+                                    
                                     <!-- Botones de Eliminar-->
-                                    <!-- Botón para eliminar horario -->
                                     <button 
                                         data-toggle="modal" 
                                         data-target="#eliminarHorarioModal" 
@@ -728,11 +803,8 @@
                                             $('#eliminarHorarioForm').attr('action', action);
                                         });
                                     </script>
-                                    
-
                                 </td>
                             </tr>
-                        @endif
                     @endforeach
                 </tbody>
             </table>

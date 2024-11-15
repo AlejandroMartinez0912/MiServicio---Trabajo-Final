@@ -19,9 +19,9 @@ class HorarioTrabajoController extends Controller
         $validated = $request->validate([
             'dia_id' => 'required|exists:dias,id',
             'hora_inicio' => 'required|date_format:H:i',
-            'hora_fin' => 'required|date_format:H:i|after:hora_inicio',
-            'hora_inicio1' => 'nullable|date_format:H:i|after:hora_fin',
-            'hora_fin1' => 'nullable|date_format:H:i|after:hora_inicio1',
+            'hora_fin' => 'required|date_format:H:i',
+            'hora_inicio1' => 'nullable|date_format:H:i',
+            'hora_fin1' => 'nullable|date_format:H:i',
         ]);
 
         // Obtener las horas de inicio y fin
@@ -33,6 +33,23 @@ class HorarioTrabajoController extends Controller
         $horaFin1 = $request->hora_fin1 ? \Carbon\Carbon::createFromFormat('H:i', $request->hora_fin1) : null;
        
 
+        // Llamar a la función de validación de horarios
+        $isValid = $this->validarHorario($horaInicio, $horaFin, $horaInicio1, $horaFin1);
+
+        // Si la validación falla, devolver un error con el mensaje correspondiente
+        if (!$isValid) {
+            return redirect()->route('gestion-servicios')->with('error', 'Los horarios no son válidos o se solapan.')->withInput();        
+        }
+
+        //Validar dia no repetido
+        $existeHorario = HorarioTrabajo::where('datos_profesion_id', DatosProfesion::where('user_id', Auth::user()->id)->value('id'))
+            ->where('dias_id', $request->dia_id)
+            ->exists();
+        if ($existeHorario) {
+        // Si ya existe, devolver un mensaje de error
+        return redirect()->route('gestion-servicios')->with('error', 'Ya existe un horario para este día.')->withInput();
+        }
+        
         // Determinar el turno
         $turno1 = $this->determinarTurno($horaInicio, $horaFin);
         $turno2 = null;
@@ -60,8 +77,7 @@ class HorarioTrabajoController extends Controller
         if ($horario->save()) {
             return redirect()->route('gestion-servicios')->with('success', 'Horario guardado correctamente.');
         } else {
-            return back()->withErrors(['error' => 'Hubo un problema al guardar el horario.'])->withInput();
-        }
+            return redirect()->route('gestion-servicios')->with('error', 'No se pudo guardar correctamente los horarios.')->withInput();        }
     }
 
     /**
@@ -89,9 +105,9 @@ class HorarioTrabajoController extends Controller
         $validated = $request->validate([
             'dia_id' => 'required|exists:dias,id', // Verifica que el ID del día exista
             'hora_inicio' => 'required|date_format:H:i',
-            'hora_fin' => 'required|date_format:H:i|after:hora_inicio',
-            'hora_inicio1' => 'nullable|date_format:H:i|after:hora_fin',
-            'hora_fin1' => 'nullable|date_format:H:i|after:hora_inicio1',
+            'hora_fin' => 'required|date_format:H:i',
+            'hora_inicio1' => 'nullable|date_format:H:i',
+            'hora_fin1' => 'nullable|date_format:H:i',
         ]);
     
         // Obtener las horas de inicio y fin
@@ -121,7 +137,6 @@ class HorarioTrabajoController extends Controller
         $horario->hora_fin1 = $horaFin1;
         $horario->turno1 = $turno1;
         $horario->turno2 = $turno2;
-        $horario->estado = true;
     
         // Guardar los cambios en la base de datos
         if ($horario->save()) {
@@ -155,4 +170,44 @@ class HorarioTrabajoController extends Controller
 
         return redirect()->route('gestion-servicios')->with('success', 'Horario anulado correctamente.');
     }
-}
+    /**
+     * Activar horario, cambiando su estado a activo
+     */
+    public function ActivarHorario($id)
+    {
+        $horario = HorarioTrabajo::findOrFail($id);
+        $horario->estado = true;
+        $horario->save();
+
+        return redirect()->route('gestion-servicios')->with('success', 'Horario activado correctamente.');
+    }
+
+    /**
+     * Funcion de validacion de logica de horarios
+     */
+    public function ValidarHorario($horaInicio, $horaFin, $horaInicio1=null, $horaFin1=null)
+    {
+         // Validar que la hora de inicio sea menor que la hora de fin en el primer rango
+        if ($horaInicio >= $horaFin) {
+            return false;
+        }
+
+        // Si se proporciona un segundo rango, validar su lógica
+        if ($horaInicio1 && $horaFin1) {
+            // Validar que la hora de inicio del segundo rango sea menor que su hora de fin
+            if ($horaInicio1 >= $horaFin1) {
+                return false;
+            }
+
+            // Validar que el segundo rango no se solape con el primer rango
+            // (El inicio del segundo rango debe ser posterior al fin del primer rango)
+            if ($horaInicio1 < $horaFin) {
+                return false;
+            }
+        }
+
+        // Si todo es válido, retornar true
+        return true;
+    }
+
+}   

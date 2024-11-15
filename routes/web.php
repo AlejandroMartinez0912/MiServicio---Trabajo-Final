@@ -42,3 +42,6 @@ Route::delete('/horarios/{id}', [HorarioTrabajoController::class, 'EliminarHorar
 
 // Ruta para anular un horario
 Route::patch('/horarios/anular/{id}', [HorarioTrabajoController::class, 'AnularHorario'])->name('anular-horario');
+
+//Ruta para activar un horario
+Route::patch('/horarios/activar/{id}', [HorarioTrabajoController::class, 'ActivarHorario'])->name('activar-horario');

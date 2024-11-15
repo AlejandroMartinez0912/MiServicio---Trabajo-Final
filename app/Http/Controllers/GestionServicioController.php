@@ -27,6 +27,7 @@ class GestionServicioController extends Controller
          
          // Obtener los horarios de trabajo relacionados con los datos de la profesión
          $horariosTrabajo = $datosProfesion ? $datosProfesion->horariosTrabajo : collect();  // Si no hay datos, se pasa una colección vacía
+         
      
          // Obtener el promedio de calificación (ajusta este método según tu implementación)
          $promedio = $this->calificacionTotal();

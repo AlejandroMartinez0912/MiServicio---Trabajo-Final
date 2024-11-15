@@ -31,8 +31,8 @@ class HorarioTrabajo extends Model
           return $this->belongsTo(DatosProfesion::class, 'datos_profesion_id');
       }
   
-      public function dia()
+      public function dias()
       {
-          return $this->belongsTo(Dias::class, 'dia_id');
+          return $this->belongsTo(Dias::class, 'dias_id');
       }
 }

@@ -19,11 +19,10 @@ return new class extends Migration
                   ->constrained('datos_profesion')
                   ->onDelete('cascade');
 
-
-            // Relación con la tabla 'dias_semana'
+            // Relación con la tabla 'dias'
             $table->foreignId('dias_id')
                   ->constrained('dias')
-                  ->onDelete('cascade');  // Borra los horarios si el día es eliminado
+                  ->onDelete('cascade');
 
             //Indice para mejorar la busqueda      
             $table->index(['datos_profesion_id', 'dias_id']);
