@@ -45,3 +45,10 @@ Route::patch('/horarios/anular/{id}', [HorarioTrabajoController::class, 'AnularH
 
 //Ruta para activar un horario
 Route::patch('/horarios/activar/{id}', [HorarioTrabajoController::class, 'ActivarHorario'])->name('activar-horario');
+
+//RUTAS DE SERVICIOS
+Route::post('/servicios', [ServicioController::class, 'guardarServicio'])->name('guardar-servicio')->middleware('auth');
+Route::put('/servicios/{id}', [ServicioController::class, 'actualizarServicio'])->name('actualizar-servicio')->middleware('auth');
+Route::delete('/servicios/{id}', [ServicioController::class, 'eliminarServicio'])->name('eliminar-servicio')->middleware('auth');
+Route::put('/servicios/{id}/anular', [ServicioController::class, 'anularServicio'])->name('anular-servicio');
+Route::put('/servicios/{id}/activar', [ServicioController::class, 'activarServicio'])->name('activar-servicio');

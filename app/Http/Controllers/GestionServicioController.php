@@ -7,6 +7,8 @@ use App\Models\Persona;
 use App\Models\User;
 use App\Models\HorarioTrabajo;
 use App\Models\Dias;
+use App\Models\Servicio;
+use App\Models\Rubro;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +23,9 @@ class GestionServicioController extends Controller
      public function index()
      {
          $userId = Auth::id();  // Obtiene el id del usuario autenticado
+
+         //Obtener datos de persona
+         $persona = Persona::where('user_id', $userId)->first();
          
          // Obtener los datos de la profesión del usuario
          $datosProfesion = DatosProfesion::where('user_id', $userId)->first();
@@ -34,9 +39,18 @@ class GestionServicioController extends Controller
          
          // Obtener todos los días (si es necesario)
          $dias = Dias::all();
-     
+
+         //Rubros
+         $rubros = Rubro::all();
+
+         // Obtener los servicios asociados al datos_profesion_id
+        $servicios = $datosProfesion
+            ? Servicio::with('rubros')->where('datos_profesion_id', $datosProfesion->id)->get()
+            : collect(); // Si no hay datos de profesión, se pasa una colección vacía
+
+
          // Pasar los datos a la vista
-         return view('Servicios.gestion', compact('userId', 'datosProfesion', 'dias', 'promedio', 'horariosTrabajo'));
+         return view('Servicios.gestion', compact('userId','persona' ,'datosProfesion', 'dias', 'promedio', 'horariosTrabajo', 'rubros','servicios'));
      }
      
 

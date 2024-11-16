@@ -11,13 +11,33 @@ class Servicio extends Model
 
     protected $table = 'servicios';
 
-    protected $fillable = ['nombre', 'precio', 'modalidad', 'duracion', 'descripcion', 'estado', 'datos_profesionales_id'];
+    protected $fillable = [
+        'nombre',
+        'descripcion',
+        'precio_base',
+        'duracion_estimada',
+        'estado',
+        'calificacion',
+        'cantidad_reservas',
+        'tags',
+        'datos_profesion_id',
+    ];
+    /**
+     * Relacion con datos_profesion
+     */
+    public function datosProfesion()
+    {
+        return $this->belongsTo(DatosProfesion::class, 'datos_profesion_id');
+    }
 
     /**
-     * Relación con la tabla 'datos_profesionales'
+     * Relacion con servicio_rubro
      */
-    public function datosProfesionales()
+    public function rubros()
     {
-        return $this->belongsTo(DatosProfesion::class, 'datos_profesionales_id');
+        return $this->belongsToMany(Rubro::class, 'servicio_rubro', 'servicio_id', 'rubro_id');
     }
+  
+
+  
 }

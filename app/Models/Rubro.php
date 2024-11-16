@@ -16,10 +16,9 @@ class Rubro extends Model
     protected $fillable = ['nombre']; 
 
     /**
-     * Relación: Muchos rubros pueden pertenecer a muchos datos profesionales.
+     * Relacion con servicios
      */
-    public function datosProfesionales()
+    public function servicios()
     {
-        return $this->belongsToMany(DatosProfesionales::class, 'datos_rubro', 'rubro_id', 'datos_profesional_id');
-    }
+        return $this->belongsToMany(Servicio::class, 'servicio_rubro', 'rubro_id', 'servicio_id');    }
 }
