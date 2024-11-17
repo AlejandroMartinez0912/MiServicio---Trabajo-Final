@@ -30,7 +30,7 @@ class ServicioController extends Controller
         $servicio->descripcion = $request->input('descripcion');
         $servicio->precio_base = $request->input('precio_base');
         $servicio->duracion_estimada = $request->input('duracion_estimada');
-        $servicio->estado = 1;
+        $servicio->estado = 'Activo';
         $servicio->calificacion = 0;
         $servicio->cantidad_reservas = 0;
         $servicio->datos_profesion_id = $datosProfesion->id; 
@@ -83,7 +83,7 @@ class ServicioController extends Controller
         public function anularServicio($id)
         {
             $servicio = Servicio::findOrFail($id);
-            $servicio->estado = 'inactivo';
+            $servicio->estado = 'Inactivo';
             $servicio->save();
             return redirect()->route('gestion-servicios')->with('success', 'Servicio anulado exitosamente.');
         }
@@ -95,7 +95,7 @@ class ServicioController extends Controller
             $servicio = Servicio::findOrFail($id);
 
             // Actualizar el estado del servicio a activo
-            $servicio->estado = 'activo'; 
+            $servicio->estado = 'Activo'; 
             $servicio->save();
 
             return redirect()->route('gestion-servicios')->with('success', 'Servicio activado exitosamente.');
