@@ -521,7 +521,7 @@
             </div>
             <!-- Mostrar los horarios ya creados -->
             @if($horariosTrabajo && $horariosTrabajo->isNotEmpty())
-                    <h3 class="text-center">Horarios de Trabajo</h3>
+                    <h3 class="text-center mb-5 text-uppercase font-weight-bold">Horarios de atención</h3>
                     <table class="horarios-table">
                         <thead>
                             <tr>
@@ -932,7 +932,7 @@
 
         </style>
         <div class="card shadow-lg mb-5" id="card-servicios">
-            <h3>Servicios</h3>
+            <h3 class="text-center mb-5 text-uppercase font-weight-bold">Servicios</h3>
             
             @if ($servicios->isEmpty())
                 <p>No hay servicios creados.</p>
