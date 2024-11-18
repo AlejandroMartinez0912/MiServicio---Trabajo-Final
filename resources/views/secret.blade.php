@@ -93,8 +93,8 @@ MiServicio
             <div class="d-grid gap-2">
                 <a href="{{ route('perfil') }}" class="btn btn-primary">Editar Perfil</a>
                 <a href="{{ route('gestion-servicios') }}" class="btn btn-primary">Gestionar Mis Servicios</a>
+                <a href="{{ route('index-cita') }}" class="btn btn-primary">Buscar Nuevos Servicios</a>
                 <a href="{{ route('home') }}" class="btn btn-primary">Ver Mis Turnos</a>
-                <a href="{{ route('home') }}" class="btn btn-primary">Buscar Nuevos Servicios</a>
             </div>
 
             <div class="quick-actions text-center mt-4">

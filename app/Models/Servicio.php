@@ -37,7 +37,14 @@ class Servicio extends Model
     {
         return $this->belongsToMany(Rubro::class, 'servicio_rubro', 'servicio_id', 'rubro_id');
     }
-  
+
+    /**
+     * Relacion con citas
+     */
+    public function citas()
+    {
+        return $this->hasMany(Cita::class, 'idCita');
+    }
 
   
 }

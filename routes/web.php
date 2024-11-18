@@ -6,6 +6,7 @@ use App\Http\Controllers\DatosProfesionController;
 use App\Http\Controllers\GestionServicioController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\HorarioTrabajoController;
+use App\Http\Controllers\CitaController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -52,3 +53,6 @@ Route::put('/servicios/{id}', [ServicioController::class, 'actualizarServicio'])
 Route::delete('/servicios/{id}', [ServicioController::class, 'eliminarServicio'])->name('eliminar-servicio')->middleware('auth');
 Route::put('/servicios/{id}/anular', [ServicioController::class, 'anularServicio'])->name('anular-servicio');
 Route::put('/servicios/{id}/activar', [ServicioController::class, 'activarServicio'])->name('activar-servicio');
+
+//RUTAS DE CITAS
+Route::get('/cita', [CitaController::class, 'index'])->name('index-cita')->middleware('auth');
