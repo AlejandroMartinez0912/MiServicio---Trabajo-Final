@@ -43,8 +43,9 @@ class Servicio extends Model
      */
     public function citas()
     {
-        return $this->hasMany(Cita::class, 'idCita');
+        return $this->hasMany(Cita::class, 'idServicio', 'id');
     }
+
 
   
 }

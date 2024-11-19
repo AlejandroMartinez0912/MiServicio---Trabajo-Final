@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Persona;
+use App\Models\Cliente;
 
 class LoginController extends Controller
 {
@@ -74,6 +75,11 @@ class LoginController extends Controller
         $persona->documento = $request->documento;
         $persona->telefono = $request->telefono;
         $persona->save();
+
+        //Crear el cliente
+        $cliente = new Cliente();
+        $cliente->persona_id = $persona->id;
+        $cliente->save();
 
         // Iniciar sesión automáticamente después de registrarse
         Auth::login($user);

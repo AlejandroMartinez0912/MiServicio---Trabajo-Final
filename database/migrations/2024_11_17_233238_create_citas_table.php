@@ -15,7 +15,7 @@ class CreateCitasTable extends Migration
         Schema::create('citas', function (Blueprint $table) {
             //Atributos
             $table->id('idCita'); // Llave primaria
-            $table->enum('estadoCita', ['pendiente', 'confirmada', 'completada', 'cancelada'])->default('pendiente');
+            $table->enum('estadoCita', ['pendiente', 'confirmada', 'completada', 'cancelada']);
             $table->date('fechaCita');
             $table->time('horaCita');
             $table->text('comentariosCliente')->nullable();
@@ -24,9 +24,8 @@ class CreateCitasTable extends Migration
             
             $table->timestamps(); // Campos created_at y updated_at
 
-            // Relacion con clientes
-            $table->unsignedBigInteger('idCliente'); // Llave foránea hacia 'clientes'
-
+            // Relacion con persona
+            $table->unsignedBigInteger('idPersona'); // Llave foránea hacia 'personas'
             //Relacion con servicios
             $table->unsignedBigInteger('idServicio'); // Llave foránea hacia 'servicios'
 

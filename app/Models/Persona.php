@@ -26,4 +26,11 @@ class Persona extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    //relacion con citas
+    public function citas()
+    {
+        return $this->hasMany(Cita::class, 'idPersona', 'id');
+    }
+
 }

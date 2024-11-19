@@ -9,19 +9,32 @@ class Cita extends Model
 {
     use HasFactory;
 
+    // Especifica la tabla asociada
     protected $table = 'citas';
-    protected $primaryKey = 'id';
-    protected $guarded = [];
 
-    //Relacion con clientes
-    public function clientes()
+    // Especifica la llave primaria
+    protected $primaryKey = 'idCita';
+
+    // Campos que se pueden asignar masivamente
+    protected $fillable = [
+        'estadoCita',
+        'fechaCita',
+        'horaCita',
+        'comentariosCliente',
+        'calificacion',
+        'idPersona',
+        'idServicio',
+    ];
+
+    // Relación con la tabla 'personas'
+    public function persona()
     {
-        return $this->belongsTo(Cliente::class, 'idCliente');
+        return $this->belongsTo(Persona::class, 'idPersona', 'id');
     }
 
-    //Relacion con servicios
-    public function servicios()
+    // Relación con la tabla 'servicios'
+    public function servicio()
     {
-        return $this->hasMany(Servicio::class, 'idCita');
+        return $this->belongsTo(Servicio::class, 'idServicio', 'id');
     }
 }

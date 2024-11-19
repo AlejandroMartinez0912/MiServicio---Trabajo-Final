@@ -56,3 +56,8 @@ Route::put('/servicios/{id}/activar', [ServicioController::class, 'activarServic
 
 //RUTAS DE CITAS
 Route::get('/cita', [CitaController::class, 'index'])->name('index-cita')->middleware('auth');
+Route::post('/citas/guardar', [CitaController::class, 'guardarCita'])->name('guardar-cita')->middleware('auth');
+
+// Rutas para editar y eliminar citas (suponiendo que cada cita tiene un ID)
+Route::get('/cita/editar/{id}', [CitaController::class, 'editar'])->name('editar-cita');
+Route::delete('/cita/eliminar/{id}', [CitaController::class, 'eliminar'])->name('eliminar-cita');
