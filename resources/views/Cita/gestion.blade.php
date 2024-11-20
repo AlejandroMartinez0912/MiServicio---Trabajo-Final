@@ -72,6 +72,7 @@
                                     Agendar Cita
                                 </button>
                                 <!-- Modal para Agendar Cita -->
+                                <!-- Modal para Agendar Cita -->
                                 <div class="modal fade" id="modalAgendarCita{{ $servicio->id }}" tabindex="-1" aria-labelledby="modalAgendarCitaLabel{{ $servicio->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -83,13 +84,14 @@
                                                 @csrf <!-- Token de seguridad -->
                                                 <div class="modal-body">
                                                     <!-- Campo oculto para el ID del servicio -->
-                                                    <input type="hidden" id="modal-servicio-id" name="servicio_id">
+                                                    <input type="hidden" id="modal-servicio-id{{ $servicio->id }}" name="servicio_id" value="{{ $servicio->id }}">
+                                                    
                                                     <!-- Fecha -->
                                                     <div class="mb-3">
                                                         <label for="fecha" class="form-label">Fecha</label>
                                                         <input type="date" id="fecha" name="fecha" class="form-control" required>
                                                     </div>
-                                
+
                                                     <!-- Hora -->
                                                     <div class="mb-3">
                                                         <label for="hora" class="form-label">Hora</label>
@@ -104,6 +106,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 
                                 <script>
                                     function pasarIdServicio(servicioId) {
@@ -159,22 +162,24 @@
                         </thead>
                         <tbody>
                             @foreach($citas as $cita)
-                                <tr>
-                                    <td>{{ $cita->servicio->nombre }}</td> <!-- Mostrar nombre del servicio -->
-                                    <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($cita->horaCita)->format('H:i') }}</td>
-                                    <td>{{ ucfirst($cita->estadoCita) }}</td> <!-- Mostrar el estado de la cita -->
-                                    <td>{{ $cita->comentariosCliente ?? 'No hay comentarios' }}</td> <!-- Mostrar comentarios si existen -->
-                                    <td>
-                                        <a href="{{ route('editar-cita', ['id' => $cita->idCita]) }}" class="btn btn-primary">Editar</a>
-                                        <!-- Botón de eliminar -->
-                                        <form action="{{ route('eliminar-cita', ['id' => $cita->idCita]) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </form>
-                                    </td>
-                                </tr>
+                                @if(Carbon\Carbon::parse($cita->fechaCita)->isToday() || Carbon\Carbon::parse($cita->fechaCita)->isFuture())
+                                    <tr>
+                                        <td>{{ $cita->servicio->nombre }}</td> <!-- Mostrar nombre del servicio -->
+                                        <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($cita->horaCita)->format('H:i') }}</td>
+                                        <td>{{ ucfirst($cita->estadoCita) }}</td> <!-- Mostrar el estado de la cita -->
+                                        <td>{{ $cita->comentariosCliente ?? 'No hay comentarios' }}</td> <!-- Mostrar comentarios si existen -->
+                                        <td>
+                                            <a href="{{ route('editar-cita', ['id' => $cita->idCita]) }}" class="btn btn-primary">Editar</a>
+                                            <!-- Botón de eliminar -->
+                                            <form action="{{ route('eliminar-cita', ['id' => $cita->idCita]) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>

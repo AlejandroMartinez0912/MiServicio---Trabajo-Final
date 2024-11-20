@@ -93,6 +93,10 @@ class CitaController extends Controller
         ]);
         // Guardar la cita
         $cita->save();
+
+        $servicio->cantidad_reservas = $servicio->cantidad_reservas + 1;
+        $servicio->save();
+        
         // Redirigir con éxito
         return redirect()->route('index-cita')->with('success', 'Cita creada exitosamente.');
                 
