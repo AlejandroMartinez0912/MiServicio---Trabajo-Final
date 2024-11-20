@@ -24,6 +24,7 @@ class Cita extends Model
         'calificacion',
         'idPersona',
         'idServicio',
+        'idProfesion',
     ];
 
     // Relación con la tabla 'personas'
@@ -36,5 +37,11 @@ class Cita extends Model
     public function servicio()
     {
         return $this->belongsTo(Servicio::class, 'idServicio', 'id');
+    }
+
+    //Relacion con la tabla datos_profesion
+    public function datosProfesion()
+    {
+        return $this->belongsTo(DatosProfesion::class, 'idProfesion', 'id');
     }
 }

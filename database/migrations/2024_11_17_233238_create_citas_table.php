@@ -28,6 +28,8 @@ class CreateCitasTable extends Migration
             $table->unsignedBigInteger('idPersona'); // Llave foránea hacia 'personas'
             //Relacion con servicios
             $table->unsignedBigInteger('idServicio'); // Llave foránea hacia 'servicios'
+            //Relacion con profesion
+            $table->unsignedBigInteger('idProfesion'); // Llave foránea hacia 'profesiones'
 
         });
     }

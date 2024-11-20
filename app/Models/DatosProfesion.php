@@ -48,6 +48,14 @@ class DatosProfesion extends Model
     public function dias()
     {
         return $this->hasManyThrough(Dias::class, HorarioTrabajo::class, 'datos_profesion_id', 'id', 'id', 'dias_id');
-}
+    }
+
+    /**
+     * Relacion con citas
+     */
+    public function citas()
+    {
+        return $this->hasMany(Cita::class, 'idProfesion', 'id');
+    }
 
 }
