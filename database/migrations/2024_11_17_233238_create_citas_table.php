@@ -15,10 +15,10 @@ class CreateCitasTable extends Migration
         Schema::create('citas', function (Blueprint $table) {
             //Atributos
             $table->id('idCita'); // Llave primaria
-            $table->enum('estadoCita', ['pendiente', 'confirmada', 'completada', 'cancelada']);
+            $table->enum('estado', ['pendiente', 'confirmada', 'completada', 'cancelada']);
             $table->date('fechaCita');
-            $table->time('horaCita');
-            $table->text('comentariosCliente')->nullable();
+            $table->time('horaInicio');
+            $table->time('horaFin');
             $table->tinyInteger('calificacion')->nullable()->checkBetween(1, 5);
 
             

@@ -14,6 +14,8 @@ use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+setlocale(LC_TIME, 'es_ES.UTF-8');
+
 
 class CitaController extends Controller
 {
@@ -49,12 +51,66 @@ class CitaController extends Controller
         $dias = Dias::all();
         $rubros = Rubro::all();
 
+  
+
         //Obtener horarios trabajo asociados 
         $horariosTrabajo = HorarioTrabajo::all();
 
 
         return view('Cita.gestion', compact('servicios', 'dias', 'rubros', 'persona', 'citas', 'horariosTrabajo'));
     }
+
+    /**
+     * Agendar cita
+     */
+    public function agendarCita(Request $request){
+
+        $idServicio = $request->input('idServicio');
+        $servicio = Servicio::findOrFail($idServicio);
+
+        //id de profesion
+        $idProfesion = $servicio->datos_profesion_id;
+        $datosProfesion = DatosProfesion::findOrFail($idProfesion);
+        $user = User::findOrFail($datosProfesion->user_id);
+        $persona = Persona::findOrFail($user->id);
+
+        // Fecha de hoy
+        $fechaHoy = Carbon::today();
+
+        // Si hay un parámetro 'inicioSemana', usalo, sino usa la fecha de hoy
+        $inicioSemana = $request->has('inicioSemana') ? Carbon::parse($request->input('inicioSemana')) : $fechaHoy->startOfWeek();
+
+        // Crear un array con los días de la semana
+        $diasDisponibles = [];
+
+        for ($i = 0; $i < 7; $i++) {
+            $fecha = $inicioSemana->copy()->addDays($i);
+            $diaSemana = $fecha->dayOfWeek === 0 ? 7 : $fecha->dayOfWeek;
+            $diasDisponibles[] = [
+                'dia' => $fecha->day,
+                'mes' => $fecha->locale('es')->monthName,
+                'fecha' => $fecha->toDateString(),
+                'diaSemana' => $diaSemana
+            ];
+        }
+
+        //Obtener horarios segun id profesion
+        $horariosTrabajo = HorarioTrabajo::where('datos_profesion_id', $idProfesion)->get();
+
+        //Obtener dias que trabaja el profesional
+        $diasTrabajo = $horariosTrabajo->pluck('dias_id')->toArray();
+
+
+        //id de persona
+        $persona_id = $user->id;
+        $citas = Cita::where('idPersona', $persona_id)->get();
+
+
+
+        return view('Cita.agendar', compact('servicio', 'persona', 'diasDisponibles',
+         'fechaHoy', 'inicioSemana', 'datosProfesion', 'diasTrabajo', 'citas'));
+    }
+
     /**
      * Guardar cita
      */
@@ -62,18 +118,24 @@ class CitaController extends Controller
     {   
         //datos de cita de la vista
         $fechaCita = $request->input('fecha');
-        $horaCita = $request->input('hora');
+        $horaInicio = $request->input('horaInicio');
         $idServicio = $request->input('servicio_id');
 
-        // Verificar que no haya citas duplicadas en el mismo día y hora
-        $mensaje2 = '';
-        $boolean = $this->verificarCitas($fechaCita, $horaCita, $idServicio, $mensaje2);
 
-        // Si ya hay una cita en el mismo día y hora, redirigir con error
+        //hora fin
+        $horaFin = $this->HoraFin($horaInicio, $idServicio);
+
+        //verificar dia hora
+        $boolean = $this->verificarDiaHora($fechaCita, $horaInicio, $idServicio, $mensaje);
         if ($boolean == false) {
-            return redirect()->route('index-cita')->with('error', $mensaje2);
+            return redirect()->back()->with('error', $mensaje);
         }
-                
+
+        $boolean = $this->verificarCita($fechaCita, $horaInicio, $horaFin, $idServicio, $mensaje);
+        if ($boolean == false) {
+            return redirect()->back()->with('error', $mensaje);
+        }
+  
         //id de persona
         $userId = Auth::id();
         $idPersona = Persona::where('user_id', $userId)->first();
@@ -81,15 +143,16 @@ class CitaController extends Controller
 
         //id de profesion
         $servicio = Servicio::findOrFail($idServicio);
-        $idprofesion = $servicio->datos_profesion_id;
+        $idProfesion = $servicio->datos_profesion_id;
 
         $cita = new Cita([
-            'estadoCita' => 'confirmada',
+            'estado' => 'confirmada',
             'fechaCita' => $fechaCita,
-            'horaCita' => $horaCita,
+            'horaInicio' => $horaInicio,
+            'horaFin' => $horaFin,
             'idPersona' => $idPersona,
             'idServicio' => $idServicio,
-            'idProfesion' => $idprofesion,
+            'idProfesion' => $idProfesion,
         ]);
         // Guardar la cita
         $cita->save();
@@ -100,6 +163,25 @@ class CitaController extends Controller
         // Redirigir con éxito
         return redirect()->route('index-cita')->with('success', 'Cita creada exitosamente.');
                 
+    }
+       /**
+    * Funcion para traer hora fin
+    */
+     public function HoraFin($horaInicio, $idServicio){
+        //convertir horaInicio
+        $horaInicio = Carbon::parse($horaInicio);
+
+        //traer servicio
+        $servicio = Servicio::findOrFail($idServicio);
+        //convertir duracion_estimada en hora
+        // Convertir la duración estimada (time) en segundos
+        $duracionEnSegundos = strtotime($servicio->duracion_estimada) - strtotime('00:00:00');
+
+        // Añadir la duración a la hora de inicio
+        $horaFin = $horaInicio->addSeconds($duracionEnSegundos);
+
+        // Devolver la horaFin en formato 'H:i:s' para la base de datos
+        return $horaFin->format('H:i:s');
     }
 
     /**
@@ -113,9 +195,6 @@ class CitaController extends Controller
         // Obtener horarios de trabajo del profesional
         $idprofesion = $servicio->datos_profesion_id;
         $horariosTrabajo = HorarioTrabajo::where('datos_profesion_id', $idprofesion)->get();
-
-        // Obtener todas las citas
-        $citas = Cita::all();
 
         // Obtener el día de la semana de la cita solicitada
         $fechaCarbon = Carbon::parse($fecha);
@@ -158,44 +237,82 @@ class CitaController extends Controller
     }
 
     /**
-     * Funcion para verificar si no hay agendado otra cita en el mismo dia y horario
+     * Funcion para ver si no hay agendada otra cita en esa hora y dia
      */
-    public function verificarCitas($fecha, $hora, $idServicio, &$mensaje) {
-        // Obtener todas las citas
+    public function verificarCita($fecha, $horaInicio,$horaFin, $idServicio, &$mensaje){
+        //todas las citas
         $citas = Cita::all();
-   
-        // Obtener el id del servicio y del profesional
-        $servicio = Servicio::findOrFail($idServicio);
-        $idProfesional = $servicio->datos_profesion_id;
-   
-        // Convertir la hora y fecha solicitadas
-        $horaSolicitada = Carbon::parse($hora);
-        $fechaSolicitada = Carbon::parse($fecha);
-   
-        // Recorrer todas las citas para verificar conflicto
-        foreach ($citas as $cita) {
-            // Convertir la fecha y hora de las citas en la base de datos
+
+        //convertir fecha en carbon
+        $fecha = Carbon::parse($fecha);
+
+        //convertir hora inicio en carbon
+        $horaInicio = Carbon::parse($horaInicio);
+        $horaFin = Carbon::parse($horaFin);
+
+        //recorrer citas
+        foreach($citas as $cita){
+            //convertir fecha cita en carbon
             $fechaCita = Carbon::parse($cita->fechaCita);
-            $horaCita = Carbon::parse($cita->horaCita);
-   
-            // Verificar si la cita es del mismo profesional
-            if ($cita->idProfesion == $idProfesional) {
-                // Verificar si la fecha y hora coinciden
-                if ($fechaCita == $fechaSolicitada){
-                    if ($horaCita == $horaSolicitada) {
-                        $mensaje = 'Ya hay una cita agendada en el mismo dia y horario.';
-                        return false;  // No está disponible
-                    }
+            $horaInicioCita = Carbon::parse($cita->horaInicio);
+            $horaFinCita = Carbon::parse($cita->horaFin);
+
+            //verificar si el dia de la cita es igual al dia de la cita solicitada
+            if($fecha->day == $fechaCita->day){
+                //verificar si la hora de inicio de la cita es igual a la hora de inicio de la cita solicitada  
+                if($horaInicio->hour == $horaInicioCita->hour){
+                    $mensaje = 'Horario no disponible';
+                    return false;
+                }
+                //verificar si la hora de inicio de la cita es igual a la hora de fin de la cita solicitada  
+                if($horaInicio->hour == $horaFinCita->hour){
+                    $mensaje = 'Horario no disponible';
+                    return false;
+                }
+                //verificar si la hora de fin de la cita es igual a la hora de inicio de la cita solicitada  
+                if($horaFin->hour == $horaInicioCita->hour){
+                    $mensaje = 'Horario no disponible';
+                    return false;
+                }
+                //verificar si la hora de fin de la cita es igual a la hora de fin de la cita solicitada  
+                if($horaFin->hour == $horaFinCita->hour){
+                    $mensaje = 'Horario no disponible';
+                    return false;
                 }
             }
         }
-        // Si no hay conflicto
-        $mensaje = 'Cita disponible.';
-        return true;  // Disponible
-   }
-   
+        $mensaje = 'Horario disponible';
+        return true;
+    }
+
+    /**
+     * Funcion para listar dias, horas disponibles
+     */
+    public function diasHorasDisponibles($idServicio)
+    {
+        $diasDisponibles = [
+            'lunes',
+            'martes',
+            'miercoles',
+            'jueves',
+            'viernes',
+            'sabado',
+            'domingo',
+        ];
+        return $diasDisponibles;
+    }
+
+
+    /**
+     * Funcion editar cita
+     */
+    public function editarCita(){
+
+    }
+
 
 }
+
 
 
 

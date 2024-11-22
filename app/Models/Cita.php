@@ -17,14 +17,14 @@ class Cita extends Model
 
     // Campos que se pueden asignar masivamente
     protected $fillable = [
-        'estadoCita',
-        'fechaCita',
-        'horaCita',
-        'comentariosCliente',
-        'calificacion',
         'idPersona',
         'idServicio',
         'idProfesion',
+        'estado',
+        'fechaCita',
+        'horaInicio',
+        'horaFin',
+        'calificacion',
     ];
 
     // Relación con la tabla 'personas'

@@ -30,7 +30,6 @@ class DatosProfesionController extends Controller
             'ubicacion' => 'required|string|max:255',
             'telefono' => 'nullable|string|max:255',
             'experiencia' => 'required|integer|min:0',
-            'estado' => 'required|boolean',
 
         ]);
         // Crear un nuevo registro de datos profesionales
@@ -42,7 +41,7 @@ class DatosProfesionController extends Controller
         $datosProfesion->telefono = $validatedData['telefono'];
         $datosProfesion->experiencia = $validatedData['experiencia'];
         $datosProfesion->calificacion = 0;
-        $datosProfesion->estado = $validatedData['estado'];
+        $datosProfesion->estado = 1;
         $datosProfesion->save();
 
         //Actualizar estado en persona a persona con profesion

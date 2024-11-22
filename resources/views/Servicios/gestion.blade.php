@@ -3,456 +3,589 @@
 @section('titulo', 'Gestión de servicio')
 
 @section('contenido')
-    <style>
-        /* Estilo adicional para los botones de la barra de navegación */
-        .nav-button {
-            padding: 10px 20px; /* Ajusta el padding para que el botón se ajuste al contenido */
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Espacio entre el icono y el texto */
-            background-color: #e0e0e0;
-            color: #555;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 1rem; /* Ajusta el tamaño del texto */
-            margin: 0 5px;
-        }
-        .nav-button i {
-            font-size: 1.5rem; /* Tamaño del icono */
-        }
-        .nav-button:hover {
-            background-color: #d1cfcf;
-        }
-        .active-tab {
-            background-color: #3f3fd1;
-            color: #fff;
-        }
-        /* Estilos generales para el cuadro */
-        .card {
-            background-color: #ffffff; /* Fondo blanco para el cuadro */
-            border-radius: 10px; /* Bordes redondeados */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para un efecto flotante */
-            padding: 20px; /* Espaciado interno */
-            margin: 15px 0; /* Separación entre el cuadro y otros elementos */
-            transition: box-shadow 0.3s ease; /* Transición suave para la sombra */
-        }
+<style>
+    /* Ajuste de la barra de navegación */
+    .navbar-nav .nav-link {
+        display: flex;
+        align-items: center; /* Alinea verticalmente el contenido */
+        justify-content: center; /* Centra el contenido horizontalmente */
+        font-size: 0.9rem; /* Reduce el tamaño de la fuente */
+        height: 50px; /* Altura consistente para los ítems */
+        padding: 0 10px; /* Espaciado horizontal */
+        color: #fff; /* Color de texto */
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
 
-        /* Efecto al pasar el ratón sobre el cuadro */
-        .card:hover {
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Aumentar la sombra para un efecto flotante */
-        }
+    .navbar-nav .nav-link:hover {
+        background-color: #3A3F47;
+        border-radius: 5px;
+        color: #FFD700; /* Color del texto al hacer hover */
+    }
 
-        /* Estilo para las secciones dentro del cuadro */
-        .card .card-header {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #333;
-            border-bottom: 2px solid #e0e0e0; /* Línea divisoria sutil */
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
+    .navbar-nav .nav-link i {
+        margin-right: 5px; /* Espaciado entre el ícono y el texto */
+        font-size: 1rem; /* Tamaño del ícono */
+    }
 
-        /* Estilo para los textos o contenido dentro del cuadro */
-        .card .card-body {
-            font-size: 1rem;
-            color: #555;
-            line-height: 1.5;
-        }
+    /* Ajustes para ítems más pequeños */
+    .navbar-nav .nav-item {
+        margin: 0 5px; /* Espaciado entre los ítems */
+    }
+    /* Efecto hover para los botones */
+    .nav-button:hover {
+        background-color: #3A3F47;
+        border-radius: 5px;
+        color: #FFD700;
+        cursor: pointer;
+    }
 
-        /* Estilo para los botones dentro del cuadro */
-        .card .nav-button {
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: #e0e0e0;
-            color: #555;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 1rem;
-            margin: 0 5px;
-        }
+    /* Fondo de la barra de navegación más oscuro y sutil sombra */
+    .container {
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 10px 0;
+    }
 
-        .card .nav-button i {
-            font-size: 1.5rem;
-        }
+    /* Transición suave al pasar el ratón */
+    .nav-button {
+        font-family: 'Arial', sans-serif;
+        font-weight: 500;
+        font-size: 1.1rem;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin: 5px 10px;
+        border-radius: 5px;
+        color: #fff;
+        background-color: #333;
+    }
 
-        .card .nav-button:hover {
-            background-color: #d1cfcf;
-        }
+    /* Logo más estilizado */
+    .navbar-brand {
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+    }
 
-        .card .active-tab {
-            background-color: #3f3fd1;
-            color: #fff;
-        }
+    /* Estilo para el contenedor de los botones */
+    .nav-button.active-tab {
+        background-color: #3A3F47;
+        color: #FFD700;
+    }
 
-    </style>
+    /* Estilo para los iconos */
+    .nav-button i {
+        margin-right: 8px;
+    }
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-center mb-4">
-        <!-- Botones de navegación -->
-        <div class="nav-button active-tab" onclick="showSection('datos')"><i class='bx bxs-business'></i>Datos Profesionales</div>
-        <div class="nav-button" onclick="showSection('horarios')"><i class='bx bx-donate-blood'></i> Horarios atencion</div>
-        <div class="nav-button" onclick="showSection('servicios')"><i class='bx bx-donate-blood'></i> Servicios</div>
-        <div class="nav-button" onclick="showSection('agenda')"><i class='bx bxs-calendar'></i> Agenda</div>
-        <div class="nav-button" onclick="showSection('clientes')"><i class='bx bxs-user-check'></i> Clientes</div>
-        <div class="nav-button" onclick="showSection('informes')"><i class='bx bxs-detail'></i> Informes</div>
-        <div class="nav-button" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</div>
-        <div class="nav-button" onclick="showSection('ajustes')"><i class='bx bx-slider'></i> Ajustes</div>
-        <div class="nav-button" onclick="{{ route('privada') }}">Volver</div>
-    </div>
+    /* Estilo para el contenedor de botones */
+    .d-flex {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    /* Estilo general para las secciones */
+    .content-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        width: 800px;
+        margin: 0 auto;
+    }
 
-    <!-- Secciones de contenido -->
+    /* Estilo para los títulos */
+    h3 {
+        font-family: sans-serif;
+        font-weight: 900;
+        color: #333333;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-    <!-- Datos Profesionales -->
-    <div id="datos" class="content-section">
-        <style>
-            /* Estilo general para los títulos */
-            h3.text-center {
-                font-size: 2rem; /* Tamaño grande */
-                color: #333;
-                letter-spacing: 1px;
-            }
+    /* Estilo para los botones */
+    .btn {
+        background-color: #28a745;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+    }
 
-            /* Estilo para las secciones del formulario */
-            .form-section {
-                margin-bottom: 24px; /* Espaciado entre secciones */
-            }
+    .btn[disabled] {
+        background-color: #e0e0e0;
+        color: #b0b0b0;
+        pointer-events: none;
+    }
 
-            .section-title {
-                font-size: 1.25rem;
-                font-weight: 600;
-                color: #444;
-                margin-bottom: 12px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
+    /* Estilo para los grupos de formulario */
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
 
-            /* Estilo para las etiquetas de los inputs */
-            .form-label {
-                font-size: 1rem;
-                font-weight: 500;
-                color: #555;
-                margin-bottom: 8px;
-            }
+    .form-group {
+        width: 48%;
+    }
 
-            /* Estilo para los inputs */
-            .form-control {
-                border-radius: 10px; /* Bordes más suaves */
-                padding: 12px; /* Mayor espaciado en los inputs */
-                font-size: 1rem;
-                border: 1px solid #ccc;
-                transition: border-color 0.3s ease;
-            }
+    .form-control {
+        border-radius: 5px;
+        padding: 10px;
+    }
 
-            .form-control:focus {
-                border-color: #3f3fd1; /* Color azul al enfocar */
-                box-shadow: 0 0 8px rgba(63, 63, 209, 0.2); /* Sombra sutil en el foco */
-            }
+    .form-label {
+        font-weight: bold;
+    }
 
-            /* Estilo para el select */
-            .form-control {
-                height: 40px; /* Altura de los selects */
-            }
+    /* Estilo para los campos de texto */
+    input[type="text"], input[type="number"], select {
+        font-size: 1rem;
+        padding: 10px;
+        border-radius: 5px;
+    }
 
-            /* Estilo para el botón de guardar */
-            .btn-primary {
-                background-color: #3f3fd1; /* Azul principal */
-                border-color: #3f3fd1;
-                font-size: 1.1rem;
-                padding: 12px;
-                text-transform: uppercase;
-                font-weight: bold;
-                border-radius: 12px;
-                transition: all 0.3s ease;
-            }
+    /* Estilo de la modal */
+    .modal-body {
+        padding: 20px;
+    }
+    /* Estilo para la tabla de horarios */
+    .horarios-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
 
-            .btn-primary:hover {
-                background-color: #2e2e9b; /* Azul más oscuro al pasar el ratón */
-                border-color: #2e2e9b;
-                transform: scale(1.05); /* Efecto de escala */
-            }
+    /* Encabezado de la tabla */
+    .horarios-table thead {
+        background-color: #333;
+        color: #fff;
+        text-align: left;
+    }
 
-            .btn-primary:focus, .btn-primary:active {
-                background-color: #232391; /* Color más oscuro en foco y clic */
-            }
+    .horarios-table th {
+        padding: 15px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
-            /* Estilo para el texto en el campo de Calificación */
-            .form-control-plaintext {
-                font-size: 1.1rem;
-                color: #333;
-                font-weight: 500;
-                padding-left: 0; /* Para eliminar el padding extra */
-            }
+    /* Celdas de la tabla */
+    .horarios-table td {
+        padding: 12px;
+        font-size: 0.95rem;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
 
-            /* Espaciado y sombras para el contenedor principal */
-            .card-body {
-                padding: 20px;
-                background-color: #f9f9f9; /* Fondo claro */
-                border-radius: 12px; /* Bordes redondeados en todo el cuerpo */
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-            }
-            /* Si deseas cambiar el color del botón "Actualizar Datos" */
-            .btn-success {
-                background-color: #3f3fd1; /* Verde para el botón de actualización */
-                border-color: #3f3fd1;
-            }
+    /* Colores alternos para las filas */
+    .horarios-table tbody tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
 
-        </style>
-        @if($datosProfesion)
-            <!-- Si ya existen los datos profesionales, se muestran y algunos campos no son editables -->
-            <form action="{{ route('actualizar-datos', $datosProfesion->id) }}" method="POST">
+    .horarios-table tbody tr:nth-child(even) {
+        background-color: #f1f1f1;
+    }
 
-                @csrf
-                @method('PUT')
-                
-                <div class="card shadow-lg mb-5">
-                    <h3 class="text-center mb-4">Datos Profesionales</h3>
+    /* Efecto hover en filas */
+    .horarios-table tbody tr:hover {
+        background-color: #f0f0f0;
+        transition: background-color 0.3s ease;
+    }
 
-                    <div class="card-body">
+    /* Botones de acción */
+    .btn-action {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        margin: 2px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        color: #fff;
+        border: none;
+    }
 
-                        <!-- Sección: Nombre -->
-                        <div class="form-section">
-                            <h4 class="section-title">Nombre</h4>
-                            <div class="form-group">
-                                <label for="nombre_fantasia" class="form-label">Nombre Fantasía</label>
-                                <input type="text" class="form-control" id="nombre_fantasia" name="nombre_fantasia" value="{{ $datosProfesion->nombre_fantasia }}" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="slogan" class="form-label">Slogan</label>
-                                <input type="text" class="form-control" id="slogan" name="slogan" value="{{ $datosProfesion->slogan }}">
-                            </div>
-                        </div>
+    .btn-action.edit {
+        background-color: #007bff;
+    }
 
-                        <!-- Sección: Ubicación -->
-                        <div class="form-section">
-                            <h4 class="section-title">Ubicación</h4>
-                            <div class="form-group">
-                                <label for="ubicacion" class="form-label">Ubicación</label>
-                                <input type="text" class="form-control" id="ubicacion" name="ubicacion" value="{{ $datosProfesion->ubicacion }}" required>
-                            </div>
-                        </div>
+    .btn-action.edit:hover {
+        background-color: #0056b3;
+    }
 
-                        <!-- Sección: Contacto -->
-                        <div class="form-section">
-                            <h4 class="section-title">Contacto</h4>
-                            <div class="form-group">
-                                <label for="telefono" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono" value="{{ $datosProfesion->telefono }}">
-                            </div>
-                        </div>
+    .btn-action.anular {
+        background-color: #ffc107;
+        color: #333;
+    }
 
-                        <!-- Sección: Otros datos -->
-                        <div class="form-section">
-                            <h4 class="section-title">Otros Datos</h4>
-                            <div class="form-group">
-                                <label for="experiencia" class="form-label">Experiencia</label>
-                                <input type="number" id="experiencia" name="experiencia" class="form-control" min="0" step="1" placeholder="Ingrese la experiencia" required value="{{$datosProfesion->experiencia}}">
-                            </div>
-                            <div class="form-group">
-                                <label for="estado" class="form-label">Estado</label>
-                                <select class="form-control" id="estado" name="estado">
-                                    <option value="1" {{ $datosProfesion->estado == 1 ? 'selected' : '' }}>Activo</option>
-                                    <option value="0" {{ $datosProfesion->estado == 0 ? 'selected' : '' }}>Inactivo</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="calificacion" class="form-label">Calificación</label>
-                                <div class="form-control-plaintext">
-                                    {{ $promedio }} 
-                                </div>
-                            </div>
-                            
-                        </div>
+    .btn-action.anular:hover {
+        background-color: #e0a800;
+    }
 
-                        <button type="button" class="btn btn-success btn-lg w-100 mt-3" data-toggle="modal" data-target="#confirmModal">Actualizar Datos</button>
-                    </div>
-                </div>
-            </form>
-        @else
-            <!-- Si no existen los datos, mostramos los campos vacíos para crear los datos -->
-            <form action="{{ route('guardar-datos') }}" method="POST">
-                @csrf
+    .btn-action.activar {
+        background-color: #28a745;
+    }
 
-                <div class="card shadow-lg mb-5">
-                    <h3 class="text-center mb-5 text-uppercase font-weight-bold">Datos Profesionales</h3>
-                    <div class="card-body p-4">
-                        <!-- Sección: Nombre -->
-                        <div class="form-section mb-4">
-                            <h4 class="section-title">Nombre</h4>
-                            <div class="form-group">
-                                <label for="nombre_fantasia" class="form-label">Nombre Fantasía</label>
-                                <input type="text" class="form-control" id="nombre_fantasia" name="nombre_fantasia" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="slogan" class="form-label">Slogan</label>
-                                <input type="text" class="form-control" id="slogan" name="slogan">
-                            </div>
-                        </div>
+    .btn-action.activar:hover {
+        background-color: #218838;
+    }
 
-                        <!-- Sección: Ubicación -->
-                        <div class="form-section mb-4">
-                            <h4 class="section-title">Ubicación</h4>
-                            <div class="form-group">
-                                <label for="ubicacion" class="form-label">Ubicación</label>
-                                <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
-                            </div>
-                        </div>
+    .btn-action.eliminar {
+        background-color: #dc3545;
+    }
 
-                        <!-- Sección: Contacto -->
-                        <div class="form-section mb-4">
-                            <h4 class="section-title">Contacto</h4>
-                            <div class="form-group">
-                                <label for="telefono" class="form-label">Teléfono</label>
-                                <input type="text" class="form-control" id="telefono" name="telefono">
-                            </div>
-                        </div>
+    .btn-action.eliminar:hover {
+        background-color: #c82333;
+    }
 
-                        <!-- Sección: Otros datos -->
-                        <div class="form-section mb-4">
-                            <h4 class="section-title">Otros Datos</h4>
-                            <div class="form-group">
-                                <label for="experiencia" class="form-label">Experiencia</label>
-                                <input type="number" id="experiencia" name="experiencia" class="form-control" min="0" step="1" placeholder="Ingrese la experiencia" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="estado" class="form-label">Estado</label>
-                                <select class="form-control" id="estado" name="estado">
-                                    <option value="1">Activo</option>
-                                    <option value="0">Inactivo</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="calificacion" class="form-label">Calificación</label>
-                                <div class="form-control-plaintext">
-                                    {{ $promedio }} 
-                                </div>
-                            </div>
-                        </div>
+    /* Botón para crear horario */
+    .btn-primary {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        font-size: 1rem;
+        padding: 10px 20px;
+        margin-top: 20px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
 
-                        <button type="button" class="btn btn-primary btn-lg w-100 mt-4 shadow-lg" data-toggle="modal" data-target="#confirmModal">Guardar Datos</button>
-                    </div>
-                </div>
-            </form>
-        @endif
-        <!-- Modal de Confirmación -->
-        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="confirmModalLabel">Confirmar Acción</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ¿Estás seguro de que quieres guardar los cambios?
-                    </div>
-                    <div class="modal-footer">
-                        <!-- Botón de Cancelar -->
-                        <button type="button" class="btn btn-secondary btn-lg w-100" data-dismiss="modal">Cancelar</button>
-                        <!-- Botón de Confirmar -->
-                        <button type="button" class="btn btn-primary btn-lg w-100" id="confirmSave">Confirmar</button>
-                    </div>
-                </div>
+    .btn-primary:hover {
+        background-color: #3A3F47;
+        color: #FFD700;
+    }
+
+    /* Modales */
+    .modal-body {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    /* Títulos dentro de la modal */
+    .modal-body h3 {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    /* Inputs en modales */
+    .modal-body .form-control {
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+   /* Estilo para el título principal */
+   .services-title {
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        text-align: center;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    h3.services-title {
+        color: #333;
+    }
+
+    /* Contenedor de los servicios */
+    #card-serviciosIndividual {
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #f8f9fa;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilo para cada tarjeta de servicio */
+    .service-card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .service-card h3 {
+        color: #007bff;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .service-card .text-success {
+        font-weight: bold;
+    }
+
+    .service-card .text-danger {
+        font-weight: bold;
+    }
+
+    .service-card p {
+        margin-bottom: 10px;
+    }
+
+    .service-card ul {
+        padding-left: 20px;
+        margin-top: 10px;
+    }
+
+    .service-card li {
+        font-size: 0.9rem;
+        color: #333;
+        padding: 5px 0;
+    }
+
+    /* Botones de acción dentro de las tarjetas */
+    .service-actions button {
+        margin-top: 10px;
+    }
+
+    .service-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    /* Botón crear servicio */
+    .btn-create-service {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 5px;
+        color: #fff;
+        background-color: #333;
+        transition: all 0.3s ease;
+    }
+
+    .btn-create-service:hover {
+        background-color: #3A3F47;
+        color: #FFD700;
+    }
+    .titulo-servicio {
+        color: #333; /* Negro */
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 1.5rem;
+    }
+    h3 {
+        color: #333 !important; /* Usa !important como último recurso */
+    }
+
+</style>
+
+<!-- Barra de navegación -->
+<nav class="navbar navbar-expand-lg navbar-dark"">
+        <div class="container-fluid">
+            <!-- Logo de la marca -->
+            <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Gestión Servicios</a>
+
+            <!-- Icono para el menú en móviles -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Menú de navegación -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('datos')"><i class='bx bxs-business'></i> Datos Profesionales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('horarios')"><i class='bx bx-donate-blood'></i> Horarios Atención</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('servicios')"><i class='bx bx-donate-blood'></i> Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('agenda')"><i class='bx bxs-calendar'></i> Agenda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('clientes')"><i class='bx bxs-user-check'></i> Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('informes')"><i class='bx bxs-detail'></i> Informes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('ajustes')"><i class='bx bx-slider'></i> Ajustes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="{{ route('privada') }}">Volver</a>
+                    </li>
+                </ul>
             </div>
         </div>
-        <script>
-            // Al confirmar en el modal, enviar el formulario
-            document.getElementById('confirmSave').addEventListener('click', function () {
-                // Encuentra el formulario correspondiente
-                var form = document.querySelector('form');
-                
-                // Enviar el formulario
-                form.submit();
-            });
-        </script>
-    </div>
+</nav>
 
-    <!-- Sección de Horarios -->
-    <div  id="horarios" class="content-section">
-        <style>
-            /* Estilo para la tabla de horarios */
-            .horarios-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 20px 0;
-                font-family: Arial, sans-serif;
-            }
+<!-- Secciones de contenido -->
 
-            .horarios-table th, .horarios-table td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: center;
-            }
+<!-- Datos Profesionales -->
+<div id="datos" class="content-section">
+    @if($datosProfesion)
+        <form action="{{ route('actualizar-datos', $datosProfesion->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            
+                <h3 class="text-uppercase font-weight-bold text-dark">Datos Profesionales</h3>
+                <div class="card-body">
+                    <!-- Sección: Nombre -->
+                    <div class="form-row mb-4">
+                        <div class="form-group">
+                            <label for="nombre_fantasia" class="form-label">Nombre Fantasía</label>
+                            <input type="text" class="form-control" id="nombre_fantasia" name="nombre_fantasia" value="{{ $datosProfesion->nombre_fantasia }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="slogan" class="form-label">Slogan</label>
+                            <input type="text" class="form-control" id="slogan" name="slogan" value="{{ $datosProfesion->slogan }}">
+                        </div>
+                    </div>
 
-            .horarios-table th {
-                background-color: #f4f4f4;
-                color: #333;
-            }
+                    <!-- Sección: Ubicación y Contacto -->
+                    <div class="form-row mb-4">
+                        <div class="form-group">
+                            <label for="ubicacion" class="form-label">Ubicación</label>
+                            <input type="text" class="form-control" id="ubicacion" name="ubicacion" value="{{ $datosProfesion->ubicacion }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono" value="{{ $datosProfesion->telefono }}">
+                        </div>
+                    </div>
 
-            .horarios-table tbody tr:nth-child(even) {
-                background-color: #f9f9f9;
-            }
+                    <!-- Sección: Otros datos -->
+                    <div class="form-row mb-4">
+                        <div class="form-group">
+                            <label for="experiencia" class="form-label">Experiencia</label>
+                            <input type="number" id="experiencia" name="experiencia" class="form-control" min="0" step="1" placeholder="Ingrese la experiencia" required value="{{$datosProfesion->experiencia}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-control" id="estado" name="estado">
+                                <option value="1" {{ $datosProfesion->estado == 1 ? 'selected' : '' }}>Activo</option>
+                                <option value="0" {{ $datosProfesion->estado == 0 ? 'selected' : '' }}>Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="calificacion" class="form-label">Calificación</label>
+                            <div class="form-control-plaintext">
+                                {{ $promedio }} 
+                            </div>
+                        </div>
+                    </div>
 
-            .horarios-table tbody tr:hover {
-                background-color: #e6e6e6;
-            }
+                    <!-- Botón para actualizar -->
+                    <button type="button" class="btn btn-success btn-lg w-100 mt-3 shadow-sm" data-toggle="modal" data-target="#confirmUpdateModal">
+                        Actualizar Datos
+                    </button>
+                    <!-- Modal para confirmar actualización -->
+                    <div class="modal fade" id="confirmUpdateModal" tabindex="-1" role="dialog" aria-labelledby="confirmUpdateModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmUpdateModalLabel">Confirmación</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de que deseas actualizar los datos?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            /* Estilo para los botones */
-            .btn-action {
-                padding: 5px 10px;
-                font-size: 14px;
-                border: none;
-                cursor: pointer;
-                margin: 5px;
-                border-radius: 5px;
-            }
+                </div>
+        </form>
+    @else
+        <!-- Si no existen los datos, mostramos los campos vacíos para crear los datos -->
+        <form action="{{ route('guardar-datos') }}" method="POST">
+            @csrf
 
-            .btn-action.edit {
-                background-color: #3f3fd1;
-                color: white;
-            }
+                <h3 class="text-uppercase font-weight-bold text-dark">Datos Profesionales</h3>
+                <div class="card-body p-4">
+                    <!-- Sección: Nombre -->
+                    <div class="form-row mb-4">
+                        <div class="form-group">
+                            <label for="nombre_fantasia" class="form-label">Nombre Fantasía</label>
+                            <input type="text" class="form-control" id="nombre_fantasia" name="nombre_fantasia" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="slogan" class="form-label">Slogan</label>
+                            <input type="text" class="form-control" id="slogan" name="slogan">
+                        </div>
+                    </div>
 
-            .btn-action.anular {
-                background-color: #008CBA;
-                color: white;
-            }
+                    <!-- Sección: Ubicación y Contacto -->
+                    <div class="form-row mb-4">
+                        <div class="form-group">
+                            <label for="ubicacion" class="form-label">Ubicación</label>
+                            <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" name="telefono">
+                        </div>
+                    </div>
 
-            .btn-action.activar {
-                background-color: orange;
-                color: white;
-            }
+                    <!-- Sección: Otros datos -->
+                    <div class="form-row mb-4">
+                        <div class="form-group">
+                            <label for="experiencia" class="form-label">Experiencia</label>
+                            <input type="number" id="experiencia" name="experiencia" class="form-control" min="0" step="1" placeholder="Ingrese la experiencia" required>
+                        </div>
+                    </div>
+                    <!-- Botón para guardar -->
+                    <button type="button" class="btn btn-success btn-lg w-100 mt-3 shadow-sm" data-toggle="modal" data-target="#confirmSaveModal">
+                        Guardar Datos
+                    </button>
+                    <!-- Modal para confirmar guardado -->
+                    <div class="modal fade" id="confirmSaveModal" tabindex="-1" role="dialog" aria-labelledby="confirmSaveModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="confirmSaveModalLabel">Confirmación</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de que deseas guardar los datos?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    @endif
+</div>
 
-            .btn-action.eliminar {
-                background-color: #f44336;
-                color: white;
-            }
+<!-- Sección de Horarios -->
+<div  id="horarios" class="content-section">
 
-            .btn-action:hover {
-                opacity: 0.8;
-            }
-
-            /* Modal custom styles */
-            .modal-content {
-                border-radius: 8px;
-            }
-
-            .modal-header {
-                background-color: #007bff;
-                color: white;
-            }
-
-            .modal-footer button {
-                border-radius: 5px;
-            }
-
-        </style>
-        <div class="card shadow-lg mb-5" id="card-servicios">
             <!-- Modal para Crear Horario -->
             <div class="modal fade" id="crearHorarioModal" tabindex="-1" role="dialog" aria-labelledby="crearHorarioModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -814,185 +947,72 @@
                     Crear Horario de Trabajo
                 </button>
             @endif
-        </div>
-    </div>
+</div>
  
-     <!-- Servicios -->
-     <div id="servicios" class="content-section">
-        <style>
-            h3 {
-                font-size: 1.8rem;
-                color: #333;
-                margin-bottom: 1rem;
-            }
 
-            p {
-                font-size: 1rem;
-                color: #666;
-            }
+<!-- Servicios -->
+<div id="servicios" class="content-section">
 
-            /* Estilos para los servicios */
-            #card-serviciosIndividual {
-                margin-bottom: 2rem;
-                background-color: #fff;
-                border-radius: 8px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                padding: 20px;
-            }
+    <h3 class="services-title" color="text-black" >Servicios</h3>
 
-            #card-serviciosIndividual h3 {
-                font-size: 1.5rem;
-                color: #2a2a2a;
-                margin-bottom: 10px;
-            }
-
-            #card-serviciosIndividual p {
-                color: #555;
-                font-size: 1rem;
-                margin: 5px 0;
-            }
-
-            #card-serviciosIndividual ul {
-                list-style-type: none;
-                padding-left: 0;
-            }
-
-            #card-serviciosIndividual li {
-                font-size: 0.9rem;
-                color: #777;
-                margin-bottom: 5px;
-            }
-
-            
-
-            /* Estilos de modales */
-            .modal-content {
-                border-radius: 8px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .modal-header {
-                background-color: #007bff;
-                color: white;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
-                padding: 15px;
-            }
-
-            .modal-title {
-                font-size: 1.5rem;
-            }
-
-            .modal-footer {
-                padding: 15px;
-            }
-
-            .modal-footer .btn {
-                padding: 10px 20px;
-            }
-
-            /* Estilos de formularios */
-            .form-label {
-                font-size: 1rem;
-                color: #333;
-                margin-bottom: 5px;
-            }
-
-            .form-control {
-                border-radius: 5px;
-                border: 1px solid #ccc;
-                padding: 12px;
-                margin-bottom: 15px;
-                width: 100%;
-                font-size: 1rem;
-                color: #333;
-                transition: border-color 0.3s ease;
-            }
-
-            .form-control:focus {
-                border-color: #007bff;
-                outline: none;
-            }
-
-            .select2-container--default .select2-selection--multiple {
-                border-radius: 5px;
-                border: 1px solid #ccc;
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            /* Estilos de mensajes de error */
-            .invalid-feedback {
-                color: #dc3545;
-                font-size: 0.875rem;
-                margin-top: 5px;
-            }
-            /* Estilo para el botón de guardar */
-            
-
-        </style>
-        <div class="card shadow-lg mb-5" id="card-servicios">
-            <h3 class="text-center mb-5 text-uppercase font-weight-bold">Servicios</h3>
-            
-            @if ($servicios->isEmpty())
-                <p>No hay servicios creados.</p>
-                <!-- Botón para abrir el modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearServicioModal">
-                    Crear servicio
-                </button>
-            @else
-            <div id="card-serviciosIndividual">
-                @foreach ($servicios as $servicio)
-                    <div class="row mb-3">
-                        <!-- Columna para los datos -->
-                        <div class="col-md-8 p-3 bg-light border rounded shadow-sm">
-                            <h3 class="text-primary">{{ $servicio->nombre }}</h3>
-                            @if ($servicio->estado == 'activo')
-                                <p class="font-weight-bold">Estado: <span class="text-success">{{ $servicio->estado }}</span></p>
-                            @elseif ($servicio->estado == 'inactivo')
-                                <p class="font-weight-bold">Estado: <span class="text-danger">{{ $servicio->estado }}</span></p>
-                            @endif
-                            <p class="font-weight-bold">Precio: <span class="text-success">{{ $servicio->precio_base }}</span></p>
-                            <p class="font-weight-bold">Calificación: 
-                                <span class="text-warning">
-                                    @if ($servicio->calificacion > 0)
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            <i class="bi {{ $i <= $servicio->calificacion ? 'bi-star-fill' : 'bi-star' }}"></i>
-                                        @endfor
-                                    @else
-                                        No calificado
-                                    @endif
-                                </span>
-                            </p>
-                            
-                            <p class="font-weight-bold">Rubros:</p>
-                            <ul class="list-group list-group-flush">
-                                @foreach ($servicio->rubros as $rubro)
-                                    <li class="list-group-item">{{ $rubro->nombre }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                        
-                         <!-- Columna para los botones -->
-                        <div class="col-md-4 d-flex flex-column justify-content-start">
-                            <button type="button" class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editarServicioModal">Editar</button>
-                            
-                            @if ($servicio->estado == 'activo')
-                                <button type="button" class="btn-action anular" data-bs-toggle="modal" data-bs-target="#anularServicioModal">Anular</button>
-                            @else
-                                <button type="button" class="btn-action active" data-bs-toggle="modal" data-bs-target="#activarServicioModal">Activar</button>                        
-                            @endif
-                            
-                            <button type="button" class="btn-action eliminar" data-bs-toggle="modal" data-bs-target="#eliminarServicioModal">Eliminar</button>
-                        </div>
+    @if ($servicios->isEmpty())
+        <p>No hay servicios creados.</p>
+        <!-- Botón para abrir el modal -->
+        <button type="button" class="btn-create-service" data-bs-toggle="modal" data-bs-target="#crearServicioModal">
+            Crear servicio
+        </button>
+    @else
+        <div id="card-serviciosIndividual">
+            @foreach ($servicios as $servicio)
+                <div class="service-card">
+                    <!-- Columna de información -->
+                    <div>
+                        <h3 class="titulo-servicio" >{{ $servicio->nombre }}</h3>
+                        <p class="font-weight-bold">Estado: 
+                            <span class="{{ $servicio->estado == 'activo' ? 'text-success' : 'text-danger' }}">
+                                {{ ucfirst($servicio->estado) }}
+                            </span>
+                        </p>
+                        <p class="font-weight-bold">Precio: <span class="text-success" >{{ $servicio->precio_base }}</span></p>
+                        <p class="font-weight-bold">Calificación: 
+                            <span class="text-warning">
+                                @if ($servicio->calificacion > 0)
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="bi {{ $i <= $servicio->calificacion ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                    @endfor
+                                @else
+                                    No calificado
+                                @endif
+                            </span>
+                        </p>
+                        <p class="font-weight-bold">Rubros:</p>
+                        <ul>
+                            @foreach ($servicio->rubros as $rubro)
+                                <li>{{ $rubro->nombre }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                @endforeach
-            </div>
-                <!-- Botón para abrir el modal -->
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearServicioModal">
-                    Crear servicio
-                </button>
+    
+                    <!-- Columna de acciones -->
+                    <div class="service-actions">
+                        <button type="button" class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editarServicioModal">Editar</button>
+                        
+                        @if ($servicio->estado == 'activo')
+                            <button type="button" class="btn-action anular" data-bs-toggle="modal" data-bs-target="#anularServicioModal">Anular</button>
+                        @else
+                            <button type="button" class="btn-action activar" data-bs-toggle="modal" data-bs-target="#activarServicioModal">Activar</button>                        
+                        @endif
+                        
+                        <button type="button" class="btn-action eliminar" data-bs-toggle="modal" data-bs-target="#eliminarServicioModal">Eliminar</button>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    
+        <!-- Botón para abrir el modal -->
+        <button type="button" class="btn-create-service" data-bs-toggle="modal" data-bs-target="#crearServicioModal">
+            Crear servicio
+        </button>
               
                 <!-- Modal para editar un servicio existente -->
                 <div class="modal fade" id="editarServicioModal" tabindex="-1" aria-labelledby="editarServicioModalLabel" aria-hidden="true">
@@ -1120,7 +1140,6 @@
                     </div>
                 </div>
             @endif
-        </div>
         <!-- Modal para crear un nuevo servicio -->
         <div class="modal fade" id="crearServicioModal" tabindex="-1" aria-labelledby="crearServicioModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -1186,9 +1205,7 @@
                 });
             });
         </script>
-
-
-    </div>
+</div>
 
     <!-- Agenda -->
     <div id="agenda" class="content-section">
@@ -1221,7 +1238,8 @@
         <h3>Ajustes</h3>
         <p>Ajustes de la cuenta y preferencias del usuario.</p>
     </div>
-</div>
+
+
 @endsection
 
 <!-- Script para mostrar la sección activa en la barra de navegación -->
@@ -1277,6 +1295,62 @@
             }
         })
         .catch(error => console.error('Error:', error));
+    });
+</script>
+
+<!-- Estilos adicionales (Opcional) -->
+<style>
+    .section {
+        padding: 30px 0;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .section:last-child {
+        border-bottom: none;
+    }
+
+    /* Opcional: resaltar la sección activa */
+    .active {
+        background-color: #f1f1f1;
+    }
+</style>
+
+<!-- Script para cambiar de sección -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('.section');  // Obtener todas las secciones
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');  // Obtener todos los enlaces de navegación
+
+        // Función para ocultar todas las secciones
+        function hideSections() {
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+
+        // Mostrar la sección seleccionada y ocultar las demás
+        function showSection(sectionId) {
+            hideSections();
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+        }
+
+        // Agregar un evento de click a cada enlace de la barra de navegación
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();  // Prevenir el comportamiento por defecto (scroll)
+                const targetId = link.getAttribute('href').substring(1);  // Obtener el id de la sección destino
+                showSection(targetId);  // Mostrar la sección correspondiente
+                // Resaltar el enlace activo
+                navLinks.forEach(navLink => navLink.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // Mostrar la primera sección al cargar la página
+        showSection('datos');
     });
 </script>
 
