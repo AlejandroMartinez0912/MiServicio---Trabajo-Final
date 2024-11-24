@@ -74,41 +74,28 @@ class CitaController extends Controller
         $user = User::findOrFail($datosProfesion->user_id);
         $persona = Persona::findOrFail($user->id);
 
-        // Fecha de hoy
-        $fechaHoy = Carbon::today();
-
-        // Si hay un parámetro 'inicioSemana', usalo, sino usa la fecha de hoy
-        $inicioSemana = $request->has('inicioSemana') ? Carbon::parse($request->input('inicioSemana')) : $fechaHoy->startOfWeek();
-
-        // Crear un array con los días de la semana
-        $diasDisponibles = [];
-
-        for ($i = 0; $i < 7; $i++) {
-            $fecha = $inicioSemana->copy()->addDays($i);
-            $diaSemana = $fecha->dayOfWeek === 0 ? 7 : $fecha->dayOfWeek;
-            $diasDisponibles[] = [
-                'dia' => $fecha->day,
-                'mes' => $fecha->locale('es')->monthName,
-                'fecha' => $fecha->toDateString(),
-                'diaSemana' => $diaSemana
-            ];
-        }
-
-        //Obtener horarios segun id profesion
-        $horariosTrabajo = HorarioTrabajo::where('datos_profesion_id', $idProfesion)->get();
-
-        //Obtener dias que trabaja el profesional
-        $diasTrabajo = $horariosTrabajo->pluck('dias_id')->toArray();
-
-
+        
         //id de persona
         $persona_id = $user->id;
         $citas = Cita::where('idPersona', $persona_id)->get();
 
+        //id dia de horario trabajo
+        $horarioTrabajo = HorarioTrabajo::where('datos_profesion_id', $idProfesion)->get();
+        $diasDeTrabajo = [];
+        foreach ($horarioTrabajo as $horarioTrabajo) {
+            $idDia = $horarioTrabajo->dias_id;
+            if (!in_array($idDia, $diasDeTrabajo)) {
+                $diasDeTrabajo[] = $idDia;
+            }
+        }
 
 
-        return view('Cita.agendar', compact('servicio', 'persona', 'diasDisponibles',
-         'fechaHoy', 'inicioSemana', 'datosProfesion', 'diasTrabajo', 'citas'));
+
+
+    
+
+        return view('Cita.agendar', compact('servicio', 'persona',
+        'datosProfesion','citas', 'diasDeTrabajo'));
     }
 
     /**

@@ -7,20 +7,20 @@
   <!-- Boxicons para íconos modernos (opcional) -->
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-   <!-- jQuery (necesario si usas Select2) -->
-   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- jQuery (necesario si usas Select2) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-   <!-- Select2 CSS y JS -->
-   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
- 
-   <!-- Popper.js -->
-   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
- 
-   <!-- swealert2 -->
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   
-   <!-- Bootstrap CSS -->
+  <!-- Select2 CSS y JS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <!-- Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+  <!-- sweetalert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- jQuery (necesario para los componentes de Bootstrap) -->
@@ -30,16 +30,17 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
 
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-  
+
   <title>@yield('titulo')</title>
 
   <style>
     /* Estilos generales */
     body {
-      background-color: black; /* Fondo negro */
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Estilos del contenedor principal */
@@ -76,6 +77,8 @@
       background-color: black;
       padding: 20px 0;
       box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      width: 100%;
     }
 
     footer .nav {
@@ -105,14 +108,24 @@
       min-width: 200px;
     }
 
-    /* Estilos del contenido */
+    /* Contenido principal que ocupa el espacio restante */
     .content {
-      background-color: grey; /* Fondo gris más oscuro */
+      flex: 1; /* Esto asegura que ocupe el espacio entre el encabezado y el pie de página */
       padding: 20px;
-      min-height: 80vh;
-      border-radius: 8px; /* Bordes redondeados */
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+      background-color: gray; /* Fondo gris para diferenciar el contenido */
     }
+
+    /* Ajustes para el contenedor que ocupa todo el ancho */
+    .container {
+      width: 100%;
+      max-width: 100%; /* Asegura que el contenedor ocupe todo el ancho disponible */
+    }
+
+    /* Fondo de la página */
+    .container-fluid {
+      background-color: black;
+    }
+
   </style>
 </head>
 
@@ -164,7 +177,9 @@
 
   <!-- CONTENIDO PRINCIPAL -->
   <main class="content">
-    @yield('contenido')
+    <div class="container">
+      @yield('contenido')
+    </div>
   </main>
 
   <!-- FOOTER -->
@@ -212,6 +227,6 @@
         @endif
     });
   </script>
-  
+
 </body>
 </html>
