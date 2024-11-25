@@ -90,10 +90,6 @@ class CitaController extends Controller
         }
 
 
-
-
-    
-
         return view('Cita.agendar', compact('servicio', 'persona',
         'datosProfesion','citas', 'diasDeTrabajo'));
     }
@@ -131,6 +127,9 @@ class CitaController extends Controller
         //id de profesion
         $servicio = Servicio::findOrFail($idServicio);
         $idProfesion = $servicio->datos_profesion_id;
+
+        //Convertir fecha
+        $fechaCita = Carbon::parse($fechaCita);
 
         $cita = new Cita([
             'estado' => 'confirmada',
@@ -273,30 +272,29 @@ class CitaController extends Controller
     }
 
     /**
-     * Funcion para listar dias, horas disponibles
-     */
-    public function diasHorasDisponibles($idServicio)
-    {
-        $diasDisponibles = [
-            'lunes',
-            'martes',
-            'miercoles',
-            'jueves',
-            'viernes',
-            'sabado',
-            'domingo',
-        ];
-        return $diasDisponibles;
-    }
-
-
-    /**
      * Funcion editar cita
      */
     public function editarCita(){
 
     }
 
+    /**
+     * anular cita
+     */
+    public function cancelarCita(Request $request)
+    {
+        $citaId = $request->input('cita_id');
+        $cita = Cita::findOrFail($citaId);
+
+        // Cambiar el estado de la cita a 'cancelada'
+        $cita->estado = 'cancelada';
+        $cita->save();
+
+        // Redireccionar de vuelta con un mensaje de éxito
+        return redirect()->back()->with('success', 'La cita ha sido cancelada correctamente.');
+    }
+
+  
 
 }
 

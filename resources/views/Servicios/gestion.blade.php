@@ -411,6 +411,9 @@
                         <a class="nav-link" onclick="showSection('servicios')"><i class='bx bx-donate-blood'></i> Servicios</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('citas')"><i class='bx bx-donate-blood'></i> Mis citas</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" onclick="showSection('agenda')"><i class='bx bxs-calendar'></i> Agenda</a>
                     </li>
                     <li class="nav-item">
@@ -421,9 +424,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('ajustes')"><i class='bx bx-slider'></i> Ajustes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="{{ route('privada') }}">Volver</a>
@@ -1205,6 +1205,54 @@
                 });
             });
         </script>
+</div>
+<!-- Agenda -->
+<div id="citas" class="content-section">
+    <h3> MIS CITAS</h3>
+    <div class="row">
+        <div class="col-md-12">
+                <div class="card-body">
+                    @if ($citas->isEmpty())
+
+                        <p class="text-center">No tienes citas agendadas.</p>
+                    @else
+                        <table class="table horarios-table table-hover table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Servicio</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($citas as $cita)
+                                    @if ($cita->estado === 'confirmada' || $cita->estado === 'pendiente')
+                                        <tr>
+                                            <td>{{$cita->persona->nombre . ' ' . $cita->persona->apellido}}</td>
+                                            <td>{{ $cita->servicio->nombre }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</td>
+                                            <td>
+                                                <span class="badge badge-{{ $cita->estado === 'confirmada' ? 'success' : 'warning' }}">
+                                                    {{ ucfirst($cita->estado) }}
+                                                </span>
+
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-action edit">Editar</button>
+                                                <button class="btn btn-sm btn-action anular">Cancelar</button>
+                                            </td>
+                                    @endif
+                                    
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
+    </div>
 </div>
 
     <!-- Agenda -->

@@ -9,6 +9,7 @@ use App\Models\HorarioTrabajo;
 use App\Models\Dias;
 use App\Models\Servicio;
 use App\Models\Rubro;
+use App\Models\Cita;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -48,9 +49,12 @@ class GestionServicioController extends Controller
             ? Servicio::with('rubros')->where('datos_profesion_id', $datosProfesion->id)->get()
             : collect(); // Si no hay datos de profesión, se pasa una colección vacía
 
+        $citas = Cita::where('idProfesion', $datosProfesion->id)->get();
+
 
          // Pasar los datos a la vista
-         return view('Servicios.gestion', compact('userId','persona' ,'datosProfesion', 'dias', 'promedio', 'horariosTrabajo', 'rubros','servicios'));
+         return view('Servicios.gestion', compact('userId','persona' ,'datosProfesion', 'dias', 
+         'promedio', 'horariosTrabajo', 'rubros','servicios', 'citas'));
      }
      
 

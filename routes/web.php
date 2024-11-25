@@ -64,4 +64,3 @@ Route::post('/citas/guardar', [CitaController::class, 'guardarCita'])->name('gua
 
 // Rutas para editar y eliminar citas (suponiendo que cada cita tiene un ID)
 Route::get('/cita/editar/{id}', [CitaController::class, 'editar'])->name('editar-cita');
-Route::delete('/cita/eliminar/{id}', [CitaController::class, 'eliminar'])->name('eliminar-cita');
