@@ -132,7 +132,7 @@ class CitaController extends Controller
         $fechaCita = Carbon::parse($fechaCita);
 
         $cita = new Cita([
-            'estado' => 'confirmada',
+            'estado' => 'pendiente',
             'fechaCita' => $fechaCita,
             'horaInicio' => $horaInicio,
             'horaFin' => $horaFin,

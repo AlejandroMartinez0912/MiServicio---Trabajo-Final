@@ -49,11 +49,15 @@ class GestionServicioController extends Controller
             ? Servicio::with('rubros')->where('datos_profesion_id', $datosProfesion->id)->get()
             : collect(); // Si no hay datos de profesión, se pasa una colección vacía
 
-        $citas = Cita::where('idProfesion', $datosProfesion->id)->get();
-
+        // si datosProfesion esta vacios no pasar nada, sino pasar citas del idProfeison
+        if ($datosProfesion) {
+            // Si $datosProfesion no está vacío, obtener las citas del idProfesion
+            $citas = Cita::where('idProfesion', $datosProfesion->id)->get();
+        } else {
+            // Si $datosProfesion está vacío, devolver una colección vacía
+            $citas = collect(); // Crea una colección vacía
+        }
         
-
-
          // Pasar los datos a la vista
          return view('Servicios.gestion', compact('userId','persona' ,'datosProfesion', 'dias', 
          'promedio', 'horariosTrabajo', 'rubros','servicios', 'citas'));

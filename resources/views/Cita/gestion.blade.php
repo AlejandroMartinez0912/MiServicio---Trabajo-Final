@@ -439,28 +439,24 @@
                     <p class="info">{{ $servicio->descripcion }}</p>
                     <ul class="features">
                         <li>
-                            <span class="icon">
-                                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 0h24v24H0z" fill="none"></path>
-                                    <path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
-                                </svg>
+                     
+                            <span>
+                                <strong>Calificación:
+                                        @if ($servicio->calificacion == 0)
+                                                No calificado
+                                        @else
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $servicio->calificacion)
+                                                    <i class='bx bxs-star text-warning'></i> <!-- Estrella llena -->
+                                                @else
+                                                    <i class='bx bx-star text-muted'></i> <!-- Estrella vacía -->
+                                                @endif
+                                            @endfor
+                                    @endif
+                                </strong>
                             </span>
-                            @php
-                                if ($servicio->calificacion == 0) {
-                                    $nota = 'No calificado';
-                                } else {
-                                    $nota = $servicio->calificacion;
-                                }
-                            @endphp
-                            <span><strong>Calificación: {{ $nota }}</strong></span>
                         </li>
                         <li>
-                            <span class="icon">
-                                <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 0h24v24H0z" fill="none"></path>
-                                    <path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"></path>
-                                </svg>
-                            </span>
                             @php
                                 $duracionEstimada = \Carbon\Carbon::parse($servicio->duracion_estimada);
                                 $duracionEnMinutos = $duracionEstimada->hour * 60 + $duracionEstimada->minute;
