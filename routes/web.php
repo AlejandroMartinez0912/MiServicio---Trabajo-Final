@@ -37,7 +37,8 @@ Route::put('/gestion-servicios/datos-profesionales/{id}', [DatosProfesionControl
 Route::post('/horarios', [HorarioTrabajoController::class, 'guardarHorario'])->name('guardar-horario');
 
 // Ruta para actualizar un horario existente
-Route::put('/horarios/{id}', [HorarioTrabajoController::class, 'actualizarHorario'])->name('actualizar-horario');
+Route::patch('/horarios/actualizar/{id}', [HorarioTrabajoController::class, 'actualizarHorario'])->name('actualizar-horario');
+
 // Ruta para eliminar un horario
 Route::delete('/horarios/{id}', [HorarioTrabajoController::class, 'EliminarHorario'])->name('eliminar-horario');
 

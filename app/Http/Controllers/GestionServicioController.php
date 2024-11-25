@@ -51,6 +51,8 @@ class GestionServicioController extends Controller
 
         $citas = Cita::where('idProfesion', $datosProfesion->id)->get();
 
+        
+
 
          // Pasar los datos a la vista
          return view('Servicios.gestion', compact('userId','persona' ,'datosProfesion', 'dias', 

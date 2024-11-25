@@ -405,19 +405,16 @@
                         <a class="nav-link" onclick="showSection('datos')"><i class='bx bxs-business'></i> Datos Profesionales</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('horarios')"><i class='bx bx-donate-blood'></i> Horarios Atención</a>
+                        <a class="nav-link" onclick="showSection('horarios')"><i class='bx bxs-time'></i>Horarios Atención</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="showSection('servicios')"><i class='bx bx-donate-blood'></i> Servicios</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('citas')"><i class='bx bx-donate-blood'></i> Mis citas</a>
+                        <a class="nav-link" onclick="showSection('citas')"><i class='bx bx-list-check'></i>Mis citas</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="showSection('agenda')"><i class='bx bxs-calendar'></i> Agenda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('clientes')"><i class='bx bxs-user-check'></i> Clientes</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" onclick="showSection('informes')"><i class='bx bxs-detail'></i> Informes</a>
@@ -688,20 +685,17 @@
                                         <td>{{ $horario->hora_fin1 ?? 'N/A' }}</td>
                                         <td>{{ $horario->estado == 1 ? 'Activo' : 'Inactivo' }}</td> 
                                         <td>
-                                            <!-- Botón de Edición -->
+                                           <!-- Botón de Edición -->
                                             <button 
                                                 data-toggle="modal" 
                                                 data-target="#editarHorarioModal" 
                                                 data-id="{{ $horario->id }}"
-                                                data-dia="{{ $horario->dia_id }}"
                                                 data-hora_inicio="{{ $horario->hora_inicio }}"
                                                 data-hora_fin="{{ $horario->hora_fin }}"
                                                 data-hora_inicio1="{{ $horario->hora_inicio1 }}"
                                                 data-hora_fin1="{{ $horario->hora_fin1 }}"
-                                                class="btn-action edit">
-                                                Editar
+                                                class="btn-action edit">Editar
                                             </button>
-
                                             <!-- Modal para editar el horario -->
                                             <div class="modal fade" id="editarHorarioModal" tabindex="-1" role="dialog" aria-labelledby="editarHorarioModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -714,43 +708,32 @@
                                                         </div>
                                                         <form action="{{ route('actualizar-horario', ':id') }}" method="POST" id="form-editar-horario">
                                                             @csrf
-                                                            @method('PUT')
+                                                            @method('PATCH')
                                                             <div class="modal-body">
-                                                                <input type="hidden" id="horario-id" name="id" value="">
-
-                                                                <!-- Día -->
-                                                                <div class="form-group">
-                                                                    <label for="dia_id">Día</label>
-                                                                    <select name="dia_id" id="dia_id" class="form-control" required>
-                                                                        <option value="">Seleccionar Día</option>
-                                                                        @foreach($dias as $dia)
-                                                                            <option value="{{ $dia->id }}">{{ $dia->nombre }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
-
-                                                                <!-- Hora de inicio -->
+                                                                <input type="hidden" id="horario-id-editar" name="id" value="">
+                                                                
+                                                                <!-- Campo de Hora de Inicio -->
                                                                 <div class="form-group">
                                                                     <label for="hora_inicio">Hora de Inicio</label>
-                                                                    <input type="time" name="hora_inicio" id="hora_inicio" class="form-control" required>
+                                                                    <input type="time" name="hora_inicio" class="form-control" required>
                                                                 </div>
 
-                                                                <!-- Hora de fin -->
+                                                                <!-- Campo de Hora de Fin -->
                                                                 <div class="form-group">
                                                                     <label for="hora_fin">Hora de Fin</label>
-                                                                    <input type="time" name="hora_fin" id="hora_fin" class="form-control" required>
+                                                                    <input type="time" name="hora_fin" class="form-control" required>
                                                                 </div>
 
-                                                                <!-- Hora de inicio adicional (opcional) -->
+                                                                <!-- Campo de Hora de Inicio (segunda franja) -->
                                                                 <div class="form-group">
-                                                                    <label for="hora_inicio1">Hora de Inicio 2 (Opcional)</label>
-                                                                    <input type="time" name="hora_inicio1" id="hora_inicio1" class="form-control">
+                                                                    <label for="hora_inicio1">Hora de Inicio (segunda franja)</label>
+                                                                    <input type="time" name="hora_inicio1" class="form-control">
                                                                 </div>
 
-                                                                <!-- Hora de fin adicional (opcional) -->
+                                                                <!-- Campo de Hora de Fin (segunda franja) -->
                                                                 <div class="form-group">
-                                                                    <label for="hora_fin1">Hora de Fin 2 (Opcional)</label>
-                                                                    <input type="time" name="hora_fin1" id="hora_fin1" class="form-control">
+                                                                    <label for="hora_fin1">Hora de Fin (segunda franja)</label>
+                                                                    <input type="time" name="hora_fin1" class="form-control">
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
@@ -761,30 +744,28 @@
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <script>
+                                                // Configuración del modal de edición
                                                 $('#editarHorarioModal').on('show.bs.modal', function (event) {
-                                                    var button = $(event.relatedTarget); // El botón que abrió el modal
-                                                    var horarioId = button.data('id'); // El ID del horario
-                                                    var diaId = button.data('dia'); // El ID del día
-                                                    var horaInicio = button.data('hora_inicio'); // La hora de inicio
-                                                    var horaFin = button.data('hora_fin'); // La hora de fin
-                                                    var horaInicio1 = button.data('hora_inicio1'); // La hora de inicio adicional
-                                                    var horaFin1 = button.data('hora_fin1'); // La hora de fin adicional
+                                                    var button = $(event.relatedTarget);
+                                                    var horarioId = button.data('id');
+                                                    var horaInicio = button.data('hora_inicio');
+                                                    var horaFin = button.data('hora_fin');
+                                                    var horaInicio1 = button.data('hora_inicio1');
+                                                    var horaFin1 = button.data('hora_fin1');
 
-                                                    // Actualizar la acción del formulario
-                                                    var formAction = '{{ route("actualizar-horario", ":id") }}';
-                                                    formAction = formAction.replace(':id', horarioId);
-                                                    $('#form-editar-horario').attr('action', formAction);
-
-                                                    // Llenar los campos del formulario con los datos obtenidos
-                                                    $('#horario-id').val(horarioId);
-                                                    $('#dia_id').val(diaId);
+                                                    // Actualizar los valores del formulario
+                                                    $('#form-editar-horario').attr('action', '{{ route("actualizar-horario", ":id") }}'.replace(':id', horarioId));
+                                                    $('#horario-id-editar').val(horarioId);
                                                     $('#hora_inicio').val(horaInicio);
                                                     $('#hora_fin').val(horaFin);
-                                                    $('#hora_inicio1').val(horaInicio1 || '');
-                                                    $('#hora_fin1').val(horaFin1 || '');
+                                                    $('#hora_inicio1').val(horaInicio1);
+                                                    $('#hora_fin1').val(horaFin1);
                                                 });
                                             </script>
+                                            
+
                                             <!-- Boton de anular/activar-->
                                             @if ($horario->estado == 1)
                                                 <!-- Botón de Anular -->
@@ -1206,7 +1187,7 @@
             });
         </script>
 </div>
-<!-- Agenda -->
+<!-- Mis citas -->
 <div id="citas" class="content-section">
     <h3> MIS CITAS</h3>
     <div class="row">
@@ -1261,12 +1242,6 @@
         <p>Aquí puedes gestionar los turnos de la empresa.</p>
     </div>
 
-    <!-- Clientes -->
-    <div id="clientes" class="content-section d-none">
-        <h3>Clientes</h3>
-        <p>Gestiona los clientes registrados en la empresa.</p>
-    </div>
-
     <!-- Informes -->
     <div id="informes" class="content-section d-none">
         <h3>Informes</h3>
@@ -1278,15 +1253,6 @@
         <h3>Caja</h3>
         <p>Administración de ingresos y egresos de la caja.</p>
     </div>
-
- 
-
-    <!-- Ajustes -->
-    <div id="ajustes" class="content-section d-none">
-        <h3>Ajustes</h3>
-        <p>Ajustes de la cuenta y preferencias del usuario.</p>
-    </div>
-
 
 @endsection
 

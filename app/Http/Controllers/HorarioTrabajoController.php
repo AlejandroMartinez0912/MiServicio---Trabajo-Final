@@ -103,46 +103,51 @@ class HorarioTrabajoController extends Controller
     {
         // Validar los datos del formulario con validaciones personalizadas
         $validated = $request->validate([
-            'dia_id' => 'required|exists:dias,id', // Verifica que el ID del día exista
             'hora_inicio' => 'required|date_format:H:i',
             'hora_fin' => 'required|date_format:H:i',
             'hora_inicio1' => 'nullable|date_format:H:i',
             'hora_fin1' => 'nullable|date_format:H:i',
         ]);
-    
+
         // Obtener las horas de inicio y fin
         $horaInicio = \Carbon\Carbon::createFromFormat('H:i', $request->hora_inicio);
         $horaFin = \Carbon\Carbon::createFromFormat('H:i', $request->hora_fin);
-    
-        // Obtener las horas de inicio1 y fin1
+
+        //Obtener las horas de inicio1 y fin1
         $horaInicio1 = $request->hora_inicio1 ? \Carbon\Carbon::createFromFormat('H:i', $request->hora_inicio1) : null;
         $horaFin1 = $request->hora_fin1 ? \Carbon\Carbon::createFromFormat('H:i', $request->hora_fin1) : null;
-    
-        // Determinar los turnos
+        
+         // Llamar a la función de validación de horarios
+         $isValid = $this->validarHorario($horaInicio, $horaFin, $horaInicio1, $horaFin1);
+
+         // Si la validación falla, devolver un error con el mensaje correspondiente
+         if (!$isValid) {
+             return redirect()->route('gestion-servicios')->with('error', 'Los horarios no son válidos o se solapan.')->withInput();        
+         }
+        // Determinar el turno
         $turno1 = $this->determinarTurno($horaInicio, $horaFin);
         $turno2 = null;
-    
-        if ($horaInicio1 && $horaFin1) {
+
+        if ($request->hora_inicio1 && $request->hora_fin1) {
             $turno2 = $this->determinarTurno($horaInicio1, $horaFin1);
         }
-    
-        // Buscar el horario existente en la base de datos
-        $horario = HorarioTrabajo::findOrFail($id); // Aquí se obtiene el horario por ID
-    
-        // Actualizar los campos del horario
-        $horario->dia_id = $request->dia_id;
+        // actualizar el horario
+        $horario = HorarioTrabajo::find($id);
+        // Actualizar el horario en la base de datos
         $horario->hora_inicio = $horaInicio;
         $horario->hora_fin = $horaFin;
-        $horario->hora_inicio1 = $horaInicio1;
-        $horario->hora_fin1 = $horaFin1;
+        $horario->hora_inicio1 = $request->hora_inicio1;
+        $horario->hora_fin1 = $request->hora_fin1;
         $horario->turno1 = $turno1;
         $horario->turno2 = $turno2;
-    
-        // Guardar los cambios en la base de datos
+
+        // Guardar el horario en la base de datos
+        $horario->save();
+        
         if ($horario->save()) {
-            return redirect()->route('gestion-servicios')->with('success', 'Horario actualizado correctamente.');
+            return redirect()->route('gestion-servicios')->with('success', 'Horario guardado correctamente.');
         } else {
-            return back()->withErrors(['error' => 'Hubo un problema al actualizar el horario.'])->withInput();
+            return redirect()->route('gestion-servicios')->with('error', 'No se pudo guardar correctamente los horarios.')->withInput();        
         }
     }
     
