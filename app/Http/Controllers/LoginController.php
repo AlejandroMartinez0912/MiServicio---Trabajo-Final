@@ -18,45 +18,8 @@ class LoginController extends Controller
      */
     public function register(Request $request)
     {
-        // Validar los datos de entrada con mensajes personalizados
-        $request->validate([
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'nombre' => 'required|string|max:50',
-            'apellido' => 'required|string|max:50',
-            'domicilio' => 'nullable|string|max:100',
-            'fecha_nacimiento' => [
-                'required',
-                'date',
-                'before:today',
-                function ($attribute, $value, $fail) {
-                    $edad = \Carbon\Carbon::parse($value)->age;
-                    if ($edad < 18) {
-                        $fail('Debes tener al menos 18 años.');
-                    }
-                }
-            ],
-            'documento' => 'nullable|numeric|unique:persona,documento|max:999999999', // Máximo 9 dígitos
-            'telefono' => 'nullable|string|max:15',
-        ], [
-            'email.required' => 'El campo correo electrónico es obligatorio.',
-            'email.email' => 'El correo electrónico debe ser válido.',
-            'email.unique' => 'Este correo electrónico ya está registrado.',
-            'password.required' => 'El campo contraseña es obligatorio.',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
-            'nombre.required' => 'El campo nombre es obligatorio.',
-            'nombre.max' => 'El nombre no debe superar los 50 caracteres.',
-            'apellido.required' => 'El campo apellido es obligatorio.',
-            'apellido.max' => 'El apellido no debe superar los 50 caracteres.',
-            'domicilio.max' => 'El domicilio no debe superar los 100 caracteres.',
-            'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
-            'fecha_nacimiento.date' => 'La fecha de nacimiento debe ser una fecha válida.',
-            'fecha_nacimiento.before' => 'Debes tener al menos 18 años.',
-            'documento.numeric' => 'El documento debe contener solo números.',
-            'documento.unique' => 'Este documento ya está registrado.',
-            'documento.max' => 'El documento no debe tener más de 9 dígitos.',
-            'telefono.max' => 'El teléfono no debe superar los 15 caracteres.',
-        ]);
+        //Validar usuario
+        $this->validateRegister($request);
 
         // Crear un nuevo usuario
         $user = new User();
@@ -75,7 +38,6 @@ class LoginController extends Controller
         $persona->telefono = $request->telefono;
         $persona->save();
 
-        
 
         // Iniciar sesión automáticamente después de registrarse
         Auth::login($user);
@@ -83,6 +45,7 @@ class LoginController extends Controller
         // Redirigir a la ruta privada
         return redirect()->route('privada');
     }
+
     /**
      * Inicia sesión en la aplicación.
      *
@@ -132,5 +95,49 @@ class LoginController extends Controller
 
         // Redirigir a la página principal
         return redirect()->route('home');
+   }
+   /**
+    * Funcion para validar registro
+    */
+    public function validateRegister(Request $request){
+        // Validar los datos de entrada con mensajes personalizados
+        $request->validate([
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'nombre' => 'required|string|max:50',
+            'apellido' => 'required|string|max:50',
+            'domicilio' => 'nullable|string|max:100',
+            'fecha_nacimiento' => [
+                'required',
+                'date',
+                'before:today',
+                function ($attribute, $value, $fail) {
+                    $edad = \Carbon\Carbon::parse($value)->age;
+                    if ($edad < 18) {
+                        $fail('Debes tener al menos 18 años.');
+                    }
+                }
+            ],
+            'documento' => 'nullable|numeric|unique:persona,documento|max:999999999', // Máximo 9 dígitos
+            'telefono' => 'nullable|string|max:15',
+        ], [
+            'email.required' => 'El campo correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser válido.',
+            'email.unique' => 'Este correo electrónico ya está registrado.',
+            'password.required' => 'El campo contraseña es obligatorio.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'nombre.required' => 'El campo nombre es obligatorio.',
+            'nombre.max' => 'El nombre no debe superar los 50 caracteres.',
+            'apellido.required' => 'El campo apellido es obligatorio.',
+            'apellido.max' => 'El apellido no debe superar los 50 caracteres.',
+            'domicilio.max' => 'El domicilio no debe superar los 100 caracteres.',
+            'fecha_nacimiento.required' => 'El campo fecha de nacimiento es obligatorio.',
+            'fecha_nacimiento.date' => 'La fecha de nacimiento debe ser una fecha válida.',
+            'fecha_nacimiento.before' => 'Debes tener al menos 18 años.',
+            'documento.numeric' => 'El documento debe contener solo números.',
+            'documento.unique' => 'Este documento ya está registrado.',
+            'documento.max' => 'El documento no debe tener más de 9 dígitos.',
+            'telefono.max' => 'El teléfono no debe superar los 15 caracteres.',
+        ]);
     }
 }

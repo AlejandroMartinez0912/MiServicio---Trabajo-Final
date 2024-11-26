@@ -9,10 +9,12 @@ use App\Http\Controllers\HorarioTrabajoController;
 use App\Http\Controllers\CitaController;
 
 use Illuminate\Support\Facades\Route;
-
+use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
 // Ruta de página principal llamada Home
 Route::view('/', "home")->name('home');
+
+
 
 // RUTAS DE LOGIN
 Route::view('/privada', "secret")->middleware('auth')->name('privada');

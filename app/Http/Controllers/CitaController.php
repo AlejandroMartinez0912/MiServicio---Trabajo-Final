@@ -14,6 +14,9 @@ use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Mail\CitaConfirmada;
+use App\Mail\CitaRegistrada;
+use Illuminate\Support\Facades\Mail;
 setlocale(LC_TIME, 'es_ES.UTF-8');
 
 
@@ -147,6 +150,13 @@ class CitaController extends Controller
 
         $servicio->cantidad_reservas = $servicio->cantidad_reservas + 1;
         $servicio->save();
+
+        // Enviar el correo de confirmación
+        $persona = Persona::findOrFail($idPersona);
+        $user = User::findOrFail($persona->user_id);
+        $usuario = User::findOrFail($user->id);
+        Mail::to($usuario->email)->send(new CitaRegistrada($cita));
+
         
         // Redirigir con éxito
         return redirect()->route('index-cita')->with('success', 'Cita creada exitosamente.');
