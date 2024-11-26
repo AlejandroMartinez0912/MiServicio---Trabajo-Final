@@ -136,11 +136,13 @@
       <a class="navbar-brand" href="{{ route('privada') }}">
         <img src="{{ asset('Images/logo.png') }}" alt="Logo de MiServicio">
       </a>
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
+          
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuButton" role="button" 
                data-bs-toggle="dropdown" aria-expanded="false">
@@ -152,20 +154,18 @@
 
               <li><hr class="dropdown-divider"></li>
 
-              <li><a class="dropdown-item" href="{{ route('home') }}">
-                <i class='bx bx-store-alt'></i>  Nueva empresa</a></li>
-
-              <li><a class="dropdown-item" href="{{ route('home') }}">
-                <i class='bx bxs-store-alt'></i>  Mis empresas</a></li>
+              <li><a class="dropdown-item" href="{{ route('gestion-servicios') }}">
+                <i class='bx bx-donate-blood'></i> Gestion de servicios</a></li>
 
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{{ route('home') }}">
+              <li><a class="dropdown-item" href="{{ route('privada') }}">
                 <i class='bx bx-search-alt-2'></i>  Buscar servicio</a></li>
 
-              <li><a class="dropdown-item" href="{{ route('home') }}">
-                <i class='bx bxs-edit'></i>  Mis turnos</a></li>
+              <li><a class="dropdown-item" href="{{ route('index-cita') }}">
+                
+                <i class='bx bx-list-check'></i> Mis Citas</a></li>
+                <li><hr class="dropdown-divider"></li>
 
-              <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">
                 <i class='bx bx-exit'></i>  Salir</a></li>
             </ul>

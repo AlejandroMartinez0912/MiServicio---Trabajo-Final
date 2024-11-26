@@ -70,39 +70,38 @@ MiServicio
     }
 </style>
 
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow-lg" style="width: 28rem;">
-        <h2 class="text-center mb-4">¡Bienvenido de nuevo, {{ Auth::user()->persona->nombre }}!</h2>
-        <p class="text-center mb-3">Estamos encantados de tenerte de vuelta. Aquí tienes algunas acciones rápidas que puedes realizar:</p>
+<!-- Barra de navegación -->
+<nav class="navbar navbar-expand-lg navbar-dark"">
+    <div class="container-fluid">
+        <!-- Logo de la marca -->
+        <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Buscar Servicios</a>
 
-        <!-- Mostrar mensajes de error si existen -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        <div class="card-body">
-            <h3 class="text-center mb-4">Acciones rápidas</h3>
-            
-            <!-- Acciones rápidas después de iniciar sesión -->
-            <div class="d-grid gap-2">
-                <a href="{{ route('perfil') }}" class="btn btn-primary">Editar Perfil</a>
-                <a href="{{ route('gestion-servicios') }}" class="btn btn-primary">Gestionar Mis Servicios</a>
-                <a href="{{ route('index-cita') }}" class="btn btn-primary">Buscar Nuevos Servicios</a>
-                <a href="{{ route('home') }}" class="btn btn-primary">Ver Mis Turnos</a>
-            </div>
-
-            <div class="quick-actions text-center mt-4">
-                <p>¿Necesitas ayuda? Visita nuestra <a href="#">sección de soporte</a>.</p>
+        <div class="container" style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+            <div>
+                <!-- Título de la sección -->
+                <h3 class="text-center mb-4">Buscar Servicios</h2>
+                <!-- Barra de búsqueda con ícono -->
+                <div class="row mb-4">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bx bx-search"></i>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Buscar por nombre de servicio..." aria-label="Buscar servicio">
+                            <span class="input-group-text">
+                                <i class='bx bx-filter'></i>
+                            </span>
+                        </div>
+                    </div>
+        
+                 </div>
             </div>
         </div>
     </div>
-</div>
+</nav>
+
+<!-- Listado de Servicios -->
+
 
 @endsection
 

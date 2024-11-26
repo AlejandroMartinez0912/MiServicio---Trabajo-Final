@@ -98,7 +98,8 @@ class CitaController extends Controller
      * Guardar cita
      */
     public function guardarCita(Request $request)
-    {   
+    { 
+        
         //datos de cita de la vista
         $fechaCita = $request->input('fecha');
         $horaInicio = $request->input('horaInicio');
@@ -130,6 +131,7 @@ class CitaController extends Controller
 
         //Convertir fecha
         $fechaCita = Carbon::parse($fechaCita);
+
 
         $cita = new Cita([
             'estado' => 'pendiente',

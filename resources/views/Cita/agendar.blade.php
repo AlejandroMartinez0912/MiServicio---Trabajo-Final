@@ -225,6 +225,34 @@
         text-align: center;
         margin-bottom: 30px;
     }
+    .form-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h4 {
+        color: #444;
+        font-weight: 700;
+    }
+
+    .form-control {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+    }
 
 </style>
 
@@ -279,245 +307,93 @@
         </div>
     </div>
     
-    <!-- Eleccion de fecha y horario -->
-    <div class="container" style=padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+    <!-- Elección de fecha y horario -->
+    <div class="container" style="padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
         <hr>
         <div class="d-flex justify-content-between align-items-center">
             <h4 class="mb-3"><i class='bx bxs-calendar'></i> Elegir fecha y horario</h4>
         </div>
+        <form id="citaForm" method="POST" action="{{ route('guardar-cita') }}">
+            @csrf
+            <!-- Campo oculto para el id del servicio -->
+            <input type="hidden" name="servicio_id" value="{{ $servicio->id }}">
 
-          <div class="container mt-5">
-            <div class="date-picker-container">
-                <!-- Contenedor de botones de navegación -->
-                <div class="navigation-buttons">
-                    <!-- Botón retroceder fecha -->
-                    <button id="prevDate" onclick="changeDate(-1)">&#8249;</button>
-                </div>
+            <!-- Selección de fecha -->
+            <div class="form-group mb-3">
+                <label for="fecha" class="form-label"><i class="bx bx-calendar"></i> Fecha de la cita:</label>
+                <input type="text" id="fecha" name="fecha" class="form-control" placeholder="Seleccione una fecha" required>
+            </div>
 
-                <!-- Contenedor de selección de fechas -->
-                <div class="date-display" id="dateDisplay">
-                    <!-- Días dinámicos -->
-                    <div class="day-box" id="day1" onclick="selectDay(1)"></div>
-                    <div class="day-box" id="day2" onclick="selectDay(2)"></div>
-                    <div class="day-box" id="day3" onclick="selectDay(3)"></div>
-                    <div class="day-box" id="day4" onclick="selectDay(4)"></div>
-                    <div class="day-box" id="day5" onclick="selectDay(5)"></div>
-                </div>
+            <!-- Selección de hora -->
+            <div class="form-group mb-3">
+                <label for="horaInicio" class="form-label"><i class="bx bx-time"></i> Hora de inicio:</label>
+                <input type="text" id="horaInicio" name="horaInicio" class="form-control" placeholder="Seleccione la hora de inicio" required>
+            </div>
 
-                <!-- Contenedor de selección de horario -->
-                <div class="schedule-container">
-                    <div id="schedule" class="schedule-display">
-                        <p>Selecciona un día para ver los horarios disponibles</p>
-                    </div>
-                </div>
-
-                <!-- Botón adelantar fecha -->
-                <div class="navigation-buttons">
-                    <button id="nextDate" onclick="changeDate(1)">&#8250;</button>
-                </div>
+            <!-- Botón de enviar -->
+            <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#confirmModal">Confirmar</button>
+        </form>
+    </div>
+</div>
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmar Cita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas confirmar la cita con la siguiente información?</p>
+                <p><strong>Fecha:</strong> <span id="confirmFecha"></span></p>
+                <p><strong>Hora de inicio:</strong> <span id="confirmHora"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmarCita">Confirmar</button>
             </div>
         </div>
     </div>
-     <!-- Botón para abrir el Modal -->
-     <button type="button" class="btn-agendar-cita" onclick="openConfirmationModal()">Agendar Cita</button>
-
-     <!-- Modal de Confirmación -->
-     <div id="confirmationModal" class="modal" tabindex="-1">
-         <div class="modal-dialog">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <h5 class="modal-title">Confirmar Cita</h5>
-                     <button type="button" class="btn-close" onclick="closeConfirmationModal()"></button>
-                 </div>
-                 <div class="modal-body">
-                     <p><strong>Fecha seleccionada:</strong> <span id="selectedDate"></span></p>
-                     <p><strong>Hora seleccionada:</strong> <span id="selectedTime"></span></p>
-                 </div>
-                 <div class="modal-footer">
-                     <!-- Formulario para enviar datos -->
-                     <form id="appointmentForm" method="POST" action="{{ route('guardar-cita') }}">
-                         @csrf
-                         <input type="hidden" id="hiddenDate" name="fecha">
-                         <input type="hidden" id="hiddenTime" name="horaInicio">
-                         <input type="hidden" id="hiddenService" name="servicio_id" value="{{ $servicio->id }}">
-                         <button type="submit" class="btn btn-success">Confirmar</button>
-                         <button type="button" class="btn btn-secondary" onclick="closeConfirmationModal()">Cancelar</button>
-                     </form>
-                     
-                 </div>
-             </div>
-         </div>
-     </div>
-
-     <script>
-         let currentDate = new Date();
-         let selectedDay = null;
-
-         let date = null;
-         let time = null; 
-     
-         // Días laborables desde el servidor
-         const workingDays = @json($diasDeTrabajo);
-
-         // Horarios disponibles por día de la semana
-         const availableSchedules = {
-               1: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"], // Lunes
-               2: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],// Martes
-               3: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],// Miércoles
-               4: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],// Jueves
-               5: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],// Viernes
-               6: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],// Sábado
-               7: ["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"],// Domingo
-         };
-
-         // Función para actualizar la visualización de las fechas
-         function updateDateDisplay() {
-               const days = [];
-               for (let i = 0; i < 5; i++) {
-                   let tempDate = new Date(currentDate);
-                   tempDate.setDate(currentDate.getDate() + i); // Sumar el i-ésimo día al actual
-                   days.push(tempDate);
-               }
-
-               // Actualizar la interfaz con las 5 fechas
-               for (let i = 0; i < 5; i++) {
-                   const dayElement = document.getElementById(`day${i + 1}`);
-                   const day = days[i].getDate();
-                   const month = days[i].toLocaleString('default', { month: 'short' });
-                   const weekday = days[i].toLocaleString('default', { weekday: 'short' });
-                   const dayOfWeek = days[i].getDay() === 0 ? 7 : days[i].getDay(); // Ajuste: Domingo es 7, no 0
-
-                   // Establecer el contenido de cada día
-                   dayElement.innerHTML = `
-                       <span id="month">${month}</span>
-                       <span id="weekday">${weekday}</span>
-                       <span id="day">${day}</span>
-                   `;
-
-                   // Verificar si el día es laborable o no
-                   if (workingDays.indexOf(dayOfWeek) === -1) {
-                       dayElement.classList.add('unavailable');
-                       dayElement.setAttribute('onclick', ''); // Deshabilitar la acción de clic
-                   } else {
-                       dayElement.classList.remove('unavailable');
-                       dayElement.setAttribute('onclick', `selectDay(${i + 1}, ${dayOfWeek})`); // Activar el clic
-                   }
-               }
-         }
-
-         // Función para cambiar la fecha (adelantar o retroceder)
-         function changeDate(direction) {
-               currentDate.setDate(currentDate.getDate() + direction);
-               updateDateDisplay();
-               deselectAllDays(); // Deseleccionar todos los días cuando se cambia la fecha
-               clearSchedule(); // Limpiar horarios
-         }
-
-         // Función para seleccionar un día
-         function selectDay(dayNumber, dayOfWeek) {
-               // Deseleccionar el día previamente seleccionado
-               deselectAllDays();
-
-               // Seleccionar el día clicado
-               const dayElement = document.getElementById(`day${dayNumber}`);
-               dayElement.classList.add('selected');
-               selectedDay = dayNumber;
-
-             // Obtener la fecha seleccionada
-             const day = dayElement.querySelector("#day").textContent;
-             const month = dayElement.querySelector("#month").textContent;
-             
-             const year = new Date().getFullYear(); // Suponiendo que siempre es el año actual
-        
-             // Formatear la fecha seleccionada como 'YYYY-MM-DD'
-             date = `${year}-${month}-${day.padStart(2, '0')}`;
-
-             // Actualizar el campo oculto en el formulario
-             document.getElementById('hiddenDate').value = date;
-
-
-               // Mostrar horarios para el día seleccionado
-               displaySchedule(dayOfWeek);
-
-         }
-
-         // Función para deselectar todos los días
-         function deselectAllDays() {
-               const allDays = document.querySelectorAll('.day-box');
-               allDays.forEach(day => {
-                   day.classList.remove('selected');
-               });
-         }
-
-         // Función para mostrar los horarios disponibles
-         function displaySchedule(dayOfWeek) {
-                 const scheduleContainer = document.getElementById('schedule');
-                 scheduleContainer.innerHTML = ''; // Limpiar horarios previos
-
-                 if (availableSchedules[dayOfWeek] && availableSchedules[dayOfWeek].length > 0) {
-                     availableSchedules[dayOfWeek].forEach(schedule => {
-                         const scheduleItem = document.createElement('button');
-                         scheduleItem.classList.add('schedule-item');
-                         scheduleItem.textContent = schedule;
-
-                         // Añadir evento de clic para seleccionar el horario
-                         scheduleItem.onclick = () => selectSchedule(scheduleItem);
-
-                         scheduleContainer.appendChild(scheduleItem);
-                     });
-                 } else {
-                     scheduleContainer.innerHTML = '<p>No hay horarios disponibles para este día</p>';
-                 }
-         }
-
-         // Nueva función para seleccionar un horario
-             function selectSchedule(scheduleItem) {
-                 // Deseleccionar horarios previamente seleccionados
-                 const allSchedules = document.querySelectorAll('.schedule-item');
-                 allSchedules.forEach(item => item.classList.remove('selected'));
-
-                 // Marcar el horario clicado como seleccionado
-                 scheduleItem.classList.add('selected');
-             // Obtener el horario seleccionado
-             time = scheduleItem.textContent;
-
-             // Actualizar el campo oculto en el formulario
-             document.getElementById('hiddenTime').value = time;
-
-         }
-
-         // Función para limpiar los horarios
-         function clearSchedule() {
-               const scheduleContainer = document.getElementById('schedule');
-               scheduleContainer.innerHTML = '<p>Selecciona un día para ver los horarios disponibles</p>';
-         }
-
-         // Inicializar con la fecha actual
-         updateDateDisplay();
-
-         // Función para abrir el modal
-         function openConfirmationModal() {
-             const modal = document.getElementById('confirmationModal');
-             modal.style.display = 'block';
-
-             // Actualizar los valores mostrados en el modal
-             document.getElementById('selectedDate').textContent = document.getElementById('hiddenDate').value;
-             document.getElementById('selectedTime').textContent = document.getElementById('hiddenTime').value;
-         }
-
-         // Función para cerrar el modal
-         function closeConfirmationModal() {
-             const modal = document.getElementById('confirmationModal');
-             modal.style.display = 'none';
-         }
-     </script>
-        
 </div>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+    // Inicializar Flatpickr
+    flatpickr("#fecha", {
+        altInput: true,
+        altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
+        minDate: "today"
+    });
+
+    flatpickr("#horaInicio", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true
+    });
+
+    // Función para actualizar los datos de la cita en el modal de confirmación
+    document.querySelector('button[data-bs-toggle="modal"]').addEventListener('click', function() {
+        const fecha = document.getElementById('fecha').value;
+        const horaInicio = document.getElementById('horaInicio').value;
+
+        document.getElementById('confirmFecha').textContent = fecha;
+        document.getElementById('confirmHora').textContent = horaInicio;
+    });
+
+    // Confirmar la cita y enviar el formulario
+    document.getElementById('confirmarCita').addEventListener('click', function() {
+        document.getElementById('citaForm').submit();  // Envía el formulario
+    });
+</script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 
 
 
 @endsection
 
-<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>

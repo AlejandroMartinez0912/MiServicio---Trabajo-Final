@@ -529,7 +529,6 @@
      
 </div>
 
-
 <!-- Script para cambiar de sección -->
 <script>
         document.addEventListener('DOMContentLoaded', function() {
