@@ -501,23 +501,24 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($citas as $cita)
-                                        @if ($cita->estado === 'confirmada' || $cita->estado === 'pendiente')
                                             <tr>
                                                 <td>{{ $cita->servicio->nombre }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</td>
                                                 <td>
-                                                    <span class="badge badge-{{ $cita->estado === 'confirmada' ? 'success' : 'warning' }}">
-                                                        {{ ucfirst($cita->estado) }}
-                                                    </span>
-
+                                                    @if ($cita->estado == 0)
+                                                        <span class="badge badge-warning">Pendiente</span>
+                                                    @elseif ($cita->estado == 1)
+                                                        <span class="badge badge-success">Confirmada</span>
+                                                    @elseif ($cita->estado == 2)
+                                                        <span class="badge badge-danger">Cancelada</span>
+                                                    @endif
+                        
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-sm btn-action edit">Editar</button>
                                                     <button class="btn btn-sm btn-action anular">Cancelar</button>
-                                                </td>
-                                        @endif
-                                        
+                                                </td>                                        
                                     @endforeach
                                 </tbody>
                             </table>

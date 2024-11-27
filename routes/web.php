@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgendaAutomaticaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\DatosProfesionController;
@@ -66,3 +67,7 @@ Route::post('/citas/guardar', [CitaController::class, 'guardarCita'])->name('gua
 // Ruta para confirmar cita con 
 Route::post('/confirmar-cita', [CitaController::class, 'confirmarCita'])->name('confirmar-cita');
 Route::post ('/cancelar-cita', [CitaController::class, 'cancelarCita'])->name('cancelar-cita');
+
+//RUTAS PROCESO AUTOMATIZADO - AGENDA AUTOMATICA
+Route::get('/agenda-automatizada/{id}', [AgendaAutomaticaController::class, 'citaConfirmar'])->name('cita-confirmar')->middleware('auth');
+Route::post('/cita-confirmada/{id}', [AgendaAutomaticaController::class, 'citaConfirmada'])->name('cita-confirmada')->middleware('auth');

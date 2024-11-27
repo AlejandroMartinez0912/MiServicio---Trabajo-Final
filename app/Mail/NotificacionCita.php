@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CitaRegistrada extends Mailable
+class NotificacionCita extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -32,7 +32,7 @@ class CitaRegistrada extends Mailable
      */
     public function build()
     {
-        return $this->subject('Registro de Cita')
-                    ->view('emails.citaRegistrada');
+        return $this->subject('Confirmar cita para mañana')
+                    ->view('emails.notificacionCita-ProcesoAutomatico');
     }
 }
