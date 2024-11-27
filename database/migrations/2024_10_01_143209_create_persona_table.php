@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('apellido');
             $table->string('domicilio');
             $table->date('fecha_nacimiento');
+            $table->decimal('calificacion', 3, 2)->default(0);
             $table->integer('documento')->unique(); // Documento único
             $table->string('telefono');
             $table->boolean('estado_profesional')->default(0);

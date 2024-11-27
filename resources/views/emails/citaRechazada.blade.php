@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Cita</title>
+    <title>Rechazo de Cita</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,7 +16,7 @@
         .container {
             width: 100%;
             max-width: 600px;
-            margin: 30px auto;
+            margin: 30px auto;  
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -79,19 +79,15 @@
         <!-- Header con el logo -->
         <div class="header">
             <img src="{{ asset('Images/logo.png') }}" alt="MiServicio Logo">
-            <h1>¡Cita Registrada!</h1>
+            <h1>¡Cita rechazada! </h1>
         </div>
         
         <!-- Contenido del correo -->
         <div class="content">
             <p>Estimado/a,</p>
-            <p>Tu cita ha sido registrada exitosamente. Aquí tienes los detalles:</p>
-            <ul>
-                <li><strong>Fecha:</strong> {{ $cita->fechaCita->format('d/m/Y') }}</li>
-                <li><strong>Hora de inicio:</strong> {{ $cita->horaInicio }}</li>
-                <li><strong>Hora de fin:</strong> {{ $cita->horaFin }}</li>
-            </ul>
-            <p>En breve el especialista confirmará la cita. ¡Gracias por confiar en <strong>MiServicio</strong>!</p>
+            <p>Lamentamos informarte que tu cita ha sido rechaza. Sigue buscando la mejor alternativa en <strong>MiServicio</strong></p>
+            
+            <p>¡Esperamos verte pronto!</p>
         </div>
         
         <!-- Footer -->

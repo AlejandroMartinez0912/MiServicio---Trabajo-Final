@@ -1209,24 +1209,136 @@
                             </thead>
                             <tbody>
                                 @foreach ($citas as $cita)
-                                    @if ($cita->estado === 'confirmada' || $cita->estado === 'pendiente')
                                         <tr>
-                                            <td>{{$cita->persona->nombre . ' ' . $cita->persona->apellido}}</td>
+                                            <td>{{$cita->persona->nombre . ' ' . $cita->persona->apellido}}
+                                                <a href="#" data-toggle="modal" data-target="#clienteModal{{ $cita->persona->id }}" style="color: #007bff; text-decoration: none;">
+                                                       Ver detalle
+                                                </a>
+                                                <!-- Modal para mostrar los datos del cliente -->
+                                                <div class="modal fade" id="clienteModal{{ $cita->persona->id }}" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="clienteModalLabel">Datos del Cliente</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p><strong>Nombre:</strong> {{ $cita->persona->nombre }} {{ $cita->persona->apellido }}</p>
+                                                                <p><strong>Email:</strong> {{ $cita->persona->user->email }}</p>
+                                                                <p><strong>Teléfono:</strong> {{ $cita->persona->telefono }}</p>
+                                                                <p><strong>Dirección:</strong> {{ $cita->persona->domicilio }}</p>
+                                                                @if ($cita->persona->calificacion == 0.0)
+                                                                    <p><strong>Calificación:</strong> No calificado</p>
+                                                                @else
+                                                                    <p><strong>Calificación:</strong> {{ $cita->persona->calificacion }}</p>
+                                                                @endif
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td>{{ $cita->servicio->nombre }}</td>
                                             <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</td>
                                             <td>
-                                                <span class="badge badge-{{ $cita->estado === 'confirmada' ? 'success' : 'warning' }}">
-                                                    {{ ucfirst($cita->estado) }}
-                                                </span>
-
+                                                @if ($cita->estado === 0)
+                                                    <span class="badge badge-warning">Pendiente</span>
+                                                    </span>
+                                                @elseif ($cita->estado === 1)
+                                                    <span class="badge badge-success">Confirmada</span>
+                                                @elseif ($cita->estado === 2)
+                                                    <span class="badge badge-danger">Cancelada</span>
+                                                @endif
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-action edit">Editar</button>
-                                                <button class="btn btn-sm btn-action anular">Cancelar</button>
-                                            </td>
-                                    @endif
-                                    
+                                                <!-- Botón que abre el modal de confirmar cita -->
+                                                <button type="button" class="btn btn-modern" data-bs-toggle="modal" data-bs-target="#confirmCitaModal{{ $cita->idCita }}">
+                                                    Confirmar Cita
+                                                </button>
+                                                <style> 
+                                                    .btn-modern {
+                                                        font-size: 10px; /* Tamaño de texto pequeño */
+                                                        padding: 6px 12px; /* Ajusta el espacio interno */
+                                                        border: none; /* Elimina bordes predeterminados */
+                                                        border-radius: 5px; /* Esquinas redondeadas */
+                                                        background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Gradiente moderno */
+                                                        color: #fff; /* Texto blanco */
+                                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+                                                        transition: all 0.3s ease; /* Animación suave */
+                                                        cursor: pointer; /* Cambia el cursor al pasar el ratón */
+                                                        margin-bottom: 10px;
+                                                    }
+                                                    .btn-modern1 {
+                                                        font-size: 10px; /* Tamaño de texto pequeño */
+                                                        padding: 6px 12px; /* Ajusta el espacio interno */
+                                                        border: none; /* Elimina bordes predeterminados */
+                                                        border-radius: 5px; /* Esquinas redondeadas */
+                                                        background: linear-gradient(135deg, #c82333, #dc3545); /* Gradiente moderno */
+                                                        color: #fff; /* Texto blanco */
+                                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+                                                        transition: all 0.3s ease; /* Animación suave */
+                                                        cursor: pointer; /* Cambia el cursor al pasar el ratón */
+                                                    }
+
+                                                </style>   
+                                                <!-- Modal de confirmacion -->
+                                                <div class="modal fade" id="confirmCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="confirmCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="confirmCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                ¿Estás seguro de que deseas confirmar esta cita?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                <!-- Formulario para confirmar la cita -->
+                                                                <form action="{{ route('confirmar-cita') }}" method="POST" style="display: inline;">
+                                                                    @csrf
+                                                                    <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Botón que abre el modal de cancelar cita -->
+                                                <button type="button" class="btn btn-modern1" data-bs-toggle="modal" data-bs-target="#cancelCitaModal{{ $cita->idCita }}">
+                                                    Rechazar cita
+                                                </button>
+                                                <!-- Modal de rechazo cita -->
+                                                <div class="modal fade" id="cancelCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="cancelCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="cancelCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                ¿Estás seguro de que deseas Rechazar esta cita?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                <!-- Formulario para confirmar la cita -->
+                                                                <form action="{{ route('cancelar-cita') }}" method="POST" style="display: inline;">
+                                                                    @csrf
+                                                                    <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                    <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                           </td>
                                 @endforeach
                             </tbody>
                         </table>

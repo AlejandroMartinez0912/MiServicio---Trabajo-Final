@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Mail\CitaConfirmada;
+use App\Mail\CitaRechazada;
 use App\Mail\CitaRegistrada;
+use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Support\Facades\Mail;
 setlocale(LC_TIME, 'es_ES.UTF-8');
 
@@ -137,7 +139,7 @@ class CitaController extends Controller
 
 
         $cita = new Cita([
-            'estado' => 'pendiente',
+            'estado' => 0,
             'fechaCita' => $fechaCita,
             'horaInicio' => $horaInicio,
             'horaFin' => $horaFin,
@@ -284,30 +286,67 @@ class CitaController extends Controller
     }
 
     /**
-     * Funcion editar cita
+     * Confirmar cita especialista
      */
-    public function editarCita(){
+    /**
+     * Confirmar cita
+     */
+    public function confirmarCita(Request $request)
+    {
+        $IdCita = request()->input('citaId');
+        $cita = Cita::find($IdCita);
+
+        if (!$cita) {
+            // Redirige con un mensaje de error si no se encuentra la cita
+            return redirect()->back()->with('error', 'Cita no encontrada.');
+        }
+
+        $cita->estado = 1;
+        $cita->save();
+
+        // Enviar el correo de confirmación
+        $idPersona = $cita->idPersona;
+        $persona = Persona::findOrFail($idPersona);
+        $user = User::findOrFail($persona->user_id);
+        $usuario = User::findOrFail($user->id);
+        Mail::to($usuario->email)->send(new CitaConfirmada($cita));
+
+
+
+        return redirect()->route('gestion-servicios')->with('success', 'Cita confirmada');
 
     }
 
     /**
-     * anular cita
+     * Cancelar cita
      */
     public function cancelarCita(Request $request)
     {
-        $citaId = $request->input('cita_id');
-        $cita = Cita::findOrFail($citaId);
+        $IdCita = request()->input('citaId');
+        $cita = Cita::find($IdCita);
 
-        // Cambiar el estado de la cita a 'cancelada'
-        $cita->estado = 'cancelada';
+        if (!$cita) {
+            // Redirige con un mensaje de error si no se encuentra la cita
+            return redirect()->back()->with('error', 'Cita no encontrada.');
+        }
+
+        $cita->estado = 2;
         $cita->save();
 
-        // Redireccionar de vuelta con un mensaje de éxito
-        return redirect()->back()->with('success', 'La cita ha sido cancelada correctamente.');
+        // Enviar el correo de confirmación
+        $idPersona = $cita->idPersona;
+        $persona = Persona::findOrFail($idPersona);
+        $user = User::findOrFail($persona->user_id);
+        $usuario = User::findOrFail($user->id);
+        Mail::to($usuario->email)->send(new CitaRechazada($cita));
+
+
+
+        return redirect()->route('gestion-servicios')->with('success', 'Cita cancelada con éxito.');
+
     }
 
-  
-
+    
 }
 
 

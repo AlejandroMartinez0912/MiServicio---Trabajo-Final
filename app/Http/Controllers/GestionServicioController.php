@@ -86,4 +86,5 @@ class GestionServicioController extends Controller
         $promedio = round($promedio, 2);
         return $promedio;
     }
+
 }

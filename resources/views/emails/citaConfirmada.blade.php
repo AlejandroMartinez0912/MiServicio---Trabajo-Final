@@ -87,7 +87,7 @@
             <p>Estimado/a,</p>
             <p>Tu cita ha sido confirmada exitosamente. Aquí tienes los detalles:</p>
             <ul>
-                <li><strong>Fecha:</strong> {{ $cita->fechaCita->format('d/m/Y') }}</li>
+                <li><strong>Fecha:</strong> {{ $cita->fechaCita}}</li>
                 <li><strong>Hora de inicio:</strong> {{ $cita->horaInicio }}</li>
                 <li><strong>Hora de fin:</strong> {{ $cita->horaFin }}</li>
             </ul>
