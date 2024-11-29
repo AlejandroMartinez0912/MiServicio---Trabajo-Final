@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmar cita</title>
+    <title>Cita confirmada</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: black;
+            color: white;
         }
 
         .container {
             width: 100%;
             max-width: 600px;
             margin: 30px auto;
-            background-color: #ffffff;
+            background-color: #000;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
@@ -147,30 +147,23 @@
         <!-- Header con el logo -->
         <div class="header">
             <img src="{{ asset('Images/logo.png') }}" alt="MiServicio Logo">
-            <h1>Confirmar cita para mañana</h1>
+            <h1>Cita confirmada para mañana</h1>
         </div>
         
         <!-- Contenido del correo -->
         <div class="content">
-            <p>Estimado/a {{$cita->persona->nombre}}{{$cita->persona->apellido}},</p>
-            <p>Confirma por favor tu cita para manana, que contiene la siguiente información:</p>
-            
+            <p>Estimado/a {{$cita->persona->nombre}} {{$cita->persona->apellido}},</p>
+
+            <p>Tu cita ha sido confirmada exitosamente. Aquí tienes los detalles:</p>
+
             <div class="details">
                 <ul>
                     <li><strong>Fecha:</strong> {{ $cita->fechaCita }}</li>
                     <li><strong>Hora de inicio:</strong> {{ $cita->horaInicio }}</li>
                     <li><strong>Hora de fin:</strong> {{ $cita->horaFin }}</li>
                     <li><strong>Servicio contratado:</strong> {{ $cita->servicio->nombre }}</li>
-                    <li><strong>Profesional asignado:</strong> {{ $cita->servicio->datos_profesion->users->persona->nombre }}</li>
                 </ul>
             </div>
-
-            <p>Para confirmar tu asistencia, por favor, haz clic en el siguiente botón:</p>
-            
-            <!-- Botón de Confirmación -->
-            <a href="{{ route('cita-confirmada', ['id' => $cita->idCita]) }}" class="button">Confirmar cita</a>
-
-            <p>Si necesitas hacer alguna modificación en tu cita, no dudes en ponerte en contacto con nosotros.</p>
         </div>
         
         <!-- Footer -->

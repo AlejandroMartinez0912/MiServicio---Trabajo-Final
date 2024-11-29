@@ -69,5 +69,5 @@ Route::post('/confirmar-cita', [CitaController::class, 'confirmarCita'])->name('
 Route::post ('/cancelar-cita', [CitaController::class, 'cancelarCita'])->name('cancelar-cita');
 
 //RUTAS PROCESO AUTOMATIZADO - AGENDA AUTOMATICA
-Route::get('/agenda-automatizada/{id}', [AgendaAutomaticaController::class, 'citaConfirmar'])->name('cita-confirmar')->middleware('auth');
-Route::post('/cita-confirmada/{id}', [AgendaAutomaticaController::class, 'citaConfirmada'])->name('cita-confirmada')->middleware('auth');
+Route::get('/confirmar-cita/cliente/{idCita}', [AgendaAutomaticaController::class, 'citaConfirmada'])->name('confirmar-cita-cliente');
+Route::get('/confirmada-cita/cliente/{idCita}', [AgendaAutomaticaController::class, 'citaConfirmadaIndex'])->name('cita-confirmada-cliente');

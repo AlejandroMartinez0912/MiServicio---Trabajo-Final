@@ -152,7 +152,7 @@
         
         <!-- Contenido del correo -->
         <div class="content">
-            <p>Estimado/a {{$cita->persona->nombre}}{{$cita->persona->apellido}},</p>
+            <p>Estimado/a {{$cita->persona->nombre}} {{$cita->persona->apellido}},</p>
             <p>Confirma por favor tu cita para manana, que contiene la siguiente información:</p>
             
             <div class="details">
@@ -168,8 +168,10 @@
             <p>Para confirmar tu asistencia, por favor, haz clic en el siguiente botón:</p>
             
             <!-- Botón de Confirmación -->
-            <a href="{{ route('cita-confirmar', ['id' => $cita->idCita]) }}" class="button">Confirmar cita</a>
-
+            <a href="{{ route('confirmar-cita-cliente', ['idCita' => $cita->idCita]) }}" 
+                style="padding: 10px 20px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">
+                Confirmar cita
+             </a>
             <p>Si necesitas hacer alguna modificación en tu cita, no dudes en ponerte en contacto con nosotros.</p>
         </div>
         

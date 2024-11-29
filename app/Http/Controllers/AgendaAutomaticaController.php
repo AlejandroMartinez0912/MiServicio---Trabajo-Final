@@ -39,21 +39,23 @@ class AgendaAutomaticaController extends Controller
     /**
      * Index para confrimar cita
      */
-    public function citaConfirmar(){
-        return view('AgendaAutomatica.citaConfirmar');
+    public function citaConfirmadaIndex($idCita){
+        $cita = Cita::findOrFail($idCita);
+        $users = $cita->persona->user->id;
+        return view('AgendaAutomatica.citaConfirmar', compact('cita', 'users'));
     }
     /**
      * confirmar cita cliente 
      */
-    public function CitaConfirmada($idCita)
+    public function citaConfirmada($idCita)
     {
         $cita = Cita::findOrFail($idCita);
-        $cita->estado_cliente = 'confirmado'; // o el estado que desees
+        $cita->estado_cliente = 'confirmada'; // o el estado que desees
         $cita->save();
         
         // Redirigir a una página de confirmación o mostrar un mensaje
-        return redirect()->route('home')->with('success', 'Cita confirmada exitosamente.');
-}
+        return redirect()->route('cita-confirmada-cliente', ['idCita' => $idCita])->with('success', 'Cita confirmada exitosamente.');
+    }
     
     
     /**
