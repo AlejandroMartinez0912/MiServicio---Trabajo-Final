@@ -76,31 +76,8 @@ MiServicio
         <!-- Logo de la marca -->
         <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Buscar Servicios</a>
 
-        <div class="container" style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
-            <div>
-                <!-- Título de la sección -->
-                <h3 class="text-center mb-4">Buscar Servicios</h2>
-                <!-- Barra de búsqueda con ícono -->
-                <div class="row mb-4">
-                    <div class="col-md-6 offset-md-3">
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bx bx-search"></i>
-                            </span>
-                            <input type="text" class="form-control" placeholder="Buscar por nombre de servicio..." aria-label="Buscar servicio">
-                            <span class="input-group-text">
-                                <i class='bx bx-filter'></i>
-                            </span>
-                        </div>
-                    </div>
-        
-                 </div>
-            </div>
-        </div>
     </div>
 </nav>
-
-<!-- Listado de Servicios -->
 
 
 @endsection

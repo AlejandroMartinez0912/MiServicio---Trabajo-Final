@@ -1256,88 +1256,144 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <!-- Botón que abre el modal de confirmar cita -->
-                                                <button type="button" class="btn btn-modern" data-bs-toggle="modal" data-bs-target="#confirmCitaModal{{ $cita->idCita }}">
-                                                    Confirmar Cita
-                                                </button>
-                                                <style> 
-                                                    .btn-modern {
-                                                        font-size: 10px; /* Tamaño de texto pequeño */
-                                                        padding: 6px 12px; /* Ajusta el espacio interno */
-                                                        border: none; /* Elimina bordes predeterminados */
-                                                        border-radius: 5px; /* Esquinas redondeadas */
-                                                        background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Gradiente moderno */
-                                                        color: #fff; /* Texto blanco */
-                                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-                                                        transition: all 0.3s ease; /* Animación suave */
-                                                        cursor: pointer; /* Cambia el cursor al pasar el ratón */
-                                                        margin-bottom: 10px;
-                                                    }
-                                                    .btn-modern1 {
-                                                        font-size: 10px; /* Tamaño de texto pequeño */
-                                                        padding: 6px 12px; /* Ajusta el espacio interno */
-                                                        border: none; /* Elimina bordes predeterminados */
-                                                        border-radius: 5px; /* Esquinas redondeadas */
-                                                        background: linear-gradient(135deg, #c82333, #dc3545); /* Gradiente moderno */
-                                                        color: #fff; /* Texto blanco */
-                                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-                                                        transition: all 0.3s ease; /* Animación suave */
-                                                        cursor: pointer; /* Cambia el cursor al pasar el ratón */
-                                                    }
+                                                @if ($cita->estado === 0)
 
-                                                </style>   
-                                                <!-- Modal de confirmacion -->
-                                                <div class="modal fade" id="confirmCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="confirmCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="confirmCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                ¿Estás seguro de que deseas confirmar esta cita?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                                <!-- Formulario para confirmar la cita -->
-                                                                <form action="{{ route('confirmar-cita') }}" method="POST" style="display: inline;">
-                                                                    @csrf
-                                                                    <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
-                                                                    <button type="submit" class="btn btn-success">Confirmar</button>
-                                                                </form>
+                                                    <!-- Botón que abre el modal de confirmar cita -->
+                                                    <button type="button" class="btn btn-modern" data-bs-toggle="modal" data-bs-target="#confirmCitaModal{{ $cita->idCita }}">
+                                                        Confirmar Cita
+                                                    </button>
+                                                    <style> 
+                                                        .btn-modern {
+                                                            font-size: 10px; /* Tamaño de texto pequeño */
+                                                            padding: 6px 12px; /* Ajusta el espacio interno */
+                                                            border: none; /* Elimina bordes predeterminados */
+                                                            border-radius: 5px; /* Esquinas redondeadas */
+                                                            background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Gradiente moderno */
+                                                            color: #fff; /* Texto blanco */
+                                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+                                                            transition: all 0.3s ease; /* Animación suave */
+                                                            cursor: pointer; /* Cambia el cursor al pasar el ratón */
+                                                            margin-bottom: 10px;
+                                                        }
+                                                        .btn-modern1 {
+                                                            font-size: 10px; /* Tamaño de texto pequeño */
+                                                            padding: 6px 12px; /* Ajusta el espacio interno */
+                                                            border: none; /* Elimina bordes predeterminados */
+                                                            border-radius: 5px; /* Esquinas redondeadas */
+                                                            background: linear-gradient(135deg, #c82333, #dc3545); /* Gradiente moderno */
+                                                            color: #fff; /* Texto blanco */
+                                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+                                                            transition: all 0.3s ease; /* Animación suave */
+                                                            cursor: pointer; /* Cambia el cursor al pasar el ratón */
+                                                        }
+
+                                                    </style>   
+                                                    <!-- Modal de confirmacion -->
+                                                    <div class="modal fade" id="confirmCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="confirmCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="confirmCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Estás seguro de que deseas confirmar esta cita?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <!-- Formulario para confirmar la cita -->
+                                                                    <form action="{{ route('confirmar-cita') }}" method="POST" style="display: inline;">
+                                                                        @csrf
+                                                                        <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
 
-                                                <!-- Botón que abre el modal de cancelar cita -->
-                                                <button type="button" class="btn btn-modern1" data-bs-toggle="modal" data-bs-target="#cancelCitaModal{{ $cita->idCita }}">
-                                                    Rechazar cita
-                                                </button>
-                                                <!-- Modal de rechazo cita -->
-                                                <div class="modal fade" id="cancelCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="cancelCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="cancelCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                ¿Estás seguro de que deseas Rechazar esta cita?
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                                <!-- Formulario para confirmar la cita -->
-                                                                <form action="{{ route('cancelar-cita') }}" method="POST" style="display: inline;">
-                                                                    @csrf
-                                                                    <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
-                                                                    <button type="submit" class="btn btn-success">Confirmar</button>
-                                                                </form>
+                                                    <!-- Botón que abre el modal de cancelar cita -->
+                                                    <button type="button" class="btn btn-modern1" data-bs-toggle="modal" data-bs-target="#cancelCitaModal{{ $cita->idCita }}">
+                                                        Rechazar cita
+                                                    </button>
+                                                    <!-- Modal de rechazo cita -->
+                                                    <div class="modal fade" id="cancelCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="cancelCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="cancelCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Estás seguro de que deseas Rechazar esta cita?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <!-- Formulario para confirmar la cita -->
+                                                                    <form action="{{ route('cancelar-cita') }}" method="POST" style="display: inline;">
+                                                                        @csrf
+                                                                        <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                @elseif ($cita->estado == 1)
+                                                    <!-- Botón que abre el modal de cancelar cita -->
+                                                    <button type="button" class="btn btn-modern1" data-bs-toggle="modal" data-bs-target="#cancelCitaModal{{ $cita->idCita }}">
+                                                        Rechazar cita
+                                                    </button>
+                                                    <style> 
+                                                        .btn-modern {
+                                                            font-size: 10px; /* Tamaño de texto pequeño */
+                                                            padding: 6px 12px; /* Ajusta el espacio interno */
+                                                            border: none; /* Elimina bordes predeterminados */
+                                                            border-radius: 5px; /* Esquinas redondeadas */
+                                                            background: linear-gradient(135deg, #4CAF50, #2E7D32); /* Gradiente moderno */
+                                                            color: #fff; /* Texto blanco */
+                                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+                                                            transition: all 0.3s ease; /* Animación suave */
+                                                            cursor: pointer; /* Cambia el cursor al pasar el ratón */
+                                                            margin-bottom: 10px;
+                                                        }
+                                                        .btn-modern1 {
+                                                            font-size: 10px; /* Tamaño de texto pequeño */
+                                                            padding: 6px 12px; /* Ajusta el espacio interno */
+                                                            border: none; /* Elimina bordes predeterminados */
+                                                            border-radius: 5px; /* Esquinas redondeadas */
+                                                            background: linear-gradient(135deg, #c82333, #dc3545); /* Gradiente moderno */
+                                                            color: #fff; /* Texto blanco */
+                                                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+                                                            transition: all 0.3s ease; /* Animación suave */
+                                                            cursor: pointer; /* Cambia el cursor al pasar el ratón */
+                                                        }
 
+                                                    </style> 
+                                                    <!-- Modal de rechazo cita -->
+                                                    <div class="modal fade" id="cancelCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="cancelCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="cancelCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Estás seguro de que deseas Rechazar esta cita?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <!-- Formulario para confirmar la cita -->
+                                                                    <form action="{{ route('cancelar-cita') }}" method="POST" style="display: inline;">
+                                                                        @csrf
+                                                                        <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
                                            </td>
                                 @endforeach
                             </tbody>

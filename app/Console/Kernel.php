@@ -18,8 +18,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Aquí puedes programar tus comandos
-        $schedule->command('recordatorio:enviar')->daily(); // Programar para que se ejecute diariamente
-        $schedule->command('agenda:generar')->daily();
+        $schedule->command('recordatorio:enviar')->everyMinute(); // Para pruebas rápidas
+        //daily('08:00'); // Programar para que se ejecute diariamente
+        $schedule->command('agenda:generar')->everyMinute() ;// Para pruebas rápidas
+        //daily('05:00');
     }
 
     /**
@@ -31,8 +33,6 @@ class Kernel extends ConsoleKernel
     {
         $this->load(__DIR__.'/Commands');  // Cargar la carpeta Commands
 
-        $this->command(GenerarAgendaDiaria::class); // Registrar el nuevo comando
-        $this->command(EnviarRecordatorio::class);
 
         // Registrar los comandos personalizados
         require base_path('routes/console.php');  // Incluir las rutas de consola
