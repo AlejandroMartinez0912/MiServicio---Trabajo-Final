@@ -40,4 +40,4 @@ class AgendaProfesional extends Mailable
                         'citas' => $this->citasDelDia,  // Pasar las citas al correo
                     ]);
     }
-}
+    }

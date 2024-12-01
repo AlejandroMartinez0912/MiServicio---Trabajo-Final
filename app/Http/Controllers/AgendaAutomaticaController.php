@@ -32,11 +32,6 @@ class AgendaAutomaticaController extends Controller
             Mail::to($email)->send(new NotificacionCita($cita));
 
         }
-
-        return response()->json([
-            'mensaje' => 'Notificaciones enviadas con éxito.',
-            'citas' => $citas
-        ]);
     }
 
     /**
@@ -79,7 +74,6 @@ class AgendaAutomaticaController extends Controller
         
             // Obtener las citas confirmadas para ese profesional en el día de hoy
             $citasDelDia = Cita::where('idProfesion', $idProfesion)
-                                ->where('estado_cliente', 'confirmada')
                                 ->whereDate('fechaCita', '=', $hoy)
                                 ->get();
         

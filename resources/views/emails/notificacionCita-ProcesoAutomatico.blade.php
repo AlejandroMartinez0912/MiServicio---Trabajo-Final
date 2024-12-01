@@ -161,7 +161,6 @@
                     <li><strong>Hora de inicio:</strong> {{ $cita->horaInicio }}</li>
                     <li><strong>Hora de fin:</strong> {{ $cita->horaFin }}</li>
                     <li><strong>Servicio contratado:</strong> {{ $cita->servicio->nombre }}</li>
-                    <li><strong>Profesional asignado:</strong> {{ $cita->servicio->datos_profesion->users->persona->nombre }}</li>
                 </ul>
             </div>
 

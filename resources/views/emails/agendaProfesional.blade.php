@@ -159,6 +159,7 @@
                             <th>Cliente</th>
                             <th>Servicio</th>
                             <th>Precio base</th>
+                            <th>Estado</th>
                             <th>Fecha</th>
                             <th>Hora</th>
                         </tr>
@@ -169,8 +170,15 @@
                                 <td>{{ $cita->persona->nombre }} {{ $cita->persona->apellido }}</td>
                                 <td>{{ $cita->servicio->nombre }}</td>
                                 <td>${{ $cita->servicio->precio_base }}</td>
-                                <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</strong></td>
-                                <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</strong></td>
+                                @if ($cita->estado_cliente == 'confirmada')
+                                    <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>Confirmada</strong></td>
+                                    <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</strong></td>
+                                    <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</strong></td>
+                                @elseif ($cita->estado_cliente == 'pendiente')
+                                    <td><strong>Pendiente</strong></td>
+                                    <td><strong>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</strong></td>
+                                    <td><strong>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</strong></td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
