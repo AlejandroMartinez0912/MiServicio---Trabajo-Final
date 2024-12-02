@@ -144,45 +144,49 @@
         <!-- Header con el logo -->
         <div class="header">
             <img src="{{ asset('Images/logo.png') }}" alt="MiServicio Logo">
-            <h1>Cita confirmada para mañana</h1>
+            <h1>Esta es la agenda del dia</h1>
         </div>
         
         <!-- Contenido del correo -->
         <div class="content">
             <p>Estimado/a,</p>
-            <p>Te enviamos el resumen de las citas agendadas para mañana:</p>
+            <p>Te enviamos el resumen de las citas agendadas para hoy:</p>
 
             <div class="details">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Cliente</th>
-                            <th>Servicio</th>
-                            <th>Precio base</th>
-                            <th>Estado</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($citas as $cita)
+                @if (count($citas) > 0)
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ $cita->persona->nombre }} {{ $cita->persona->apellido }}</td>
-                                <td>{{ $cita->servicio->nombre }}</td>
-                                <td>${{ $cita->servicio->precio_base }}</td>
-                                @if ($cita->estado_cliente == 'confirmada')
-                                    <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>Confirmada</strong></td>
-                                    <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</strong></td>
-                                    <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</strong></td>
-                                @elseif ($cita->estado_cliente == 'pendiente')
-                                    <td><strong>Pendiente</strong></td>
-                                    <td><strong>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</strong></td>
-                                    <td><strong>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</strong></td>
-                                @endif
+                                <th>Cliente</th>
+                                <th>Servicio</th>
+                                <th>Precio base</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($citas as $cita)
+                                <tr>
+                                    <td>{{ $cita->persona->nombre }} {{ $cita->persona->apellido }}</td>
+                                    <td>{{ $cita->servicio->nombre }}</td>
+                                    <td>${{ $cita->servicio->precio_base }}</td>
+                                    @if ($cita->estado_cliente == 'confirmada')
+                                        <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>Confirmada</strong></td>
+                                        <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</strong></td>
+                                        <td style="background-color: yellow; padding: 5px; border-radius: 5px;"><strong>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</strong></td>
+                                    @elseif ($cita->estado_cliente == 'pendiente')
+                                        <td><strong>Pendiente</strong></td>
+                                        <td><strong>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</strong></td>
+                                        <td><strong>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</strong></td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <p>No tienes citas agendadas para hoy.</p>
+                @endif
             </div>
 
             <p>Si tienes alguna consulta o necesitas modificar tu cita, no dudes en ponerte en contacto con nosotros.</p>

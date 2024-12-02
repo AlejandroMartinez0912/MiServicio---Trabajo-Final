@@ -1253,6 +1253,8 @@
                                                     <span class="badge badge-success">Confirmada</span>
                                                 @elseif ($cita->estado === 2)
                                                     <span class="badge badge-danger">Cancelada</span>
+                                                @elseif ($cita->estado === 3)
+                                                    <span class="badge badge-success"><strong>Re-confirmada</strong></span>
                                                 @endif
                                             </td>
                                             <td>

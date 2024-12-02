@@ -55,14 +55,14 @@ class CitaController extends Controller
         // Obtener todos los días y rubros
         $dias = Dias::all();
         $rubros = Rubro::all();
-
-  
-
+        $datosProfesion = DatosProfesion::all();
+        $user = User::all();
         //Obtener horarios trabajo asociados 
         $horariosTrabajo = HorarioTrabajo::all();
 
 
-        return view('Cita.gestion', compact('servicios', 'dias', 'rubros', 'persona', 'citas', 'horariosTrabajo'));
+        return view('Cita.gestion', compact('servicios', 'dias', 'rubros', 'persona', 
+        'citas', 'horariosTrabajo', 'datosProfesion', 'user'));
     }
 
     /**

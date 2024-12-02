@@ -493,6 +493,7 @@
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>Servicio</th>
+                                        <th>Especialista</th>
                                         <th>Fecha</th>
                                         <th>Hora</th>
                                         <th>Estado</th>
@@ -503,6 +504,11 @@
                                     @foreach ($citas as $cita)
                                             <tr>
                                                 <td>{{ $cita->servicio->nombre }}</td>
+                                                @php
+                                                    $idEspecialista = $cita->servicio->datos_profesion_id;
+                                                    $especialista = $datosProfesion->where('id', $idEspecialista)->first();
+                                                @endphp
+                                                <td> {{ $especialista->nombre_fantasia }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</td>
                                                 <td>
@@ -512,6 +518,8 @@
                                                         <span class="badge badge-success">Confirmada</span>
                                                     @elseif ($cita->estado == 2)
                                                         <span class="badge badge-danger">Cancelada</span>
+                                                    @elseif ($cita->estado == 3)
+                                                        <span class="badge badge-success"><strong>Re-confirmada</strong></span>
                                                     @endif
                         
                                                 </td>

@@ -26,11 +26,12 @@ class AgendaAutomaticaController extends Controller
         $citas = Cita::whereDate('fechaCita', '=', $manana)->get();
         
         foreach ($citas as $cita) {
-            //Encontrar mail de persona
-            $email = $cita->persona->user->email;
-            // Enviar notificación
-            Mail::to($email)->send(new NotificacionCita($cita));
-
+            if ($cita->estado == '1') {
+                //Encontrar mail de persona
+                $email = $cita->persona->user->email;
+                // Enviar notificación
+                Mail::to($email)->send(new NotificacionCita($cita));
+            }
         }
     }
 
@@ -48,7 +49,8 @@ class AgendaAutomaticaController extends Controller
     public function citaConfirmada($idCita)
     {
         $cita = Cita::findOrFail($idCita);
-        $cita->estado_cliente = 'confirmada'; // o el estado que desees
+        $cita->estado_cliente = 'confirmada';
+        $cita->estado = 3;
         $cita->save();
         
         // Redirigir a una página de confirmación o mostrar un mensaje
