@@ -94,7 +94,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         // Redirigir a la página principal
-        return redirect()->route('home');
+        return redirect()->route('login');
    }
    /**
     * Funcion para validar registro

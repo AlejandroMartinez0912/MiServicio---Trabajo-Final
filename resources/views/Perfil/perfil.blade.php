@@ -1,87 +1,111 @@
-@extends('layouts.plantillain')
+@extends('layouts.miservicioIn')
 
 @section('titulo', 'Editar Perfil')
 
 @section('contenido')
-
 <style>
     .card {
-        background-color: #3f3fd1;
-        color: whitesmoke;
-        border-radius: 15px;
-        transition: all 0.3s ease-in-out;
-        padding: 20px;
-    }
+    background: #222; /* Fondo del card */
+    border: none;
+    border-radius: 15px;
+    color: #eaeaea; /* Texto blanco-gris */
+}
 
-    .card-body {
-        display: flex;
-        align-items: center;
-    }
+.card-body {
+    padding: 30px;
+}
 
-    .form-container {
-        flex: 1;
-        margin-right: 20px;
-    }
+h2 {
+    font-weight: bold;
+    color: #fff;
+}
 
-    .form-control {
-        border-radius: 10px;
-        width: 100%;
-        max-width: 400px;
-    }
+.form-label {
+    color: #bbb; /* Un gris más claro */
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
 
-    .form-control[readonly] {
-        background-color: #e9ecef; /* Fondo gris claro para campos de solo lectura */
-        color: #495057;
-    }
+.form-control {
+    background: #333; /* Fondo gris oscuro */
+    border: 1px solid #555; /* Borde gris tenue */
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+}
 
-    .profile-pic {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background-color: grey;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        margin-left: 20px;
-    }
+.form-control:focus {
+    background: #444;
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
 
-    .btn-primary {
-        background-color: #0d6efd;
-        border-radius: 50px;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1.2rem;
-        transition: background-color 0.3s ease-in-out;
-    }
+button.btn-primary {
+    background: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1.1rem;
+    transition: background 0.3s ease;
+}
 
-    .btn-primary:hover {
-        background-color: #0a58ca;
-    }
+button.btn-primary:hover {
+    background: #0056b3;
+}
 
-    .welcome-message {
-        font-family: 'Poppins', sans-serif;
-        font-size: 1.5rem;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
+button.btn-secondary {
+    background: #555;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1.1rem;
+    transition: background 0.3s ease;
+}
 
-    h2, h3 {
-        font-family: 'Poppins', sans-serif;
-        font-weight: bold;
-        text-align: center;
-    }
+button.btn-secondary:hover {
+    background: #444;
+}
 
-    p, label {
-        font-family: 'Roboto', sans-serif;
-    }
+.profile-pic {
+    background: #444; /* Fondo oscuro para la imagen */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-left: 30px;
+    border: 2px solid #555;
+}
 
-    .form-group {
-        text-align: left;
-        margin-bottom: 1rem;
-    }
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-pic:hover {
+    border-color: #007bff;
+    cursor: pointer;
+}
+
+.alert {
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.alert-success {
+    background: #28a745;
+    color: #fff;
+}
+
+.alert-danger {
+    background: #dc3545;
+    color: #fff;
+}
 </style>
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">

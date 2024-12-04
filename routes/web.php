@@ -14,7 +14,10 @@ use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentL
 
 // Ruta de página principal llamada Home
 Route::view('/', "home")->name('home');
-
+//Ruta de iniciar sesion
+Route::view('/login', "Auth.Login")->name('login');
+//Ruta de register
+Route::view('/register', "Auth.Register")->name('register');
 // RUTAS DE LOGIN
 Route::view('/privada', "secret")->middleware('auth')->name('privada');
 
