@@ -817,182 +817,185 @@
                 Crear servicio
             </button>
         @else
-            <div id="card-serviciosIndividual">
-                @foreach ($servicios as $servicio)
-                    <div class="service-card">
-                        <!-- Columna de información -->
-                        <div>
-                            <h3 class="titulo-servicio" >{{ $servicio->nombre }}</h3>
-                            <p class="font-weight-bold">Estado: 
-                                <span class="{{ $servicio->estado == 'activo' ? 'text-success' : 'text-danger' }}">
-                                    {{ ucfirst($servicio->estado) }}
-                                </span>
-                            </p>
-                            <p class="font-weight-bold">Precio: <span class="text-success" >{{ $servicio->precio_base }}</span></p>
-                            <p class="font-weight-bold">Calificación: 
-                                <span class="text-warning">
-                                    @if ($servicio->calificacion > 0)
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            <i class="bi {{ $i <= $servicio->calificacion ? 'bi-star-fill' : 'bi-star' }}"></i>
-                                        @endfor
-                                    @else
-                                        No calificado
-                                    @endif
-                                </span>
-                            </p>
+        <div id="card-serviciosIndividual">
+            @foreach ($servicios as $servicio)
+                <div class="service-card">
+                    <!-- Columna de información -->
+                    <div>
+                        <h3 class="titulo-servicio" >{{ $servicio->nombre }}</h3>
+                        <p class="font-weight-bold">Estado: 
+                            <span class="{{ $servicio->estado == 'activo' ? 'text-success' : 'text-danger' }}">
+                                {{ ucfirst($servicio->estado) }}
+                            </span>
+                        </p>
+                        <p class="font-weight-bold">Precio: <span class="text-success" >{{ $servicio->precio_base }}</span></p>
+                        <p class="font-weight-bold">Calificación: 
+                            <span class="text-warning">
+                                @if ($servicio->calificacion > 0)
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="bi {{ $i <= $servicio->calificacion ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                    @endfor
+                                @else
+                                    No calificado
+                                @endif
+                            </span>
+                        </p>
+                    </div>
+                    <!-- Columna de acciones -->
+                    <div class="service-actions">
+                        <!-- Editar servicio-->
+                        <button type="button" class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editarServicioModal{{ $servicio->id }}">
+                            <i class="bx bx-edit" style="font-size: 20px;"></i>
+                        </button>
+        
+                        <!-- Modal para editar un servicio existente -->
+                        <div class="modal fade" id="editarServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="editarServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editarServicioModalLabel{{ $servicio->id }}">Editar Servicio</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form action="{{ route('actualizar-servicio', $servicio->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="modal-body">
+                                            <!-- Nombre -->
+                                            <div class="mb-3">
+                                                <label for="nombre" class="form-label">Nombre del Servicio</label>
+                                                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ old('nombre', $servicio->nombre) }}" placeholder="Ingrese el nombre del servicio" required>
+                                            </div>
+        
+                                            <!-- Rubros -->
+                                            <div class="form-group">
+                                                <label for="rubros">Selecciona los Rubros</label>
+                                                <select id="rubros" name="rubros[]" class="form-control select2" multiple="multiple" style="width: 100%;" required>
+                                                    @foreach($rubros as $rubro)
+                                                        <option value="{{ $rubro->id }}" 
+                                                            @if(in_array($rubro->id, $servicio->rubros->pluck('id')->toArray())) 
+                                                                selected
+                                                            @endif
+                                                        >{{ $rubro->nombre }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+        
+                                            <!-- Descripción -->
+                                            <div class="mb-3">
+                                                <label for="descripcion" class="form-label">Descripción</label>
+                                                <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Descripción del servicio">{{ old('descripcion', $servicio->descripcion) }}</textarea>
+                                            </div>
+        
+                                            <!-- Precio Base -->
+                                            <div class="mb-3">
+                                                <label for="precio_base" class="form-label">Precio Base</label>
+                                                <input type="number" class="form-control" id="precio_base" name="precio_base" step="0.01" value="{{ old('precio_base', $servicio->precio_base) }}" placeholder="Ingrese el precio base" required>
+                                            </div>
+        
+                                            <!-- Duración Estimada -->
+                                            <div class="mb-3">
+                                                <label for="duracion_estimada" class="form-label">Duración Estimada</label>
+                                                <input type="time" class="form-control" id="duracion_estimada" name="duracion_estimada" value="{{ old('duracion_estimada', $servicio->duracion_estimada) }}" required>
+                                            </div>
+        
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
         
-                        <!-- Columna de acciones -->
-                        <div class="service-actions">
+                        <!-- Anular o activar servicio-->
+                        @if ($servicio->estado == 'activo')
+                            <button type="button" class="btn-action anular" data-bs-toggle="modal" data-bs-target="#anularServicioModal{{ $servicio->id }}">
+                                <i class='bx bx-x' style="font-size: 20px;"></i>
+                            </button>
+                        @else
+                            <button type="button" class="btn-action activar" data-bs-toggle="modal" data-bs-target="#activarServicioModal{{ $servicio->id }}">
+                                <i class='bx bx-check' style="font-size: 20px;"></i>
+                            </button>                        
+                        @endif
         
-                            <!-- Editar servicio-->
-                            <button type="button" class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editarServicioModal">
-                                <i class="bx bx-edit" style="font-size: 20px;"></i>
-                            </button>
-                            <!-- Modal para editar un servicio existente -->
-                            <div class="modal fade" id="editarServicioModal" tabindex="-1" aria-labelledby="editarServicioModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="editarServicioModalLabel">Editar Servicio</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="{{ route('actualizar-servicio', $servicio->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT') <!-- Usamos PUT para indicar una actualización -->
-                                            <div class="modal-body">
-                                                <!-- Nombre -->
-                                                <div class="mb-3">
-                                                    <label for="nombre" class="form-label">Nombre del Servicio</label>
-                                                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ old('nombre', $servicio->nombre) }}" placeholder="Ingrese el nombre del servicio" required>
-                                                </div>
-
-                                                <!-- Rubros -->
-                                                <div class="form-group">
-                                                    <label for="rubros">Selecciona los Rubros</label>
-                                                    <select id="rubros" name="rubros[]" class="form-control select2" multiple="multiple" style="width: 100%;" required>
-                                                        @foreach($rubros as $rubro)
-                                                            <option value="{{ $rubro->id }}" 
-                                                                @if(in_array($rubro->id, $servicio->rubros->pluck('id')->toArray())) 
-                                                                    selected
-                                                                @endif
-                                                            >{{ $rubro->nombre }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-                                                <!-- Descripción -->
-                                                <div class="mb-3">
-                                                    <label for="descripcion" class="form-label">Descripción</label>
-                                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Descripción del servicio">{{ old('descripcion', $servicio->descripcion) }}</textarea>
-                                                </div>
-
-                                                <!-- Precio Base -->
-                                                <div class="mb-3">
-                                                    <label for="precio_base" class="form-label">Precio Base</label>
-                                                    <input type="number" class="form-control" id="precio_base" name="precio_base" step="0.01" value="{{ old('precio_base', $servicio->precio_base) }}" placeholder="Ingrese el precio base" required>
-                                                </div>
-
-                                                <!-- Duración Estimada -->
-                                                <div class="mb-3">
-                                                    <label for="duracion_estimada" class="form-label">Duración Estimada</label>
-                                                    <input type="time" class="form-control" id="duracion_estimada" name="duracion_estimada" value="{{ old('duracion_estimada', $servicio->duracion_estimada) }}" required>
-                                                </div>
-
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                                            </div>
-                                        </form>
+                        <!-- Modal para anular servicio -->
+                        <div class="modal fade" id="anularServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="anularServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="anularServicioModalLabel{{ $servicio->id }}">Anular Servicio</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    <form action="{{ route('anular-servicio', $servicio->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="modal-body">
+                                            <p>¿Estás seguro de que deseas anular este servicio? El estado del servicio cambiará a inactivo.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-danger">Anular Servicio</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-
-                            <!-- Anular o activar servicio-->
-                            @if ($servicio->estado == 'activo')
-                                <button type="button" class="btn-action anular" data-bs-toggle="modal" data-bs-target="#anularServicioModal">
-                                    <i class='bx bx-x' style="font-size: 20px;"></i>
-                                </button>
-                            @else
-                                <button type="button" class="btn-action activar" data-bs-toggle="modal" data-bs-target="#activarServicioModal">
-                                    <i class='bx bx-check' style="font-size: 20px;"></i>
-                                </button>                        
-                            @endif
-                            <!-- Modal para anular servicio -->
-                            <div class="modal fade" id="anularServicioModal" tabindex="-1" aria-labelledby="anularServicioModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="anularServicioModalLabel">Anular Servicio</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="{{ route('anular-servicio', $servicio->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT') <!-- Usamos PUT para la actualización -->
-                                            <div class="modal-body">
-                                                <p>¿Estás seguro de que deseas anular este servicio? El estado del servicio cambiará a inactivo.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                                <button type="submit" class="btn btn-danger">Anular Servicio</button>
-                                            </div>
-                                        </form>
+                        </div>
+        
+                        <!-- Modal para activar servicio -->
+                        <div class="modal fade" id="activarServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="activarServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="activarServicioModalLabel{{ $servicio->id }}">Activar Servicio</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    <form action="{{ route('activar-servicio', $servicio->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="modal-body">
+                                            <p>¿Estás seguro de que deseas activar este servicio? El estado del servicio cambiará a activo.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-success">Activar Servicio</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            <!-- Modal para activar servicio -->
-                            <div class="modal fade" id="activarServicioModal" tabindex="-1" aria-labelledby="activarServicioModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="activarServicioModalLabel">Activar Servicio</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <form action="{{ route('activar-servicio', $servicio->id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT') <!-- Usamos PUT para la actualización -->
-                                            <div class="modal-body">
-                                                <p>¿Estás seguro de que deseas activar este servicio? El estado del servicio cambiará a activo.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                                <button type="submit" class="btn btn-success">Activar Servicio</button>
-                                            </div>
-                                        </form>
+                        </div>
+        
+                        <!-- Eliminar servicio-->
+                        <button type="button" class="btn-action eliminar" data-bs-toggle="modal" data-bs-target="#eliminarServicioModal{{ $servicio->id }}">
+                            <i class='bx bx-trash' style="font-size: 20px;"></i>
+                        </button>
+                        
+                        <div class="modal fade" id="eliminarServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="eliminarServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="eliminarServicioModalLabel{{ $servicio->id }}">Eliminar Servicio</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Eliminar servicio-->
-                            <button type="button" class="btn-action eliminar" data-bs-toggle="modal" data-bs-target="#eliminarServicioModal">
-                                <i class='bx bx-trash' style="font-size: 20px;"></i>
-                            </button>
-                            <div class="modal fade" id="eliminarServicioModal" tabindex="-1" aria-labelledby="eliminarServicioModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="eliminarServicioModalLabel">Eliminar Servicio</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <form action="{{ route('eliminar-servicio', $servicio->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <div class="modal-body">
+                                            <p>¿Estás seguro de que deseas eliminar este servicio? Esta acción es irreversible.</p>
                                         </div>
-                                        <form action="{{ route('eliminar-servicio', $servicio->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE') <!-- Método DELETE para eliminar -->
-                                            <div class="modal-body">
-                                                <p>¿Estás seguro de que deseas eliminar este servicio? Esta acción es irreversible.</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <button type="submit" class="btn btn-danger">Eliminar Servicio</button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <button type="submit" class="btn btn-danger">Eliminar Servicio</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
+        </div>
+        
         @endif
         <!-- Botón para crear un nuevo servicio -->
         <button type="button" class="btn btn-success w-100 mt-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#crearServicioModal">
@@ -1110,6 +1113,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
 
         .service-card h3.titulo-servicio {
@@ -1157,23 +1161,23 @@
 
         /* Estilo para la columna de acciones */
         .service-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
+            display: flex; /* Alinea los botones en fila */
+            justify-content: start; /* Alinea los botones al inicio */
+            gap: 10px; /* Espaciado entre los botones */
         }
 
-        .service-actions button {
-            font-size: 0.875rem;
-            padding: 6px 12px;
+        .btn-action {
+            display: inline-block;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            background-color: #f8f9fa;
             border-radius: 5px;
-            text-transform: uppercase;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
 
-        .service-actions .btn-action {
-            width: 100%;
+        .btn-action:hover {
+            background-color: #ddd;
         }
 
         /* Estilos específicos para los botones de acción */
