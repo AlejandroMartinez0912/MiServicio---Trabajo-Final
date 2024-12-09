@@ -430,9 +430,8 @@
                                         data-hora_fin="{{ $horario->hora_fin }}"
                                         data-hora_inicio1="{{ $horario->hora_inicio1 }}"
                                         data-hora_fin1="{{ $horario->hora_fin1 }}"
-                                        class="btn-action edit">Editar
+                                        class="btn-action edit"><i class="bx bx-edit" style="font-size: 20px;"></i>
                                     </button>
-                            
                                     <!-- Modal para editar el horario -->
                                     <div class="modal fade" id="editarHorarioModal" tabindex="-1" aria-labelledby="editarHorarioModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
@@ -499,7 +498,7 @@
                                             data-bs-toggle="modal" 
                                             data-bs-target="#anularHorarioModal" 
                                             data-id="{{ $horario->id }}" 
-                                            class="btn-action anular">Anular
+                                            class="btn-action anular"><i class='bx bx-x' style="font-size: 20px;"></i>
                                         </button>
                                         <!-- Modal para anular el horario -->
                                         <div class="modal fade" id="anularHorarioModal" tabindex="-1" aria-labelledby="anularHorarioModalLabel" aria-hidden="true">
@@ -542,7 +541,7 @@
                                             data-bs-toggle="modal" 
                                             data-bs-target="#activarHorarioModal" 
                                             data-id="{{ $horario->id }}" 
-                                            class="btn-action activar">Activar
+                                            class="btn-action activar"><i class='bx bx-check' style="font-size: 20px;"></i>
                                         </button>
 
                                         <!-- Modal para activar el horario -->
@@ -587,7 +586,7 @@
                                         data-bs-toggle="modal" 
                                         data-bs-target="#eliminarHorarioModal" 
                                         data-id="{{ $horario->id }}" 
-                                        class="btn-action eliminar">Eliminar
+                                        class="btn-action eliminar"><i class='bx bx-trash' style="font-size: 20px;"></i>
                                     </button>
                                     <!-- Modal para confirmar eliminación de horario -->
                                     <div class="modal fade" id="eliminarHorarioModal" tabindex="-1" aria-labelledby="eliminarHorarioModalLabel" aria-hidden="true">
@@ -845,8 +844,11 @@
         
                         <!-- Columna de acciones -->
                         <div class="service-actions">
+        
                             <!-- Editar servicio-->
-                            <button type="button" class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editarServicioModal">Editar</button>
+                            <button type="button" class="btn-action edit" data-bs-toggle="modal" data-bs-target="#editarServicioModal">
+                                <i class="bx bx-edit" style="font-size: 20px;"></i>
+                            </button>
                             <!-- Modal para editar un servicio existente -->
                             <div class="modal fade" id="editarServicioModal" tabindex="-1" aria-labelledby="editarServicioModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -909,9 +911,13 @@
 
                             <!-- Anular o activar servicio-->
                             @if ($servicio->estado == 'activo')
-                                <button type="button" class="btn-action anular" data-bs-toggle="modal" data-bs-target="#anularServicioModal">Anular</button>
+                                <button type="button" class="btn-action anular" data-bs-toggle="modal" data-bs-target="#anularServicioModal">
+                                    <i class='bx bx-x' style="font-size: 20px;"></i>
+                                </button>
                             @else
-                                <button type="button" class="btn-action activar" data-bs-toggle="modal" data-bs-target="#activarServicioModal">Activar</button>                        
+                                <button type="button" class="btn-action activar" data-bs-toggle="modal" data-bs-target="#activarServicioModal">
+                                    <i class='bx bx-check' style="font-size: 20px;"></i>
+                                </button>                        
                             @endif
                             <!-- Modal para anular servicio -->
                             <div class="modal fade" id="anularServicioModal" tabindex="-1" aria-labelledby="anularServicioModalLabel" aria-hidden="true">
@@ -959,7 +965,9 @@
                             </div>
 
                             <!-- Eliminar servicio-->
-                            <button type="button" class="btn-action eliminar" data-bs-toggle="modal" data-bs-target="#eliminarServicioModal">Eliminar</button>
+                            <button type="button" class="btn-action eliminar" data-bs-toggle="modal" data-bs-target="#eliminarServicioModal">
+                                <i class='bx bx-trash' style="font-size: 20px;"></i>
+                            </button>
                             <div class="modal fade" id="eliminarServicioModal" tabindex="-1" aria-labelledby="eliminarServicioModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -1209,9 +1217,360 @@
 </div>
 
 <div id="citas" class="section" style="display: none;">
-    <h1>Mis Citas</h1>
-    <p>Contenido de la sección Mis Citas.</p>
+    <div id="citas">
+        <h3 class="text-uppercase font-weight-bold text-dark mb-4"> Mis Citas</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card-body">
+                    @if ($citas->isEmpty())
+
+                        <p class="text-center">No tienes citas agendadas.</p>
+                    @else
+                        <table class="table horarios-table table-hover table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Servicio</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($citas as $cita)
+                                        <tr>
+                                            <td>
+                                                {{$cita->persona->nombre . ' ' . $cita->persona->apellido}}
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#clienteModal{{ $cita->persona->id }}" style="color: #007bff; text-decoration: none;">
+                                                    Ver detalle
+                                                </a>
+                                                
+                                                <!-- Modal para mostrar los datos del cliente -->
+                                                <div class="modal fade" id="clienteModal{{ $cita->persona->id }}" tabindex="-1" aria-labelledby="clienteModalLabel{{ $cita->persona->id }}" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="clienteModalLabel{{ $cita->persona->id }}">Datos del Cliente</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p><strong>Nombre:</strong> {{ $cita->persona->nombre }} {{ $cita->persona->apellido }}</p>
+                                                                <p><strong>Email:</strong> {{ $cita->persona->user->email }}</p>
+                                                                <p><strong>Teléfono:</strong> {{ $cita->persona->telefono }}</p>
+                                                                <p><strong>Dirección:</strong> {{ $cita->persona->domicilio }}</p>
+                                                                @if ($cita->persona->calificacion == 0.0)
+                                                                    <p><strong>Calificación:</strong> No calificado</p>
+                                                                @else
+                                                                    <p><strong>Calificación:</strong> {{ $cita->persona->calificacion }}</p>
+                                                                @endif
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if($cita->servicio)
+                                                    {{ $cita->servicio->nombre }}
+                                                @else
+                                                    No asignado
+                                                @endif
+
+                                            </td>
+                                            <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</td>
+                                            <td>
+                                                @if ($cita->estado === 0)
+                                                    <span class="badge badge-warning">Pendiente</span>
+                                                    </span>
+                                                @elseif ($cita->estado === 1)
+                                                    <span class="badge badge-success">Confirmada</span>
+                                                @elseif ($cita->estado === 2)
+                                                    <span class="badge badge-danger">Cancelada</span>
+                                                @elseif ($cita->estado === 3)
+                                                    <span class="badge badge-success"><strong>Re-confirmada</strong></span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($cita->estado === 0)
+
+                                                    <!-- Botón que abre el modal de confirmar cita -->
+                                                    <button type="button" class="btn btn-modern" data-bs-toggle="modal" data-bs-target="#confirmCitaModal{{ $cita->idCita }}">
+                                                        Confirmar Cita
+                                                    </button>
+                                                     
+                                                    <!-- Modal de confirmacion -->
+                                                    <div class="modal fade" id="confirmCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="confirmCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="confirmCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Estás seguro de que deseas confirmar esta cita?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <!-- Formulario para confirmar la cita -->
+                                                                    <form action="{{ route('confirmar-cita') }}" method="POST" style="display: inline;">
+                                                                        @csrf
+                                                                        <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Botón que abre el modal de cancelar cita -->
+                                                    <button type="button" class="btn btn-modern1" data-bs-toggle="modal" data-bs-target="#cancelCitaModal{{ $cita->idCita }}">
+                                                        Rechazar cita
+                                                    </button>
+                                                    <!-- Modal de rechazo cita -->
+                                                    <div class="modal fade" id="cancelCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="cancelCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="cancelCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Estás seguro de que deseas Rechazar esta cita?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <!-- Formulario para confirmar la cita -->
+                                                                    <form action="{{ route('cancelar-cita') }}" method="POST" style="display: inline;">
+                                                                        @csrf
+                                                                        <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @elseif ($cita->estado == 1)
+                                                    <!-- Botón que abre el modal de cancelar cita -->
+                                                    <button type="button" class="btn btn-modern1" data-bs-toggle="modal" data-bs-target="#cancelCitaModal{{ $cita->idCita }}">
+                                                        Rechazar cita
+                                                    </button>
+                                                     
+                                                    <!-- Modal de rechazo cita -->
+                                                    <div class="modal fade" id="cancelCitaModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="cancelCitaModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="cancelCitaModalLabel{{ $cita->idCita }}">Confirmar Cita</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    ¿Estás seguro de que deseas Rechazar esta cita?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                    <!-- Formulario para confirmar la cita -->
+                                                                    <form action="{{ route('cancelar-cita') }}" method="POST" style="display: inline;">
+                                                                        @csrf
+                                                                        <input type="hidden" name="citaId" value="{{ $cita->idCita }}">
+                                                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                        </td>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
+            </div>
+        </div>
+                
+    </div>
+    <style>
+        #citas {
+            background: linear-gradient(135deg, #ffffff, #f0f0f5);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+    
+        #citas h3 {
+            color: #4a4a4a;
+            text-align: center;
+            border-bottom: 2px solid black;
+            padding-bottom: 10px;
+        }
+    
+        #citas label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #555555;
+        }
+    
+        #citas input, 
+        #citas select {
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            padding: 10px;
+            transition: all 0.3s;
+        }
+    
+        #citas input:focus, 
+        #citas select:focus {
+            border-color: #333399;
+            outline: none;
+        }
+    
+        #citas .btn-success {
+            background: linear-gradient(90deg, #ff00cc, #333399);
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            padding: 10px 20px;
+        }
+    
+        #citas .form-control-plaintext {
+            color: #4a4a4a;
+            font-weight: bold;
+        }
+    
+        .modal-header, .modal-footer {
+            border: none;
+        }
+    
+        .modal-content {
+            border-radius: 10px;
+        }
+    
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+    
+        .modal-footer .btn-success {
+            width: 100%;
+        }
+        /* Estilo general del modal */
+        .modal-content {
+            background-color: #fff; /* Fondo blanco para el modal */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+            padding: 20px; /* Espaciado interno */
+        }
+
+        /* Cabecera del modal */
+        .modal-header {
+            border-bottom: 2px solid #007bff; /* Línea de separación */
+            padding-bottom: 15px; /* Espaciado debajo del título */
+        }
+
+        /* Título del modal */
+        .modal-title {
+            font-size: 1.25rem; /* Tamaño de fuente */
+            font-weight: bold; /* Negrita */
+            color: #007bff; /* Color azul */
+        }
+
+        /* Botón de cierre */
+        .btn-close {
+            background-color: transparent;
+            border: none;
+            font-size: 1.5rem;
+            color: #007bff;
+        }
+
+        /* Cuerpo del modal */
+        .modal-body {
+            font-size: 1rem; /* Tamaño de fuente */
+            color: #333; /* Color de texto */
+            padding-bottom: 10px; /* Espaciado */
+        }
+
+        /* Estilo de los textos dentro del modal */
+        .modal-body p {
+            margin-bottom: 10px; /* Espaciado entre párrafos */
+            line-height: 1.6; /* Altura de línea para mayor legibilidad */
+        }
+
+        /* Pie de página del modal */
+        .modal-footer {
+            border-top: 1px solid #ddd; /* Línea de separación superior */
+            padding-top: 10px; /* Espaciado arriba del pie de página */
+        }
+
+        /* Botones dentro del modal */
+        .modal-footer .btn-secondary {
+            background-color: #f1f1f1; /* Color de fondo gris claro */
+            color: #007bff; /* Color del texto */
+            border-radius: 5px; /* Bordes redondeados */
+            padding: 8px 20px; /* Espaciado del botón */
+            font-size: 1rem; /* Tamaño de fuente */
+        }
+
+        .modal-footer .btn-secondary:hover {
+            background-color: #007bff; /* Fondo azul al pasar el mouse */
+            color: white; /* Texto blanco */
+        }
+
+        /* Fondo oscuro de la pantalla cuando el modal está abierto */
+        .modal-backdrop.show {
+            background-color: rgba(0, 0, 0, 0.5); /* Sombra oscura de fondo */
+        }
+        /* Estilos generales para los badges */
+
+        /* Estado Pendiente */
+        .badge-warning {
+            background-color: #f0ad4e; /* Color de fondo naranja */
+            color: white; /* Color del texto blanco */
+        }
+
+
+        /* Estado Confirmada */
+        .badge-success {
+            background-color: #28a745; /* Color de fondo verde */
+            color: white; /* Color del texto blanco */
+        }
+
+
+
+        /* Estado Cancelada */
+        .badge-danger {
+            background-color: #dc3545; /* Color de fondo rojo */
+            color: white; /* Color del texto blanco */
+        }
+        /* Estilos generales para los botones */
+
+        /* Botón Confirmar Cita */
+        .btn-modern {
+            background-color: #28a745; /* Color de fondo verde */
+            color: white; /* Color del texto blanco */
+        }
+
+        .btn-modern:hover {
+            background-color: #218838; /* Color de fondo verde oscuro al pasar el mouse */
+            transform: scale(1.05); /* Efecto de agrandar el botón al pasar el mouse */
+        }
+
+        /* Botón Rechazar Cita */
+        .btn-modern1 {
+            background-color: #dc3545; /* Color de fondo rojo */
+            color: white; /* Color del texto blanco */
+        }
+
+        .btn-modern1:hover {
+            background-color: #c82333; /* Color de fondo rojo oscuro al pasar el mouse */
+            transform: scale(1.05); /* Efecto de agrandar el botón al pasar el mouse */
+        }
+    </style>
 </div>
+
 <div id="agenda" class="section" style="display: none;">
     <h1>Agenda</h1>
     <p>Contenido de la sección Agenda.</p>
