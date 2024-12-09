@@ -1,4 +1,4 @@
-@extends('layouts.plantillain')
+@extends('layouts.miservicioIn')
 
 @section('titulo', 'Gestión de Citas')
 <!-- Estilos adicionales para mejorar la apariencia -->

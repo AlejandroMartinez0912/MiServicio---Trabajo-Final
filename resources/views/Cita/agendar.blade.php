@@ -1,4 +1,4 @@
-@extends('layouts.plantillain')
+@extends('layouts.miservicioIn')
 
 @section('titulo', 'Agendar Cita')
 <style>

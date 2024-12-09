@@ -33,7 +33,6 @@ Route::put('/perfil-update', [PersonaController::class, 'update'])->name('perfil
 // RUTAS DE GESTION DE SERVICIOS
 Route::get('/gestion-servicios', [GestionServicioController::class, 'index'])->name('gestion-servicios')->middleware('auth');
 
-
 // RUTAS DE DATOS PROFESIONALES
 Route::post('/gestion-servicios/datos-profesionales', [DatosProfesionController::class, 'guardarDatos'])->name('guardar-datos')->middleware('auth');
 Route::put('/gestion-servicios/datos-profesionales/{id}', [DatosProfesionController::class, 'actualizarDatos'])->name('actualizar-datos')->middleware('auth');

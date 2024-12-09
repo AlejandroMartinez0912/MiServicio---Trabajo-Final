@@ -59,7 +59,7 @@ class GestionServicioController extends Controller
         }
         
          // Pasar los datos a la vista
-         return view('Servicios.gestion', compact('userId','persona' ,'datosProfesion', 'dias', 
+         return view('Servicios.gestionNew', compact('userId','persona' ,'datosProfesion', 'dias', 
          'promedio', 'horariosTrabajo', 'rubros','servicios', 'citas'));
      }
      

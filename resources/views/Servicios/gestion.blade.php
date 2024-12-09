@@ -1,4 +1,4 @@
-@extends('layouts.plantillain')
+@extends('layouts.miservicioIn')
 
 @section('titulo', 'Gestión de servicio')
 
@@ -387,47 +387,47 @@
 </style>
 
 <!-- Barra de navegación -->
-<nav class="navbar navbar-expand-lg navbar-dark"">
-        <div class="container-fluid">
-            <!-- Logo de la marca -->
-            <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Gestión Servicios</a>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <!-- Logo de la marca -->
+        <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Gestión Servicios</a>
 
-            <!-- Icono para el menú en móviles -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <!-- Icono para el menú en móviles -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <!-- Menú de navegación -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('datos')"><i class='bx bxs-business'></i> Datos Profesionales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('horarios')"><i class='bx bxs-time'></i>Horarios Atención</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('servicios')"><i class='bx bx-donate-blood'></i> Servicios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('citas')"><i class='bx bx-list-check'></i>Mis citas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('agenda')"><i class='bx bxs-calendar'></i> Agenda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('informes')"><i class='bx bxs-detail'></i> Informes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" onclick="{{ route('privada') }}">Volver</a>
-                    </li>
-                </ul>
-            </div>
+        <!-- Menú de navegación -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('datos')"><i class='bx bxs-business'></i> Datos Profesionales</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('horarios')"><i class='bx bxs-time'></i> Horarios Atención</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('servicios')"><i class='bx bx-donate-blood'></i> Servicios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('citas')"><i class='bx bx-list-check'></i> Mis citas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('agenda')"><i class='bx bxs-calendar'></i> Agenda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('informes')"><i class='bx bxs-detail'></i> Informes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="{{ route('privada') }}">Volver</a>
+                </li>
+            </ul>
         </div>
+    </div>
 </nav>
 
 <!-- Secciones de contenido -->
