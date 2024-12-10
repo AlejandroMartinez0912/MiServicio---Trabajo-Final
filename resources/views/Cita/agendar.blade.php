@@ -1,157 +1,146 @@
 @extends('layouts.miservicioIn')
 
-@section('titulo', 'Agendar Cita')
+@section('titulo', 'MiServicio | Agendar Cita')
 <style>
     /* Estilo para los elementos h5 */
     h3 {
-        font-family:sans-serif; /* Fuente gruesa y moderna */
+        font-family: sans-serif; /* Fuente gruesa y moderna */
         font-weight: 900; /* Máxima negrita */
-        color: #333333; /* Gris oscuro para un contraste elegante */
+        color: #e0e0e0; /* Gris claro para un contraste elegante */
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para mayor profundidad */
-        
     }
     h4 {
-            font-family:sans-serif; /* Fuente gruesa y moderna */
-            font-weight: 900; /* Máxima negrita */
-            color: #333333; /* Gris oscuro para un contraste elegante */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para mayor profundidad */
+        font-family: sans-serif; /* Fuente gruesa y moderna */
+        font-weight: 900; /* Máxima negrita */
+        color: #e0e0e0; /* Gris claro para un contraste elegante */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Sombra para mayor profundidad */
     }
 
-    #servicio-container {
-        background-color: #f8f9fa;
+    #servicio-container, #profesional-container, #horario-container {
+        background-color: #333; /* Fondo oscuro */
         padding: 20px;
         border-radius: 10px;
         width: 600px;
+        color: #e0e0e0; /* Texto claro */
     }
 
-
-    #profesional-container {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        width: 600px;
-
-    }
-
-    #horario-container {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        width: 600px;
-
-    }
     /* Estilo para los botones deshabilitados */
     .btn[disabled] {
-        background-color: #e0e0e0;
-        color: #b0b0b0;
+        background-color: #555;
+        color: #888;
         pointer-events: none; /* Evita que se pueda hacer clic */
     }
-        /* Contenedor principal */
-  .date-picker-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      gap: 20px;
-  }
 
-  /* Botones de navegación */
-  .navigation-buttons {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-  }
+    /* Contenedor principal */
+    .date-picker-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #333; /* Fondo oscuro */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        gap: 20px;
+        color: #e0e0e0; /* Texto claro */
+    }
 
-  .date-picker-container button {
-      background-color: #333;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 18px;
-  }
+    /* Botones de navegación */
+    .navigation-buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-  .date-picker-container button:hover {
-      background-color: #0056b3;
-  }
+    .date-picker-container button {
+        background-color: #444; /* Fondo oscuro */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+    }
 
-  /* Contenedor de fechas */
-  .date-display {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      gap: 10px;
-  }
+    .date-picker-container button:hover {
+        background-color: #0056b3;
+    }
 
-  /* Contenedor de horarios */
-  .schedule-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 10px;
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+    /* Contenedor de fechas */
+    .date-display {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+        gap: 10px;
+    }
 
-  /* Días seleccionables */
-  .day-box {
-      text-align: center;
-      background-color: #70e188;
-      color: #333;
-      padding: 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 2px;
-  }
+    /* Contenedor de horarios */
+    .schedule-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+        background-color: #444; /* Fondo oscuro */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        color: #e0e0e0; /* Texto claro */
+    }
 
-  .day-box.selected {
-      background-color: #3f3fd1;
-      color: white;
-  }
+    /* Días seleccionables */
+    .day-box {
+        text-align: center;
+        background-color: #70e188;
+        color: #333;
+        padding: 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 2px;
+    }
 
-  .day-box.unavailable {
-      background-color: #ffebee;
-      color: #f44336;
-      cursor: not-allowed;
-  }
+    .day-box.selected {
+        background-color: #3f3fd1;
+        color: white;
+    }
 
-  .day-box span {
-      display: block;
-  }
+    .day-box.unavailable {
+        background-color: #ffebee;
+        color: #f44336;
+        cursor: not-allowed;
+    }
 
-  .day-box #month {
-      font-size: 18px;
-      font-weight: bold;
-  }
+    .day-box span {
+        display: block;
+    }
 
-  .day-box #weekday {
-      font-size: 16px;
-  }
+    .day-box #month {
+        font-size: 18px;
+        font-weight: bold;
+    }
 
-  .day-box #day {
-      font-size: 20px;
-      font-weight: bold;
-  }
-  .schedule-item {
+    .day-box #weekday {
+        font-size: 16px;
+    }
+
+    .day-box #day {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .schedule-item {
         margin: 5px;
         padding: 10px;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
+        background-color: #444; /* Fondo oscuro */
+        border: 1px solid #555;
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        color: #e0e0e0; /* Texto claro */
     }
 
     .schedule-item:hover {
-        background-color: #ddd;
+        background-color: #555;
     }
 
     .schedule-item.selected {
@@ -160,6 +149,7 @@
         font-weight: bold;
         border-color: #4caf50;
     }
+
     .modal {
         display: none;
         position: fixed;
@@ -169,7 +159,7 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.7);
     }
 
     .modal-dialog {
@@ -178,10 +168,11 @@
     }
 
     .modal-content {
-        background-color: #fff;
+        background-color: #333; /* Fondo oscuro */
         border-radius: 8px;
         padding: 20px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        color: #e0e0e0; /* Texto claro */
     }
 
     .modal-header {
@@ -198,6 +189,7 @@
         display: flex;
         justify-content: flex-end;
     }
+
     /* Botón agendar cita */
     .btn-agendar-cita {
         display: block;
@@ -207,9 +199,9 @@
         font-weight: bold;
         border-radius: 5px;
         color: #fff;
-        background-color: #333; /* Color de fondo predeterminado */
+        background-color: #444; /* Fondo oscuro */
         transition: all 0.3s ease;
-        border: none; /* Asegura que no haya borde visible */
+        border: none;
     }
 
     .btn-agendar-cita:hover {
@@ -217,32 +209,28 @@
         color: #FFD700; /* Color del texto al pasar el mouse */
         cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
     }
-    h3 {
-        font-family: sans-serif;
-        font-weight: 900;
-        color: #333333;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        text-align: center;
-        margin-bottom: 30px;
-    }
+
     .form-container {
         max-width: 500px;
         margin: 50px auto;
         padding: 20px;
         border-radius: 10px;
-        background: #fff;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        background: #444; /* Fondo oscuro */
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+        color: #e0e0e0; /* Texto claro */
     }
 
     .form-container h4 {
-        color: #444;
+        color: #e0e0e0;
         font-weight: 700;
     }
 
     .form-control {
-        border: 1px solid #ccc;
+        border: 1px solid #555;
         border-radius: 5px;
         padding: 10px;
+        background-color: #666; /* Fondo oscuro */
+        color: #e0e0e0; /* Texto claro */
     }
 
     .btn-primary {
@@ -253,19 +241,19 @@
     .btn-primary:hover {
         background: #0056b3;
     }
-
 </style>
 
 @section('contenido')
-<div class="container" style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+
+<div class="container" style="background:linear-gradient(135deg, #2a2a2a, #1c1c1c); padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); color: #f8f9fa;">
     <h3 class="text-center mb-5 text-uppercase font-weight-bold">Agendar Cita</h3>
-    <div class="container" style="padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); display: flex; gap: 20px;">
+    <div class="container" style="padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); display: flex; gap: 20px; background:linear-gradient(135deg, #2a2a2a, #1c1c1c);">
         <div style="flex: 1;">
             <!-- Contenido del primer div -->
-            <h4><i class="bx bx-wrench"></i>Servicio elegido</h5>
+            <h4 style="color: #f8f9fa;"><i class="bx bx-wrench"></i> Servicio elegido</h4>
             <div class="d-flex align-items-center mt-3">
                 <div>
-                    <h6 class="mb-0" style="font-family: 'Roboto', sans-serif; font-weight: bold; font-size: 1.2rem;">
+                    <h6 class="mb-0" style="font-family: 'Roboto', sans-serif; font-weight: bold; font-size: 1.2rem; color: #f8f9fa;">
                         {{ $servicio->nombre }}
                     </h6>
     
@@ -275,12 +263,11 @@
                         $duracionEnMinutos = $duracionEstimada->hour * 60 + $duracionEstimada->minute;
                     @endphp
                     <!-- Duración formateada en horas y minutos -->
-                    
-                    <p class="card-text" style="font-size: 0.9rem; color: #6c757d;">
+                    <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">
                         Duración: {{ floor($duracionEnMinutos / 60) }}h {{ $duracionEnMinutos % 60 }}m
                     </p>
                     <!-- Precio estimado -->
-                    <p class="card-text" style="font-size: 0.9rem; color: #6c757d;">
+                    <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">
                         Precio estimado: ${{ number_format($servicio->precio_base, 2) }}
                     </p>
                 </div>
@@ -289,18 +276,19 @@
         <div style="flex: 1;">
             <!-- Contenido del segundo div -->
             <div class="d-flex justify-content-between align-items-center">
-                <h4><i class='bx bxs-briefcase-alt-2' ></i> Profesional encargado</h5>
+                <h4 style="color: #f8f9fa;"><i class='bx bxs-briefcase-alt-2'></i> Profesional encargado</h4>
             </div>
             <div class="d-flex align-items-center mt-3">
                 <div>
-                    <h6 class="mb-0" style="font-family: 'Roboto', sans-serif; font-weight: bold; font-size: 1.2rem;">
-                        {{ $persona->nombre }} {{ $persona->apellido }}</h6>
-                    <p class="card-text" style="font-size: 0.9rem; color: #6c757d;"> Ubicación: {{ $datosProfesion->ubicacion }}</p>
-                    <p class="card-text" style="font-size: 0.9rem; color: #6c757d;">Telefo: {{ $datosProfesion->telefono }}</p>
+                    <h6 class="mb-0" style="font-family: 'Roboto', sans-serif; font-weight: bold; font-size: 1.2rem; color: #f8f9fa;">
+                        {{ $persona->nombre }} {{ $persona->apellido }}
+                    </h6>
+                    <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Ubicación: {{ $datosProfesion->ubicacion }}</p>
+                    <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Teléfono: {{ $datosProfesion->telefono }}</p>
                     @if ($datosProfesion->calificacion == 0)
-                        <p class="card-text" style="font-size: 0.9rem; color: #6c757d;">Calificacion: No calificado</p>
+                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación: No calificado</p>
                     @else
-                        <p class="card-text" style="font-size: 0.9rem; color: #6c757d;"> Calificacion: {{ $datosProfesion->calificacion }}</p>
+                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación: {{ $datosProfesion->calificacion }}</p>
                     @endif
                 </div>
             </div>
@@ -308,10 +296,10 @@
     </div>
     
     <!-- Elección de fecha y horario -->
-    <div class="container" style="padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
-        <hr>
+    <div class="container" style="padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); background:linear-gradient(135deg, #2a2a2a, #1c1c1c);">
+        <hr style="border-color: #495057;">
         <div class="d-flex justify-content-between align-items-center">
-            <h4 class="mb-3"><i class='bx bxs-calendar'></i> Elegir fecha y horario</h4>
+            <h4 class="mb-3" style="color: #f8f9fa;"><i class='bx bxs-calendar'></i> Elegir fecha y horario</h4>
         </div>
         <form id="citaForm" method="POST" action="{{ route('guardar-cita') }}">
             @csrf
@@ -320,14 +308,14 @@
 
             <!-- Selección de fecha -->
             <div class="form-group mb-3">
-                <label for="fecha" class="form-label"><i class="bx bx-calendar"></i> Fecha de la cita:</label>
-                <input type="text" id="fecha" name="fecha" class="form-control" placeholder="Seleccione una fecha" required>
+                <label for="fecha" class="form-label" style="color: #f8f9fa;"><i class="bx bx-calendar"></i> Fecha de la cita:</label>
+                <input type="text" id="fecha" name="fecha" class="form-control" placeholder="Seleccione una fecha" required style="background-color: white; color: black;">
             </div>
 
             <!-- Selección de hora -->
             <div class="form-group mb-3">
-                <label for="horaInicio" class="form-label"><i class="bx bx-time"></i> Hora de inicio:</label>
-                <input type="text" id="horaInicio" name="horaInicio" class="form-control" placeholder="Seleccione la hora de inicio" required>
+                <label for="horaInicio" class="form-label" style="color: #f8f9fa;"><i class="bx bx-time"></i> Hora de inicio:</label>
+                <input type="text" id="horaInicio" name="horaInicio" class="form-control" placeholder="Seleccione la hora de inicio" required style="background-color: white ; color: black ;">
             </div>
 
             <!-- Botón de enviar -->
@@ -335,6 +323,10 @@
         </form>
     </div>
 </div>
+
+
+
+
 <!-- Modal de Confirmación -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">

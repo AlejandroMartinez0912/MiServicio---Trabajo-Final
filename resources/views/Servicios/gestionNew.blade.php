@@ -1,6 +1,6 @@
 @extends('layouts.miservicioIn')
 
-@section('titulo', 'Gestión de servicio')
+@section('titulo', 'MiServicio | Gestión de Servicios')
 
 @section('contenido')
 
@@ -103,7 +103,7 @@
                 @csrf
                 @method('PUT')
             
-                <h3 class="text-uppercase font-weight-bold text-dark mb-4">Datos Profesionales</h3>
+                <h3 class="text-uppercase font-weight-bold text-white mb-4">Datos Profesionales</h3>
                 
                 <!-- Sección: Nombre -->
                 <div class="row mb-4">
@@ -135,17 +135,19 @@
             
                 <!-- Sección: Otros datos -->
                 <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label for="experiencia" class="form-label">Experiencia</label>
-                        <input type="number" id="experiencia" name="experiencia" class="form-control" 
-                            min="0" step="1" placeholder="Ingrese la experiencia" required value="{{$datosProfesion->experiencia}}">
-                    </div>
+                    
                     <div class="col-md-4">
                         <label for="estado" class="form-label">Estado</label>
                         <select class="form-control" id="estado" name="estado">
                             <option value="1" {{ $datosProfesion->estado == 1 ? 'selected' : '' }}>Activo</option>
                             <option value="0" {{ $datosProfesion->estado == 0 ? 'selected' : '' }}>Inactivo</option>
                         </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="calificacion" class="form-label">Experiencia</label>
+                        <div class="form-control-plaintext">
+                            {{ $datosProfesion->experiencia }} 
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <label for="calificacion" class="form-label">Calificación</label>
@@ -186,7 +188,7 @@
             <form action="{{ route('guardar-datos') }}" method="POST" class="p-4">
                 @csrf
             
-                <h3 class="text-uppercase font-weight-bold text-dark mb-4">Datos Profesionales</h3>
+                <h3 text-white class="text-uppercase font-weight-bold text-dark mb-4">Datos Profesionales</h3>
                 
                 <!-- Sección: Nombre -->
                 <div class="row mb-4">
@@ -263,66 +265,73 @@
     </script>
     <style>
         #datos-profesionales {
-            background: linear-gradient(135deg, #ffffff, #f0f0f5);
+            background: #222;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            color: #ccc;
         }
-
+    
         #datos-profesionales h3 {
-            color: #4a4a4a;
+            color: #fff;
             text-align: center;
-            border-bottom: 2px solid black;
+            border-bottom: 2px solid #444;
             padding-bottom: 10px;
         }
-
+    
         #datos-profesionales label {
             font-weight: bold;
             font-size: 0.9rem;
-            color: #555555;
+            color: #ccc;
         }
-
+    
         #datos-profesionales input, 
         #datos-profesionales select {
-            border: 1px solid #dcdcdc;
+            border: 1px solid #555;
             border-radius: 4px;
             padding: 10px;
+            background-color: #444;
+            color: #ccc;
             transition: all 0.3s;
         }
-
+    
         #datos-profesionales input:focus, 
-       
-
+        #datos-profesionales select:focus {
+            border-color: #333399;
+            background-color: #333;
+        }
+    
         #datos-profesionales .btn-success {
             background: linear-gradient(90deg, #ff00cc, #333399);
+            color: white;
             font-size: 1rem;
             font-weight: bold;
         }
-
-
+    
         #datos-profesionales .form-control-plaintext {
-            color: #4a4a4a;
+            color: #fff;
             font-weight: bold;
         }
-
+    
         .modal-header, .modal-footer {
             border: none;
         }
-
+    
         .modal-content {
             border-radius: 10px;
+            background-color: #333;
+            color: #ccc;
         }
-
+    
         .modal-title {
             font-size: 1.25rem;
             font-weight: bold;
         }
-
+    
         .modal-footer .btn-success {
             width: 100%;
         }
-
     </style>
+    
 </div>
     
 <div id="horarios" class="section" style="display: none;">
@@ -387,7 +396,7 @@
     <div id= "horarios">
         <!-- Mostrar los horarios ya creados -->
         @if($horariosTrabajo && $horariosTrabajo->isNotEmpty())
-            <h3 class="text-uppercase font-weight-bold text-dark mb-4">Horarios de atención</h3>
+            <h3 class="text-uppercase font-weight-bold text-white mb-4">Horarios de atención</h3>
             <table class="horarios-table">
                 <thead>
                     <tr>
@@ -641,123 +650,129 @@
     </div>
     <style>
         #horarios {
-            background: linear-gradient(135deg, #ffffff, #f0f0f5);
+            background: #222;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             padding: 20px;
+            color: #ccc;
         }
-
+    
         #horarios h3 {
-            color: #4a4a4a;
+            color: #fff;
             text-align: center;
-            border-bottom: 2px solid black;
+            border-bottom: 2px solid #444;
             padding-bottom: 10px;
         }
-
+    
         .horarios-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-
+    
         .horarios-table th, .horarios-table td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #444;
         }
-
+    
         .horarios-table th {
-            background-color: #f0f0f5;
-            color: #333;
+            background-color: #333;
+            color: #fff;
             font-weight: bold;
         }
-
+    
         .horarios-table tr:hover {
-            background-color: #f9f9f9;
+            background-color: #444;
         }
-
+    
         .horarios-table td {
             font-size: 0.9rem;
-            color: #555;
+            color: #bbb;
         }
-
+    
         .btn-action {
             font-size: 0.875rem;
             font-weight: bold;
             padding: 6px 12px;
         }
-
+    
         .btn-warning {
-            background-color: #f0ad4e;
-            color: white;
+            background-color: #ffcc00;
+            color: black;
         }
-
+    
         .btn-warning:hover {
-            background-color: #ec971f;
+            background-color: #e6b800;
         }
-
+    
         .btn-danger {
-            background-color: #d9534f;
+            background-color: #c9302c;
             color: white;
         }
-
+    
         .btn-danger:hover {
-            background-color: #c9302c;
+            background-color: #a8231d;
         }
-
+    
         .btn-success {
             background: linear-gradient(90deg, #ff00cc, #333399);
             color: white;
             font-size: 1rem;
             font-weight: bold;
         }
-
+    
         .modal-content {
             border-radius: 10px;
+            background: #333;
+            color: #ccc;
         }
-
+    
         .modal-header, .modal-footer {
             border: none;
         }
-
+    
         .modal-title {
             font-size: 1.25rem;
             font-weight: bold;
         }
-
+    
         .modal-footer .btn-success {
             width: 100%;
         }
-
+    
         .form-label {
             font-weight: bold;
-            color: #555555;
+            color: #ccc;
         }
-
+    
         input[type="time"], .form-control {
-            border: 1px solid #dcdcdc;
+            border: 1px solid #555;
             border-radius: 4px;
             padding: 10px;
+            background-color: #444;
+            color: #ccc;
             transition: all 0.3s;
         }
-
+    
         input:focus, .form-control:focus {
             border-color: #333399;
         }
-
+    
         .modal-body {
             padding: 20px;
         }
-
+    
         .modal-footer button {
             font-size: 1rem;
         }
-
+    
         @media (max-width: 768px) {
             .horarios-table th, .horarios-table td {
                 font-size: 0.8rem;
             }
         }
+    
         /* Estilos para los botones de Editar, Anular y Eliminar */
         .btn-action {
             font-weight: bold;
@@ -769,47 +784,43 @@
             transition: all 0.3s ease-in-out;
             border: none;
         }
-
+    
         .btn-action.edit {
             background: linear-gradient(90deg, #ffcc00, #ff9900); /* Estilo para el botón de editar */
-            color: #fff;
+            color: #333;
         }
-
-
+    
         .btn-action.anular {
             background: linear-gradient(90deg, #333399, #333350); /* Estilo para el botón de anular */
             color: #fff;
         }
-
+    
         .btn-action.activar {
-            background: linear-gradient(90deg, #218838, #28a745); /* Estilo para el botón de anular */
+            background: linear-gradient(90deg, #218838, #28a745); /* Estilo para el botón de activar */
             color: #fff;
         }
-
-     
-
+    
         .btn-action.eliminar {
             background: linear-gradient(90deg, #cc0000, #c9302c); /* Estilo para el botón de eliminar */
             color: #fff;
         }
-
+    
         .btn-action.inactive {
             background: linear-gradient(90deg, #6c757d, #5a6268); /* Estilo para el botón de desactivar */
             color: #fff;
         }
-
+    
         .btn-action.inactive:hover {
             background: linear-gradient(90deg, #5a6268, #6c757d); /* Efecto hover */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-
-
     </style>
+    
 </div>
 
 <div id="servicios" class="section" style="display: none;">
     <div id="servicios">
-        <h3 class="text-uppercase font-weight-bold text-dark mb-4" >Servicios</h3>
+        <h3 class="text-uppercase font-weight-bold text-white mb-4" >Servicios</h3>
         @if ($servicios->isEmpty())
             <p>No hay servicios creados.</p>
             <!-- Botón para abrir el modal -->
@@ -1059,26 +1070,26 @@
     <style>
         /* Estilo para el contenedor de servicios */
         #servicios {
-            background: linear-gradient(135deg, #f0f0f5, #ffffff);
+            background: linear-gradient(135deg, #121212, #1f1f1f);
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
-
+    
         #servicios h3 {
-            color: #4a4a4a;
+            color: #fff;
             text-align: center;
-            border-bottom: 2px solid black;
+            border-bottom: 2px solid #444;
             padding-bottom: 10px;
         }
-
+    
         /* Estilo para cuando no hay servicios */
         #servicios p {
             font-size: 1rem;
             text-align: center;
-            color: #777;
+            color: #aaa;
         }
-
+    
         /* Estilo para el botón Crear servicio */
         .btn-create-service {
             background-color: #28a745;
@@ -1091,11 +1102,11 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
+    
         .btn-create-service:hover {
             background-color: #218838;
         }
-
+    
         /* Estilo para las tarjetas de servicio */
         #card-serviciosIndividual {
             display: flex;
@@ -1103,11 +1114,11 @@
             gap: 20px;
             justify-content: space-between;
         }
-
+    
         .service-card {
-            background: #ffffff;
+            background: #2a2a2a;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             width: 100%;
             max-width: 300px;
             padding: 20px;
@@ -1115,114 +1126,116 @@
             flex-direction: column;
             align-items: center;
         }
-
+    
         .service-card h3.titulo-servicio {
-            color: #333;
+            color: #fff;
             font-size: 1.2rem;
             font-weight: bold;
             margin-bottom: 10px;
         }
-
+    
         /* Estilo para la columna de información */
         .service-card p {
             font-size: 0.9rem;
             margin-bottom: 8px;
+            color: #ddd;
         }
-
+    
         .service-card ul {
             list-style-type: none;
             padding-left: 0;
         }
-
+    
         .service-card li {
             font-size: 0.9rem;
-            color: #555;
+            color: #bbb;
         }
-
+    
         .service-card .text-success {
             color: #28a745;
         }
-
+    
         .service-card .text-danger {
             color: #dc3545;
         }
-
+    
         .service-card .text-warning {
             color: #ffc107;
         }
-
+    
         .service-card .bi-star-fill {
             color: #ffc107;
         }
-
+    
         .service-card .bi-star {
-            color: #e0e0e0;
+            color: #666;
         }
-
+    
         /* Estilo para la columna de acciones */
         .service-actions {
             display: flex; /* Alinea los botones en fila */
             justify-content: start; /* Alinea los botones al inicio */
             gap: 10px; /* Espaciado entre los botones */
         }
-
+    
         .btn-action {
             display: inline-block;
             padding: 10px;
             border: none;
             cursor: pointer;
-            background-color: #f8f9fa;
+            background-color: #444;
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-
+    
         .btn-action:hover {
-            background-color: #ddd;
+            background-color: #555;
         }
-
+    
         /* Estilos específicos para los botones de acción */
         .btn-action.edit {
             background: linear-gradient(90deg, #ffcc00, #ff9900);
             color: #fff;
         }
-
+    
         .btn-action.edit:hover {
             background: linear-gradient(90deg, #ff9900, #ffcc00);
         }
-
+    
         .btn-action.anular {
             background: linear-gradient(90deg, #333399, #333350);
             color: #fff;
         }
-
+    
         .btn-action.anular:hover {
             background: linear-gradient(90deg, #333350, #333399);
         }
-
+    
         .btn-action.activar {
             background: linear-gradient(90deg, #218838, #28a745);
             color: #fff;
         }
-
+    
         .btn-action.activar:hover {
             background: linear-gradient(90deg, #28a745, #218838);
         }
-
+    
         .btn-action.eliminar {
             background: linear-gradient(90deg, #cc0000, #c9302c);
             color: #fff;
         }
-
+    
         .btn-action.eliminar:hover {
             background: linear-gradient(90deg, #c9302c, #cc0000);
         }
-
+    
     </style>
+    
 </div>
 
 <div id="citas" class="section" style="display: none;">
     <div id="citas">
-        <h3 class="text-uppercase font-weight-bold text-dark mb-4"> Mis Citas</h3>
+        <h3 class="text-uppercase font-weight-bold text-white mb-4"> Mis Citas</h3>
         <div class="row">
             <div class="col-md-12">
                 <div class="card-body">
@@ -1398,88 +1411,85 @@
                 
     </div>
     <style>
+        /* Estilo para el contenedor de citas */
         #citas {
-            background: linear-gradient(135deg, #ffffff, #f0f0f5);
+            background: linear-gradient(135deg, #121212, #1f1f1f);
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             padding: 20px;
         }
-    
+
         #citas h3 {
-            color: #4a4a4a;
+            color: #fff;
             text-align: center;
-            border-bottom: 2px solid black;
+            border-bottom: 2px solid #444;
             padding-bottom: 10px;
         }
-    
+
+        /* Estilo para las etiquetas */
         #citas label {
             font-weight: bold;
             font-size: 0.9rem;
-            color: #555555;
+            color: #bbb;
         }
-    
+
+        /* Estilo para los inputs y selects */
         #citas input, 
         #citas select {
-            border: 1px solid #dcdcdc;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
             border-radius: 4px;
             padding: 10px;
+            color: #ddd;
             transition: all 0.3s;
         }
-    
+
+        /* Estilo cuando los inputs/selects están enfocados */
         #citas input:focus, 
         #citas select:focus {
-            border-color: #333399;
+            border-color: #28a745;
             outline: none;
         }
-    
+
+        /* Estilo para el botón de acción */
         #citas .btn-success {
             background: linear-gradient(90deg, #ff00cc, #333399);
             font-size: 1rem;
             font-weight: bold;
             border-radius: 4px;
             padding: 10px 20px;
+            color: white;
         }
-    
+
+        #citas .btn-success:hover {
+            background: linear-gradient(90deg, #333399, #ff00cc);
+        }
+
+        /* Estilo para el texto dentro de inputs o selects de solo lectura */
         #citas .form-control-plaintext {
-            color: #4a4a4a;
+            color: #bbb;
             font-weight: bold;
         }
-    
-        .modal-header, .modal-footer {
-            border: none;
-        }
-    
+
+        /* Estilos generales para el modal */
         .modal-content {
+            background-color: #1f1f1f; /* Fondo oscuro */
             border-radius: 10px;
-        }
-    
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-    
-        .modal-footer .btn-success {
-            width: 100%;
-        }
-        /* Estilo general del modal */
-        .modal-content {
-            background-color: #fff; /* Fondo blanco para el modal */
-            border-radius: 10px; /* Bordes redondeados */
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-            padding: 20px; /* Espaciado interno */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px;
         }
 
         /* Cabecera del modal */
         .modal-header {
-            border-bottom: 2px solid #007bff; /* Línea de separación */
-            padding-bottom: 15px; /* Espaciado debajo del título */
+            border-bottom: 2px solid #444;
+            padding-bottom: 15px;
         }
 
         /* Título del modal */
         .modal-title {
-            font-size: 1.25rem; /* Tamaño de fuente */
-            font-weight: bold; /* Negrita */
-            color: #007bff; /* Color azul */
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: linear-gradient(90deg, #ff00cc, #333399);;
         }
 
         /* Botón de cierre */
@@ -1487,91 +1497,85 @@
             background-color: transparent;
             border: none;
             font-size: 1.5rem;
-            color: #007bff;
+            color: linear-gradient(90deg, #ff00cc, #333399);;
         }
 
         /* Cuerpo del modal */
         .modal-body {
-            font-size: 1rem; /* Tamaño de fuente */
-            color: #333; /* Color de texto */
-            padding-bottom: 10px; /* Espaciado */
-        }
-
-        /* Estilo de los textos dentro del modal */
-        .modal-body p {
-            margin-bottom: 10px; /* Espaciado entre párrafos */
-            line-height: 1.6; /* Altura de línea para mayor legibilidad */
+            font-size: 1rem;
+            color: #ddd;
+            padding-bottom: 10px;
         }
 
         /* Pie de página del modal */
         .modal-footer {
-            border-top: 1px solid #ddd; /* Línea de separación superior */
-            padding-top: 10px; /* Espaciado arriba del pie de página */
+            border-top: 1px solid #444;
+            padding-top: 10px;
         }
 
         /* Botones dentro del modal */
         .modal-footer .btn-secondary {
-            background-color: #f1f1f1; /* Color de fondo gris claro */
-            color: #007bff; /* Color del texto */
-            border-radius: 5px; /* Bordes redondeados */
-            padding: 8px 20px; /* Espaciado del botón */
-            font-size: 1rem; /* Tamaño de fuente */
+            background-color: #444;
+            color: white;
+            border-radius: 5px;
+            padding: 8px 20px;
+            font-size: 1rem;
         }
 
         .modal-footer .btn-secondary:hover {
-            background-color: #007bff; /* Fondo azul al pasar el mouse */
-            color: white; /* Texto blanco */
+            background-color: linear-gradient(90deg, #ff00cc, #333399);;
+            color: white;
         }
 
         /* Fondo oscuro de la pantalla cuando el modal está abierto */
         .modal-backdrop.show {
-            background-color: rgba(0, 0, 0, 0.5); /* Sombra oscura de fondo */
+            background-color: rgba(0, 0, 0, 0.7);
         }
+
         /* Estilos generales para los badges */
 
         /* Estado Pendiente */
         .badge-warning {
-            background-color: #f0ad4e; /* Color de fondo naranja */
-            color: white; /* Color del texto blanco */
+            background-color: #f0ad4e;
+            color: white;
         }
-
 
         /* Estado Confirmada */
         .badge-success {
-            background-color: #28a745; /* Color de fondo verde */
-            color: white; /* Color del texto blanco */
+            background-color: #28a745;
+            color: white;
         }
-
-
 
         /* Estado Cancelada */
         .badge-danger {
-            background-color: #dc3545; /* Color de fondo rojo */
-            color: white; /* Color del texto blanco */
+            background-color: #dc3545;
+            color: white;
         }
+
         /* Estilos generales para los botones */
 
         /* Botón Confirmar Cita */
         .btn-modern {
-            background-color: #28a745; /* Color de fondo verde */
-            color: white; /* Color del texto blanco */
+            background-color: #28a745;
+            color: white;
         }
 
         .btn-modern:hover {
-            background-color: #218838; /* Color de fondo verde oscuro al pasar el mouse */
-            transform: scale(1.05); /* Efecto de agrandar el botón al pasar el mouse */
+            background-color: #218838;
+            transform: scale(1.05);
         }
 
         /* Botón Rechazar Cita */
         .btn-modern1 {
-            background-color: #dc3545; /* Color de fondo rojo */
-            color: white; /* Color del texto blanco */
+            background-color: #dc3545;
+            color: white;
         }
 
         .btn-modern1:hover {
-            background-color: #c82333; /* Color de fondo rojo oscuro al pasar el mouse */
-            transform: scale(1.05); /* Efecto de agrandar el botón al pasar el mouse */
+            background-color: #c82333;
+            transform: scale(1.05);
         }
+
     </style>
 </div>
 

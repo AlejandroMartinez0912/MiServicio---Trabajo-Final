@@ -135,6 +135,9 @@
 
 
     </style>
+
+    <link rel="icon" href="{{ asset('Images/logo.png') }}" type="image/png">
+
 </head>
 <body>
 
@@ -150,12 +153,7 @@
                     <i class="bx bx-home-alt-2"></i>
                 </a>
             </button>
-            <!-- buscar servicios -->
-            <button class="button">
-                <a class="dropdown-item" href="{{ route('homein') }}" title="Buscar servicios">
-                    <i class="bx bx-search"></i>
-                </a>
-            </button>
+            
             <!-- perfil -->
             <button class="button">
                 <a class="dropdown-item" href="{{ route('perfil') }}" title="Perfil">

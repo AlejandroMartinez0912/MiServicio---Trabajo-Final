@@ -1,6 +1,6 @@
 @extends('layouts.miservicioIn')
 
-@section('titulo', 'Editar Perfil')
+@section('titulo', 'MiServicio | Perfil')
 
 @section('contenido')
 <style>

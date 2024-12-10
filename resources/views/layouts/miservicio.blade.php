@@ -135,12 +135,15 @@
 
 
     </style>
+
+    <link rel="icon" href="{{ asset('Images/logo.png') }}" type="image/png">
+
 </head>
 <body>
 
    <!-- Navbar -->
    <nav>
-        <a class="navbar-brand" href="{{ route('homein') }}">
+        <a class="navbar-brand">
             <img src="{{ asset('Images/logo.png') }}" alt="Logo de MiServicio">
         </a>
         <div class="button-container">

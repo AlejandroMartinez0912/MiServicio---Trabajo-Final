@@ -1,418 +1,39 @@
 @extends('layouts.miservicioIn')
 
-@section('titulo', 'Gestión de Citas')
+@section('titulo', 'MiServicio | Gestión de Citas')
 <!-- Estilos adicionales para mejorar la apariencia -->
-<style>
-    * Ajuste de la barra de navegación */
-    .navbar-nav .nav-link {
-        display: flex;
-        align-items: center; /* Alinea verticalmente el contenido */
-        justify-content: center; /* Centra el contenido horizontalmente */
-        font-size: 0.9rem; /* Reduce el tamaño de la fuente */
-        height: 50px; /* Altura consistente para los ítems */
-        padding: 0 10px; /* Espaciado horizontal */
-        color: #fff; /* Color de texto */
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
 
-    .navbar-nav .nav-link:hover {
-        background-color: #3A3F47;
-        border-radius: 5px;
-        color: #FFD700; /* Color del texto al hacer hover */
-    }
-
-    .navbar-nav .nav-link i {
-        margin-right: 5px; /* Espaciado entre el ícono y el texto */
-        font-size: 1rem; /* Tamaño del ícono */
-    }
-
-    /* Ajustes para ítems más pequeños */
-    .navbar-nav .nav-item {
-        margin: 0 5px; /* Espaciado entre los ítems */
-    }
-    /* Efecto hover para los botones */
-    .nav-button:hover {
-        background-color: #3A3F47;
-        border-radius: 5px;
-        color: #FFD700;
-        cursor: pointer;
-    }
-
-    /* Fondo de la barra de navegación más oscuro y sutil sombra */
-    .container {
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-        padding: 10px 0;
-    }
-
-    /* Transición suave al pasar el ratón */
-    .nav-button {
-        font-family: 'Arial', sans-serif;
-        font-weight: 500;
-        font-size: 1.1rem;
-        padding: 10px 20px;
-        transition: all 0.3s ease;
-        display: inline-block;
-        margin: 5px 10px;
-        border-radius: 5px;
-        color: #fff;
-        background-color: #333;
-    }
-
-    /* Logo más estilizado */
-    .navbar-brand {
-        font-family: 'Segoe UI', sans-serif;
-        font-size: 1.5rem;
-        letter-spacing: 1px;
-    }
-
-    /* Estilo para el contenedor de los botones */
-    .nav-button.active-tab {
-        background-color: #3A3F47;
-        color: #FFD700;
-    }
-
-    /* Estilo para los iconos */
-    .nav-button i {
-        margin-right: 8px;
-    }
-
-    /* Estilo para el contenedor de botones */
-    .d-flex {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
-    /* Estilo general para las secciones */
-    .content-section {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        width: 800px;
-        margin: 0 auto;
-    }
-
-    /* Estilo para los títulos */
-    h3 {
-        font-family: sans-serif;
-        font-weight: 900;
-        color: #333333;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    /* Estilo para los botones */
-    .btn {
-        background-color: #28a745;
-        color: white;
-        font-weight: bold;
-        border-radius: 5px;
-    }
-
-    .btn[disabled] {
-        background-color: #e0e0e0;
-        color: #b0b0b0;
-        pointer-events: none;
-    }
-
-    /* Estilo para los grupos de formulario */
-    .form-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .form-group {
-        width: 48%;
-    }
-
-    .form-control {
-        border-radius: 5px;
-        padding: 10px;
-    }
-
-    .form-label {
-        font-weight: bold;
-    }
-
-    /* Estilo para los campos de texto */
-    input[type="text"], input[type="number"], select {
-        font-size: 1rem;
-        padding: 10px;
-        border-radius: 5px;
-    }
-
-    /* Estilo de la modal */
-    .modal-body {
-        padding: 20px;
-    }
-    /* Estilo para la tabla de horarios */
-    .horarios-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-        background-color: #fff;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Encabezado de la tabla */
-    .horarios-table thead {
-        background-color: #333;
-        color: #fff;
-        text-align: left;
-    }
-
-    .horarios-table th {
-        padding: 15px;
-        font-size: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    /* Celdas de la tabla */
-    .horarios-table td {
-        padding: 12px;
-        font-size: 0.95rem;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-    }
-
-    /* Colores alternos para las filas */
-    .horarios-table tbody tr:nth-child(odd) {
-        background-color: #f9f9f9;
-    }
-
-    .horarios-table tbody tr:nth-child(even) {
-        background-color: #f1f1f1;
-    }
-
-    /* Efecto hover en filas */
-    .horarios-table tbody tr:hover {
-        background-color: #f0f0f0;
-        transition: background-color 0.3s ease;
-    }
-
-    /* Botones de acción */
-    .btn-action {
-        font-size: 0.9rem;
-        padding: 5px 10px;
-        margin: 2px;
-        border-radius: 5px;
-        transition: all 0.3s ease;
-        color: #fff;
-        border: none;
-    }
-
-    .btn-action.edit {
-        background-color: #007bff;
-    }
-
-    .btn-action.edit:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-action.anular {
-        background-color: #ffc107;
-        color: #333;
-    }
-
-    .btn-action.anular:hover {
-        background-color: #e0a800;
-    }
-
-    .btn-action.activar {
-        background-color: #28a745;
-    }
-
-    .btn-action.activar:hover {
-        background-color: #218838;
-    }
-
-    .btn-action.eliminar {
-        background-color: #dc3545;
-    }
-
-    .btn-action.eliminar:hover {
-        background-color: #c82333;
-    }
-    /* Contenedor principal */
-    .services-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 20px;
-        max-width: 100%;
-        background-color: #f8f9fa; /* Fondo suave */
-    }
-
-    /* Estilos de card */
-    .plan {
-        border-radius: 16px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        background-color: white;
-        color: #697e91;
-        min-width: 250px;
-        box-sizing: border-box;
-        max-width: 300px;
-    }
-
-    .plan strong {
-        font-weight: 600;
-        color: #333;
-    }
-
-    .plan .inner {
-        align-items: center;
-        padding: 20px;
-        padding-top: 40px;
-        background-color: grey;
-        border-radius: 12px;
-        position: relative;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .plan .pricing {
-        top: 0;
-        right: 0;
-        background-color: black;
-        border-radius: 99em 0 0 99em;
-        display: flex;
-        align-items: center;
-        padding: 0.625em 0.75em;
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: white;
-    }
-
-    .plan .pricing small {
-        color: grey;
-        font-size: 0.75em;
-        margin-left: 0.25em;
-    }
-
-    .plan .title {
-        font-weight: 600;
-        font-size: 1.25rem;
-        color: white;
-        text-align: center;
-    }
-
-    .plan .info {
-        color: #ddd;
-        text-align: center;
-        margin-top: 8px;
-    }
-
-    .plan .features {
-        display: flex;
-        flex-direction: column;
-        margin-top: 16px;
-    }
-
-    .plan .features li {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: white;
-    }
-
-    .plan .features li + * {
-        margin-top: 0.75rem;
-    }
-
-    .plan .features .icon {
-        background-color: black;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-    }
-
-    .plan .features + * {
-        margin-top: 1.25rem;
-    }
-
-    .plan .action {
-        margin-top: auto;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: end;
-    }
-
-    .plan .button {
-        background-color: #333;
-        border-radius: 6px;
-        color: white;
-        font-weight: 500;
-        font-size: 1.125rem;
-        text-align: center;
-        border: 0;
-        outline: 0;
-        width: 100%;
-        padding: 0.625em 0.75em;
-        text-decoration: none;
-    }
-
-    .plan .button:hover,
-    .plan .button:focus {
-        background-color: black;
-    }
-    /* Contenedor para organizar las tarjetas en filas */
-    .plan-container {
-    display: flex;
-    flex-wrap: wrap; /* Asegura que las tarjetas pasen a la siguiente fila si no caben */
-    justify-content: center;
-    gap: 20px;
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 5px;
-    }
-
-</style>
 @section('contenido')
-
 <style>
     #citas {
-        background: linear-gradient(135deg, #ffffff, #f0f0f5);
+        background: linear-gradient(135deg, #2a2a2a, #1c1c1c);
         border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
         padding: 20px;
     }
 
     #citas h3 {
-        color: #4a4a4a;
+        color: #e0e0e0;
         text-align: center;
-        border-bottom: 2px solid black;
+        border-bottom: 2px solid #555;
         padding-bottom: 10px;
     }
 
     #citas .table {
-        background-color: #ffffff;
-        border: 1px solid #dcdcdc;
+        background-color: #333;
+        border: 1px solid #555;
         border-radius: 8px;
         overflow: hidden;
     }
 
     #citas .thead-dark th {
-        background-color: #333399;
+        background-color: #444;
         color: white;
         text-align: center;
     }
 
     #citas .table-hover tbody tr:hover {
-        background-color: #f0f0f5;
+        background-color: #555;
     }
 
     #citas .badge {
@@ -422,17 +43,17 @@
     }
 
     #citas .badge-warning {
-        background: #ffc107;
+        background: #ffb347;
         color: #212529;
     }
 
     #citas .badge-success {
-        background: #28a745;
+        background: #4caf50;
         color: #ffffff;
     }
 
     #citas .badge-danger {
-        background: #dc3545;
+        background: #e57373;
         color: #ffffff;
     }
 
@@ -442,12 +63,13 @@
         padding: 5px 10px;
         border-radius: 5px;
         transition: all 0.3s;
+        background-color: #444;
+        color: white;
+        border: none;
     }
 
     #citas .btn-action.edit {
         background-color: #007bff;
-        color: white;
-        border: none;
     }
 
     #citas .btn-action.edit:hover {
@@ -456,19 +78,16 @@
 
     #citas .btn-action.anular {
         background-color: #dc3545;
-        color: white;
-        border: none;
     }
 
     #citas .btn-action.anular:hover {
         background-color: #a71d2a;
     }
-
 </style>
 
 <!-- Sección: Mis Citas -->
 <div id="citas">
-    <h3 class="text-uppercase font-weight-bold text-dark mb-4">Mis Citas</h3>
+    <h3 class="text-uppercase font-weight-bold text-white mb-4">Mis Citas</h3>
     <div class="row">
         <div class="col-md-12">
                 <div class="card-body">
@@ -479,7 +98,7 @@
                         <table class="table horarios-table table-hover table-bordered">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>Servicio</th>
+                                    <th class="text-white">Servicio</th>
                                     <th>Especialista</th>
                                     <th>Fecha</th>
                                     <th>Hora</th>
@@ -489,7 +108,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($citas as $cita)
-                                        <tr>
+                                        <tr class= "text-white">
                                             <td>{{ $cita->servicio->nombre }}</td>
                                             @php
                                                 $idEspecialista = $cita->servicio->datos_profesion_id;

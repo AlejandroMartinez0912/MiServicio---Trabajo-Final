@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
 // Ruta de página principal llamada Home
-Route::view('/', "home")->name('home');
+Route::view('/', "Home.home")->name('home');
 
 //Ruta de iniciar sesion
 Route::view('/login', "Auth.Login")->name('login');

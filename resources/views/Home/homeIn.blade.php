@@ -1,6 +1,6 @@
 @extends('layouts.miservicioIn')
 
-@section('titulo', 'Inicio')
+@section('titulo', 'MiServicio | Inicio')
 
 @section('contenido')
 
@@ -10,13 +10,39 @@
         <!-- Logo de la marca -->
         <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Buscar Servicios</a>
 
+        <!-- Botón de filtro (dropdown) -->
+        <div class="dropdown ms-3">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; color: white;">
+                Categorías
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <!-- Iterar sobre los rubros para mostrarlos como opciones -->
+                @foreach($rubros as $rubro)
+                    <li><a class="dropdown-item" href="#">{{ $rubro->nombre }}</a></li>
+                @endforeach
+            </ul>
+        </div>
+
         <!-- Barra de búsqueda -->
         <form class="d-flex ms-auto me-3" role="search" onsubmit="handleSearch(event)" style="max-width: 300px;">
             <input class="form-control me-2" type="search" placeholder="Buscar servicios..." aria-label="Buscar" id="searchInput" style="background-color: white; color: black; border: none; border-radius: 5px;">
-            <button class="btn" type="submit" style="background-color: #ff00cc; color: white; border: none;">Buscar</button>
+            <button class="btn" type="submit" style="background-color: #ff00cc; color: white; border: none;"><i class="bx bx-search"></i></button>
         </form>
+
+        <!-- Botón de filtro (dropdown) -->
+        <div class="dropdown ms-3">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #ff00cc; color: white;">
+                Filtrar por
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" href="#">Precio</a></li>
+                <li><a class="dropdown-item" href="#">Ubicación</a></li>
+                <li><a class="dropdown-item" href="#">Calificación</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
+
 
 <style>
     .navbar-brand {
@@ -201,8 +227,4 @@
     }
 
 </style>
-
-
-
-
 @endsection

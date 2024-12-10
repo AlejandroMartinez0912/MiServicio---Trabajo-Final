@@ -50,7 +50,7 @@ class HomeController extends Controller
         $horariosTrabajo = HorarioTrabajo::all();
 
 
-        return view('homeIn', compact('servicios', 'dias', 'rubros', 'persona', 
+        return view('Home.homeIn', compact('servicios', 'dias', 'rubros', 'persona', 
         'citas', 'horariosTrabajo', 'datosProfesion', 'user'));
     }
 
