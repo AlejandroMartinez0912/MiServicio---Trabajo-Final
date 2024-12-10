@@ -239,342 +239,287 @@
     .btn-action.eliminar:hover {
         background-color: #c82333;
     }
-/* Contenedor principal */
-.services-container {
+    /* Contenedor principal */
+    .services-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 20px;
+        max-width: 100%;
+        background-color: #f8f9fa; /* Fondo suave */
+    }
+
+    /* Estilos de card */
+    .plan {
+        border-radius: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        background-color: white;
+        color: #697e91;
+        min-width: 250px;
+        box-sizing: border-box;
+        max-width: 300px;
+    }
+
+    .plan strong {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .plan .inner {
+        align-items: center;
+        padding: 20px;
+        padding-top: 40px;
+        background-color: grey;
+        border-radius: 12px;
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .plan .pricing {
+        top: 0;
+        right: 0;
+        background-color: black;
+        border-radius: 99em 0 0 99em;
+        display: flex;
+        align-items: center;
+        padding: 0.625em 0.75em;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .plan .pricing small {
+        color: grey;
+        font-size: 0.75em;
+        margin-left: 0.25em;
+    }
+
+    .plan .title {
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: white;
+        text-align: center;
+    }
+
+    .plan .info {
+        color: #ddd;
+        text-align: center;
+        margin-top: 8px;
+    }
+
+    .plan .features {
+        display: flex;
+        flex-direction: column;
+        margin-top: 16px;
+    }
+
+    .plan .features li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+    }
+
+    .plan .features li + * {
+        margin-top: 0.75rem;
+    }
+
+    .plan .features .icon {
+        background-color: black;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+    }
+
+    .plan .features + * {
+        margin-top: 1.25rem;
+    }
+
+    .plan .action {
+        margin-top: auto;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: end;
+    }
+
+    .plan .button {
+        background-color: #333;
+        border-radius: 6px;
+        color: white;
+        font-weight: 500;
+        font-size: 1.125rem;
+        text-align: center;
+        border: 0;
+        outline: 0;
+        width: 100%;
+        padding: 0.625em 0.75em;
+        text-decoration: none;
+    }
+
+    .plan .button:hover,
+    .plan .button:focus {
+        background-color: black;
+    }
+    /* Contenedor para organizar las tarjetas en filas */
+    .plan-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px;
-    max-width: 100%;
-    background-color: #f8f9fa; /* Fondo suave */
-}
-
-/* Estilos de card */
-.plan {
-    border-radius: 16px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    background-color: white;
-    color: #697e91;
-    min-width: 250px;
-    box-sizing: border-box;
-    max-width: 300px;
-}
-
-.plan strong {
-    font-weight: 600;
-    color: #333;
-}
-
-.plan .inner {
-    align-items: center;
-    padding: 20px;
-    padding-top: 40px;
-    background-color: grey;
-    border-radius: 12px;
-    position: relative;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.plan .pricing {
-    top: 0;
-    right: 0;
-    background-color: black;
-    border-radius: 99em 0 0 99em;
-    display: flex;
-    align-items: center;
-    padding: 0.625em 0.75em;
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: white;
-}
-
-.plan .pricing small {
-    color: grey;
-    font-size: 0.75em;
-    margin-left: 0.25em;
-}
-
-.plan .title {
-    font-weight: 600;
-    font-size: 1.25rem;
-    color: white;
-    text-align: center;
-}
-
-.plan .info {
-    color: #ddd;
-    text-align: center;
-    margin-top: 8px;
-}
-
-.plan .features {
-    display: flex;
-    flex-direction: column;
-    margin-top: 16px;
-}
-
-.plan .features li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: white;
-}
-
-.plan .features li + * {
-    margin-top: 0.75rem;
-}
-
-.plan .features .icon {
-    background-color: black;
-    display: inline-flex;
-    align-items: center;
+    flex-wrap: wrap; /* Asegura que las tarjetas pasen a la siguiente fila si no caben */
     justify-content: center;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-}
-
-.plan .features + * {
-    margin-top: 1.25rem;
-}
-
-.plan .action {
-    margin-top: auto;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-}
-
-.plan .button {
-    background-color: #333;
-    border-radius: 6px;
-    color: white;
-    font-weight: 500;
-    font-size: 1.125rem;
-    text-align: center;
-    border: 0;
-    outline: 0;
-    width: 100%;
-    padding: 0.625em 0.75em;
-    text-decoration: none;
-}
-
-.plan .button:hover,
-.plan .button:focus {
-    background-color: black;
-}
-/* Contenedor para organizar las tarjetas en filas */
-.plan-container {
-  display: flex;
-  flex-wrap: wrap; /* Asegura que las tarjetas pasen a la siguiente fila si no caben */
-  justify-content: center;
-  gap: 20px;
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 5px;
-}
+    gap: 20px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    }
 
 </style>
 @section('contenido')
-<!-- Barra de navegación -->
-<nav class="navbar navbar-expand-lg navbar-dark"">
-    <div class="container-fluid">
-        <!-- Descr de la marca -->
-        <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Gestiona tus Citas</a>
-        <!-- Menú de navegación -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-light p-2" href="#buscar-servicios" style="transition: all 0.3s ease; font-size: 1.1rem;">Buscar Servicios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light p-2" href="#mis-citas" style="transition: all 0.3s ease; font-size: 1.1rem;">Mis Citas</a>
-                </li>
-                
-            </ul>
-        </div>
-    </div>
-</nav>
 
+<style>
+    #citas {
+        background: linear-gradient(135deg, #ffffff, #f0f0f5);
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
 
-<!-- Sección: Buscar Servicios -->
-<div id="buscar-servicios" class="section" style="display:none;">
-    <div class="container" style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
-        <div>
-            <!-- Título de la sección -->
-            <h3 class="text-center mb-4">Buscar Servicios</h2>
-            <!-- Barra de búsqueda con ícono -->
-            <div class="row mb-4">
-                <div class="col-md-6 offset-md-3">
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="bx bx-search"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Buscar por nombre de servicio..." aria-label="Buscar servicio">
-                        <span class="input-group-text">
-                            <i class='bx bx-filter'></i>
-                        </span>
-                    </div>
-                </div>
-    
-             </div>
-        </div>
-        <!-- Listado de Servicios -->
-        <div class="plan-container">
-            @foreach ($servicios as $servicio)
-            <div class="plan">
-                <div class="inner">
-                    <span class="pricing">
-                        <span>
-                            ${{ number_format($servicio->precio_base, 2) }} <small></small>
-                        </span>
-                    </span>
-                    <p class="title">{{ $servicio->nombre }}</p>
-                    <p class="info">{{ $servicio->descripcion }}</p>
-                    <ul class="features">
-                        <li>
-                     
-                            <span>
-                                <strong>Calificación:
-                                        @if ($servicio->calificacion == 0)
-                                                No calificado
-                                        @else
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $servicio->calificacion)
-                                                    <i class='bx bxs-star text-warning'></i> <!-- Estrella llena -->
-                                                @else
-                                                    <i class='bx bx-star text-muted'></i> <!-- Estrella vacía -->
-                                                @endif
-                                            @endfor
-                                    @endif
-                                </strong>
-                            </span>
-                        </li>
-                        <li>
-                            @php
-                                $duracionEstimada = \Carbon\Carbon::parse($servicio->duracion_estimada);
-                                $duracionEnMinutos = $duracionEstimada->hour * 60 + $duracionEstimada->minute;
-                            @endphp
-                            <span><strong>Duración: {{ floor($duracionEnMinutos / 60) }}h {{ $duracionEnMinutos % 60 }}m</strong></span>
-                        </li>
-                    </ul>
-                    <div class="action">
-                        <a class="button" href="{{ route('agendar-cita', ['idServicio' => $servicio->id]) }}">
-                            Agendar cita
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
+    #citas h3 {
+        color: #4a4a4a;
+        text-align: center;
+        border-bottom: 2px solid black;
+        padding-bottom: 10px;
+    }
 
-</div>
+    #citas .table {
+        background-color: #ffffff;
+        border: 1px solid #dcdcdc;
+        border-radius: 8px;
+        overflow: hidden;
+    }
 
+    #citas .thead-dark th {
+        background-color: #333399;
+        color: white;
+        text-align: center;
+    }
+
+    #citas .table-hover tbody tr:hover {
+        background-color: #f0f0f5;
+    }
+
+    #citas .badge {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        border-radius: 12px;
+    }
+
+    #citas .badge-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    #citas .badge-success {
+        background: #28a745;
+        color: #ffffff;
+    }
+
+    #citas .badge-danger {
+        background: #dc3545;
+        color: #ffffff;
+    }
+
+    #citas .btn-action {
+        font-size: 0.85rem;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+
+    #citas .btn-action.edit {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+    #citas .btn-action.edit:hover {
+        background-color: #0056b3;
+    }
+
+    #citas .btn-action.anular {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    #citas .btn-action.anular:hover {
+        background-color: #a71d2a;
+    }
+
+</style>
 
 <!-- Sección: Mis Citas -->
-<div id="mis-citas" class="section mt-5">
-    <div class="container" style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
-        <h3>Mis Citas</h3>
-        <div class="row">
-            <div class="col-md-12">
-                    <div class="card-body">
-                        @if ($citas->isEmpty())
+<div id="citas">
+    <h3 class="text-uppercase font-weight-bold text-dark mb-4">Mis Citas</h3>
+    <div class="row">
+        <div class="col-md-12">
+                <div class="card-body">
+                    @if ($citas->isEmpty())
 
-                            <p class="text-center">No tienes citas agendadas.</p>
-                        @else
-                            <table class="table horarios-table table-hover table-bordered">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>Servicio</th>
-                                        <th>Especialista</th>
-                                        <th>Fecha</th>
-                                        <th>Hora</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($citas as $cita)
-                                            <tr>
-                                                <td>{{ $cita->servicio->nombre }}</td>
-                                                @php
-                                                    $idEspecialista = $cita->servicio->datos_profesion_id;
-                                                    $especialista = $datosProfesion->where('id', $idEspecialista)->first();
-                                                @endphp
-                                                <td> {{ $especialista->nombre_fantasia }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</td>
-                                                <td>
-                                                    @if ($cita->estado == 0)
-                                                        <span class="badge badge-warning">Pendiente</span>
-                                                    @elseif ($cita->estado == 1)
-                                                        <span class="badge badge-success">Confirmada</span>
-                                                    @elseif ($cita->estado == 2)
-                                                        <span class="badge badge-danger">Cancelada</span>
-                                                    @elseif ($cita->estado == 3)
-                                                        <span class="badge badge-success"><strong>Re-confirmada</strong></span>
-                                                    @endif
-                        
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-action edit">Editar</button>
-                                                    <button class="btn btn-sm btn-action anular">Cancelar</button>
-                                                </td>                                        
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        @endif
-                    </div>
-        </div>
+                        <p class="text-center">No tienes citas agendadas.</p>
+                    @else
+                        <table class="table horarios-table table-hover table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Especialista</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($citas as $cita)
+                                        <tr>
+                                            <td>{{ $cita->servicio->nombre }}</td>
+                                            @php
+                                                $idEspecialista = $cita->servicio->datos_profesion_id;
+                                                $especialista = $datosProfesion->where('id', $idEspecialista)->first();
+                                            @endphp
+                                            <td> {{ $especialista->nombre_fantasia }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($cita->horaInicio)->format('H:i') }}</td>
+                                            <td>
+                                                @if ($cita->estado == 0)
+                                                    <span class="badge badge-warning">Pendiente</span>
+                                                @elseif ($cita->estado == 1)
+                                                    <span class="badge badge-success">Confirmada</span>
+                                                @elseif ($cita->estado == 2)
+                                                    <span class="badge badge-danger">Cancelada</span>
+                                                @elseif ($cita->estado == 3)
+                                                    <span class="badge badge-success"><strong>Re-confirmada</strong></span>
+                                                @endif
+                    
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-action edit">Editar</button>
+                                                <button class="btn btn-sm btn-action anular">Cancelar</button>
+                                            </td>                                        
+                                @endforeach
+                            </tbody>
+                        </table>
+                    @endif
+                </div>
     </div>
-    
-     
 </div>
 
-<!-- Script para cambiar de sección -->
-<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const sections = document.querySelectorAll('.section');  // Obtener todas las secciones
-            const navLinks = document.querySelectorAll('.navbar-nav .nav-link');  // Obtener todos los enlaces de navegación
-
-            // Función para ocultar todas las secciones
-            function hideSections() {
-                sections.forEach(section => {
-                    section.style.display = 'none';
-                });
-            }
-
-            // Mostrar la sección seleccionada y ocultar las demás
-            function showSection(sectionId) {
-                hideSections();
-                const selectedSection = document.getElementById(sectionId);
-                if (selectedSection) {
-                    selectedSection.style.display = 'block';
-                }
-            }
-
-            // Agregar un evento de click a cada enlace de la barra de navegación
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();  // Prevenir el comportamiento por defecto (scroll)
-                    const targetId = link.getAttribute('href').substring(1);  // Obtener el id de la sección destino
-                    showSection(targetId);  // Mostrar la sección correspondiente
-                    // Resaltar el enlace activo
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                    link.classList.add('active');
-                });
-            });
-
-            // Mostrar la primera sección al cargar la página
-            showSection('buscar-servicios');
-        });
-
-</script>
 @endsection

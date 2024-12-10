@@ -161,7 +161,7 @@ class CitaController extends Controller
 
         
         // Redirigir con éxito
-        return redirect()->route('index-cita')->with('success', 'Cita creada exitosamente.');
+        return redirect()->route('homein')->with('success', 'Cita creada exitosamente.');
                 
     }
        /**

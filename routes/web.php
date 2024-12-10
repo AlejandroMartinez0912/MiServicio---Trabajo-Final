@@ -8,18 +8,23 @@ use App\Http\Controllers\GestionServicioController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\HorarioTrabajoController;
 use App\Http\Controllers\CitaController;
-
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
 // Ruta de página principal llamada Home
 Route::view('/', "home")->name('home');
+
 //Ruta de iniciar sesion
 Route::view('/login', "Auth.Login")->name('login');
+
 //Ruta de register
 Route::view('/register', "Auth.Register")->name('register');
+
 // RUTAS DE LOGIN
-Route::view('/privada', "secret")->middleware('auth')->name('privada');
+Route::view('/privada', "homeIn")->middleware('auth')->name('privada');
+
+Route::get('/homein', [HomeController::class, 'index'])->name('homein');
 
 Route::post('/validar-registro', [LoginController::class, 'register'])->name('validar-registro');
 Route::post('/inicia-sesion', [LoginController::class, 'login'])->name('inicia-sesion');

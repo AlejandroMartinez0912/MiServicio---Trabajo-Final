@@ -138,50 +138,26 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav>
+   <!-- Navbar -->
+   <nav>
         <a class="navbar-brand" href="{{ route('homein') }}">
             <img src="{{ asset('Images/logo.png') }}" alt="Logo de MiServicio">
         </a>
         <div class="button-container">
-            <!-- home-->
+            <!-- Iniciar sesion-->
             <button class="button">
-                <a class="dropdown-item" href="{{ route('homein') }}" title="Inicio">
-                    <i class="bx bx-home-alt-2"></i>
+                <a class="dropdown-item" href="{{ route('login') }}" title="Iniciar sesion">
+                    <i class="bx bx-log-in"></i>
+                    Iniciar sesion
                 </a>
             </button>
-            <!-- buscar servicios -->
+            <!-- Registrarse -->
             <button class="button">
-                <a class="dropdown-item" href="{{ route('homein') }}" title="Buscar servicios">
-                    <i class="bx bx-search"></i>
+                <a class="dropdown-item" href="{{ route('register') }}" title="Registrarse">
+                    <i class="bx bx-user-plus"></i>
+                    Reigistrarse
                 </a>
             </button>
-            <!-- perfil -->
-            <button class="button">
-                <a class="dropdown-item" href="{{ route('perfil') }}" title="Perfil">
-                    <i class="bx bx-user"></i>
-                </a>
-            </button>
-            <!-- gestion de servicios -->
-            <button class="button">
-                <a class="dropdown-item" href="{{ route('gestion-servicios') }}" title="Gestion de servicios">
-                    <i class="bx bx-briefcase-alt"></i>
-                </a>
-            </button>
-            <!-- citas -->
-            <button class="button">
-                <a class="dropdown-item" href="{{ route('index-cita') }}" title="Mis citas">
-                    <i class="bx bx-calendar"></i>
-                </a>
-            </button>
-            <!-- salir -->
-            <button class="button">
-                <a class="dropdown-item" href="{{ route('logout') }}" title="Salir">
-                    <i class="bx bx-log-out"></i>
-                </a>
-            </button>
-        </div>
-        
     </nav>
 
     <!-- Main content -->

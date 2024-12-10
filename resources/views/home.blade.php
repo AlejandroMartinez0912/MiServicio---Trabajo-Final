@@ -1,223 +1,88 @@
-@extends('layouts.plantilla')
+@extends('layouts.miservicio')
 
-@section('titulo')
-    MiServicio
-@endsection
-
-@section('ruta')
-    
-@endsection
-
-@section('contenido')
+@section('titulo', 'MiServicio')
 
 <style>
-    .card {
-        background-color: #343a40; /* Gris oscuro */
-        color: #f8f9fa; /* Blanco suave */
-        border-radius: 15px;
-        transition: all 0.3s ease-in-out;
+    span {
+        color: #ff00cc;
     }
-
-    .card:hover {
-        transform: scale(1.05); /* Animación de hover */
-        box-shadow: 0 0 15px rgba(0, 123, 255, 0.6);
-    }
-
-    .btn {
-        border-radius: 50px; /* Bordes redondeados */
-        border: none; /* Sin bordes */
-        padding: 10px 20px;
-        font-size: 1.2rem;
-        transition: background-color 0.3s ease-in-out;
-        width: 100%; /* Ancho completo para los botones */
-    }
-
-    .btn-primary {
-        background-color: #0d6efd; /* Azul Bootstrap */
-    }
-
-    .btn-primary:hover {
-        background-color: #0a58ca; /* Azul oscuro */
-    }
-
-    .btn-secondary {
-        background-color: #6c757d; /* Gris */
-    }
-
-    .btn-secondary:hover {
-        background-color: #5a6268; /* Gris oscuro */
-    }
-
-    .form-control {
-        border-radius: 10px; /* Bordes redondeados para los inputs */
-    }
-
-    h2, h3 {
-        font-family: 'Poppins', sans-serif;
-        font-weight: bold;
-    }
-
-    p, label {
-        font-family: 'Roboto', sans-serif;
-    }
-
-    a {
-        color: #0d6efd;
-        text-decoration: none;
-    }
-
-    a:hover {
-        color: #0a58ca;
-        text-decoration: underline;
-    }
-    
 </style>
-
-<div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-4 shadow-lg" style="width: 28rem;">
-        <h2 class="text-center mb-4">Bienvenido a <span class="text-primary">MiServicio</span></h2>
-        <p class="text-center mb-3">Inicia sesión para formar parte de nuestra comunidad.</p>
-        <div class="card-body">
-            <h3 class="card-title text-center mb-4">Iniciar Sesión</h3>
-            
-            <!-- Mostrar mensajes de error si existen -->
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            
-            <form method="POST" action="{{ route('inicia-sesion') }}">
-                @csrf
-                <div class="mb-3">
-                    <label for="emailInput" class="form-label">Correo electrónico</label>
-                    <input type="email" class="form-control" id="emailInput" name="email" value="{{ old('email') }}" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="passwordInput" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="passwordInput" name="password" required>
-                </div>
-
-                <div class="mb-3 form-check">
-                    <input type="checkbox" class="form-check-input" id="rememberCheck" name="remember">
-                    <label class="form-check-label" for="rememberCheck">Mantener sesión iniciada</label>
-                </div>
-
-                <div class="mb-3 text-center">
-                    <p>¿No tienes cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Regístrate</a></p>
-                </div>
-
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Acceder</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal de registro mejorado -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg"> <!-- Tamaño del modal ampliado -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-center w-100" id="registerModalLabel">Regístrate en <span class="text-primary">MiServicio</span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+@section('contenido')
+   <div class="container-fluid d-flex align-items-center justify-content-center min-vh-100">
+        <div class="row justify-content-center w-100 text-center">
+            <!-- Título de la página -->
+            <div class="col-12 mb-4" style="background: linear-gradient(90deg, #ff00cc, #333399); padding: 40px 20px; border-radius: 10px;">
+                <h1 class="text-light display-4">Bienvenido a <strong>MiServicio</strong></h1>
+                <p class="text-light lead">Tu plataforma para encontrar profesionales calificados en diversas áreas</p>
             </div>
-            <div class="modal-body">
-                <form id="registrationForm" method="POST" action="{{ route('validar-registro') }}">
-                    @csrf
-                    <div class="row g-3"> <!-- Distribución en dos columnas -->
-                        <div class="col-md-6">
-                            <label for="emailRegister" class="form-label">Correo electrónico</label>
-                            <input type="email" class="form-control" id="emailRegister" name="email" required placeholder="Ingresa tu correo">
-                        </div>
+            
 
-                        <div class="col-md-6">
-                            <label for="passwordRegister" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="passwordRegister" name="password" required placeholder="Crea una contraseña">
-                        </div>
 
-                        <div class="col-md-6">
-                            <label for="nombreRegister" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombreRegister" name="nombre" required placeholder="Ingresa tu nombre">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="apellidoRegister" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellidoRegister" name="apellido" required placeholder="Ingresa tu apellido">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="documentoRegister" class="form-label">Documento</label>
-                            <input type="number" class="form-control" id="documentoRegister" name="documento" required placeholder="Ingresa tu documento">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="telefonoRegister" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" id="telefonoRegister" name="telefono" required placeholder="Ingresa tu teléfono">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="domicilioRegister" class="form-label">Domicilio</label>
-                            <input type="text" class="form-control" id="domicilioRegister" name="domicilio" required placeholder="Ingresa tu domicilio">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="fechaNacimientoRegister" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="fechaNacimientoRegister" name="fecha_nacimiento" required>
+            <!-- Sección de beneficios o características -->
+            <div class="col-12 mt-5">
+                <h2 class="text-light mb-4">¿Por qué elegir MiServicio?</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card text-white bg-dark shadow-lg">
+                            <div class="card-body">
+                                <i class="bx bxs-briefcase-alt-2 icon display-3 mb-3"></i>
+                                <h5 class="card-title">Profesionales Verificados</h5>
+                                <p class="card-text">Nuestros expertos están altamente calificados y verificados para asegurar la calidad de su trabajo.</p>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="modal-footer mt-4">
-                        <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card text-white bg-dark shadow-lg">
+                            <div class="card-body">
+                                <i class="bx bx-credit-card icon display-3 mb-3"></i>
+                                <h5 class="card-title">Pago Seguro</h5>
+                                <p class="card-text">Aprovecha la integración con Mercado Pago para realizar pagos rápidos y seguros.</p>
+                            </div>
+                        </div>
                     </div>
-                </form>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card text-white bg-dark shadow-lg">
+                            <div class="card-body">
+                                <i class="bx bx-calendar icon display-3 mb-3"></i>
+                                <h5 class="card-title">Agenda Flexible</h5>
+                                <p class="card-text">Gestiona tu agenda de manera fácil y flexible para una experiencia más cómoda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonios (opcional) -->
+            <div class="col-12 mt-5">
+                <h2 class="text-light mb-4">Lo que dicen nuestros usuarios</h2>
+                <div id="carouselTestimonios" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <p class="text-light">"MiServicio me ayudó a encontrar un electricista de confianza rápidamente. ¡Totalmente recomendado!"</p>
+                            <footer class="blockquote-footer text-light">Ana Pérez, Cliente</footer>
+                        </div>
+                        <div class="carousel-item">
+                            <p class="text-light">"Los profesionales son muy buenos. Tuve una experiencia excelente con el plomero que contraté."</p>
+                            <footer class="blockquote-footer text-light">Carlos Díaz, Cliente</footer>
+                        </div>
+                        <div class="carousel-item">
+                            <p class="text-light">"La plataforma es fácil de usar y segura. Definitivamente volveré a usarla."</p>
+                            <footer class="blockquote-footer text-light">Laura Gómez, Cliente</footer>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselTestimonios" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselTestimonios" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-@if(session('success'))
-    <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        {{ session('success') }}
-    </div>
-@endif
-
 
 @endsection
-  <!-- Script para alertas-->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Éxito',
-                text: '{{ session('success') }}',
-                confirmButtonText: 'Aceptar'
-            });
-        @endif
-
-        @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: '{{ session('error') }}',
-                confirmButtonText: 'Aceptar'
-            });
-        @endif
-
-        @if(session('info'))
-            Swal.fire({
-                icon: 'info',
-                title: 'Información',
-                text: '{{ session('info') }}',
-                confirmButtonText: 'Aceptar'
-            });
-        @endif
-    });
-  </script>

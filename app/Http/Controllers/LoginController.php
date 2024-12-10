@@ -43,9 +43,8 @@ class LoginController extends Controller
         Auth::login($user);
         
         // Redirigir a la ruta privada
-        return redirect()->route('privada');
+        return redirect()->route('homein');
     }
-
     /**
      * Inicia sesión en la aplicación.
      *
@@ -70,8 +69,8 @@ class LoginController extends Controller
             // Regenerar la sesión para mayor seguridad
             $request->session()->regenerate();
 
-            // Redirigir a la ruta privada después de iniciar sesión
-            return redirect()->intended(route('privada'));
+            // Redirigir a la ruta homein después de iniciar sesión
+            return redirect()->route('homein');
         }
 
         // Redirigir de vuelta a la página de inicio de sesión con un mensaje de error
