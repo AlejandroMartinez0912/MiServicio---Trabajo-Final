@@ -1523,7 +1523,7 @@
         }
 
         .modal-footer .btn-secondary:hover {
-            background-color: linear-gradient(90deg, #ff00cc, #333399);;
+            background-color: linear-gradient(90deg, #ff00cc, #333399);
             color: white;
         }
 

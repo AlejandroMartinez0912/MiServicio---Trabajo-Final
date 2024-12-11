@@ -319,7 +319,7 @@
             </div>
 
             <!-- Botón de enviar -->
-            <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#confirmModal">Confirmar</button>
+            <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#confirmModal" style=" background-color: #333399" >Confirmar</button>
         </form>
     </div>
 </div>

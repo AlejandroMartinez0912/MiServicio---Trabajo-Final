@@ -92,7 +92,6 @@
                     </div>
                     <div class="size">
                         <p>{{ $servicio->descripcion }}</p>
-                        <p><strong>Precio:</strong> ${{ number_format($servicio->precio_base, 2) }}</p>
                         <p>
                             <strong>Calificación:</strong>
                             @if ($servicio->calificacion == 0)
@@ -114,7 +113,16 @@
                             @endphp
                             <strong>Duración:</strong> {{ floor($duracionEnMinutos / 60) }}h {{ $duracionEnMinutos % 60 }}m
                         </p>
+                        <p>
+                            @php
+                                $especialista = $servicio->datosProfesion->user->persona;
+                                $especialistaNombre = $especialista->nombre;
+                                $especialistaApellido = $especialista->apellido;
+                            @endphp
+                            <strong>Especialista:</strong> {{$especialistaNombre}} {{$especialistaApellido}}
+                        </p>
                     </div>
+
                     <div class="action">
                         <div class="price">
                             <span>${{ number_format($servicio->precio_base, 2) }}</span>
