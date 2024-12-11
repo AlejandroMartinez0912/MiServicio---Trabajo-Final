@@ -26,6 +26,10 @@ Route::view('/privada', "homeIn")->middleware('auth')->name('privada');
 
 Route::get('/homein', [HomeController::class, 'index'])->name('homein');
 
+//Ruta de busquedas
+Route::get('/search', [HomeController::class, 'search'])->name('search');
+
+
 Route::post('/validar-registro', [LoginController::class, 'register'])->name('validar-registro');
 Route::post('/inicia-sesion', [LoginController::class, 'login'])->name('inicia-sesion');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');

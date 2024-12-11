@@ -42,16 +42,71 @@ class HomeController extends Controller
 
 
         // Obtener todos los días y rubros
-        $dias = Dias::all();
         $rubros = Rubro::all();
         $datosProfesion = DatosProfesion::all();
         $user = User::all();
-        //Obtener horarios trabajo asociados 
-        $horariosTrabajo = HorarioTrabajo::all();
 
 
-        return view('Home.homeIn', compact('servicios', 'dias', 'rubros', 'persona', 
-        'citas', 'horariosTrabajo', 'datosProfesion', 'user'));
+        return view('Home.homeIn', compact('servicios', 'rubros', 'persona', 
+        'datosProfesion', 'user'));
+    }
+
+    public function search(Request $request)
+    {
+        $userId = Auth::id();
+        $persona = Persona::where('user_id', $userId)->first();
+        $datosProfesion = DatosProfesion::where('user_id', $userId)->first();
+
+        // Obtener parámetros de búsqueda
+        $search = $request->input('search');
+        $rubro = $request->input('rubro');
+        $order = $request->input('order');
+
+        // Crear consulta base
+        $query = Servicio::query();
+
+        // Aplicar búsqueda por término
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('nombre', 'like', '%' . $search . '%')
+                ->orWhere('descripcion', 'like', '%' . $search . '%');
+            });
+        }
+
+        /// Filtrar por rubro si está presente
+        if ($request->filled('rubro_id')) { 
+            $query->whereHas('rubros', function ($subQuery) use ($request) {
+                $subQuery->where('rubros.id', $request->input('rubro_id'));
+            });
+        }
+
+        // Aplicar ordenación si corresponde
+        if ($request->filled('order')) {
+            $order = $request->input('order');
+            if ($order === 'mayor_precio') {
+                $query->orderBy('precio_base', 'desc'); // Mayor precio
+            } elseif ($order === 'menor_precio') {
+                $query->orderBy('precio_base', 'asc'); // Menor precio
+            } elseif ($order === 'calificacion') {
+                $query->orderBy('calificacion', 'desc'); // Mayor calificación
+            }
+        }
+
+        // Excluir servicios del usuario si tiene datos profesionales
+        if ($datosProfesion) {
+            $query->where('datos_profesion_id', '!=', $datosProfesion->id);
+        }
+
+        $servicios = $query->get();
+
+        // Obtener otros datos necesarios
+        $rubros = Rubro::all();
+        $users = User::all();
+
+        return view('Home.homeIn', compact(
+            'servicios', 'rubros', 'persona', 
+            'datosProfesion', 'users', 'search'
+        ));
     }
 
 }

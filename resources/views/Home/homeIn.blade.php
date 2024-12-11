@@ -10,39 +10,54 @@
         <!-- Logo de la marca -->
         <a class="navbar-brand" href="#" style="font-family: 'Roboto', sans-serif; font-weight: 700; letter-spacing: 2px;">Buscar Servicios</a>
 
-        <!-- Botón de filtro (dropdown) -->
+        <!-- Dropdown de Categorías -->
         <div class="dropdown ms-3">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; color: white;">
                 Categorías
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <!-- Iterar sobre los rubros para mostrarlos como opciones -->
                 @foreach($rubros as $rubro)
-                    <li><a class="dropdown-item" href="#">{{ $rubro->nombre }}</a></li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('search', array_merge(request()->all(), ['rubro_id' => $rubro->id])) }}">
+                            {{ $rubro->nombre }}
+                        </a>
+                    </li>
                 @endforeach
             </ul>
         </div>
 
-        <!-- Barra de búsqueda -->
-        <form class="d-flex ms-auto me-3" role="search" onsubmit="handleSearch(event)" style="max-width: 300px;">
-            <input class="form-control me-2" type="search" placeholder="Buscar servicios..." aria-label="Buscar" id="searchInput" style="background-color: white; color: black; border: none; border-radius: 5px;">
-            <button class="btn" type="submit" style="background-color: #ff00cc; color: white; border: none;"><i class="bx bx-search"></i></button>
-        </form>
-
-        <!-- Botón de filtro (dropdown) -->
+        <!-- Dropdown de Ordenamiento -->
         <div class="dropdown ms-3">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #ff00cc; color: white;">
                 Filtrar por
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="#">Precio</a></li>
-                <li><a class="dropdown-item" href="#">Ubicación</a></li>
-                <li><a class="dropdown-item" href="#">Calificación</a></li>
+                <li><a class="dropdown-item" href="{{ route('search', array_merge(request()->all(), ['order' => 'mayor_precio'])) }}">Mayor precio</a></li>
+                <li><a class="dropdown-item" href="{{ route('search', array_merge(request()->all(), ['order' => 'menor_precio'])) }}">Menor precio</a></li>
+                <li><a class="dropdown-item" href="{{ route('search', array_merge(request()->all(), ['order' => 'calificacion'])) }}">Calificación</a></li>
             </ul>
         </div>
+
+
+
+        <!-- Barra de búsqueda -->
+        <form class="d-flex ms-auto me-3" role="search" method="GET" action="{{ route('search') }}" style="max-width: 300px;">
+            <input class="form-control me-2" type="search" name="search" placeholder="Buscar servicios..." aria-label="Buscar" id="searchInput" style="background-color: white; color: black; border: none; border-radius: 5px;" value="{{ request('search') }}">
+            <button class="btn" type="submit" style="background-color: #ff00cc; color: white; border: none;">
+                <i class="bx bx-search"></i>
+            </button>
+        </form>
+
+        <div class="d-flex align-items-center">
+            <!-- Botón de limpiar filtros -->
+            <a href="{{ route('search') }}" class="btn btn-warning ms-3" style="background-color: #333399; color: white; border: none;">
+                Limpiar filtros
+            </a>
+        </div>
+        
+        
     </div>
 </nav>
-
 
 <style>
     .navbar-brand {
@@ -66,46 +81,6 @@
     }
     
 </style>
-
-<script>
-    // Función para manejar el evento de búsqueda
-    function handleSearch(event) {
-        event.preventDefault(); // Evita que el formulario recargue la página
-        const query = document.getElementById('searchInput').value.trim();
-        if (query) {
-            alert(`Buscando: ${query}`);
-            // Implementar la lógica de búsqueda aquí
-        } else {
-            alert('Por favor, ingresa un término de búsqueda.');
-        }
-    }
-
-    // Función para mostrar solo la sección activa
-    function showSection(sectionId) {
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(section => section.style.display = 'none');
-
-        const activeSection = document.getElementById(sectionId);
-        if (activeSection) {
-            activeSection.style.display = 'block';
-        }
-
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => link.classList.remove('active'));
-
-        const activeLink = document.querySelector(`.nav-link[onclick="showSection('${sectionId}')"]`);
-        if (activeLink) {
-            activeLink.classList.add('active');
-        }
-
-        localStorage.setItem('activeSection', sectionId);
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedSection = localStorage.getItem('activeSection') || 'datos';
-        showSection(savedSection);
-    });
-</script>
 
 <div class="container mt-5">
     <div class="row justify-content-start g-4"> <!-- Clase 'g-4' para espaciado uniforme entre tarjetas -->
