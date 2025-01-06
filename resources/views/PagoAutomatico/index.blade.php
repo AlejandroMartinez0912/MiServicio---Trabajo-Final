@@ -4,4 +4,6 @@
 <!-- Estilos adicionales para mejorar la apariencia -->
 
 @section('contenido')
+
+
 @endsection
