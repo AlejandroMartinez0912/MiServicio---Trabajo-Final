@@ -40,9 +40,6 @@
                 <li class="nav-item">
                     <a class="nav-link" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="{{ route('privada') }}">Volver</a>
-                </li>
             </ul>
         </div>
     </div>

@@ -9,6 +9,7 @@ use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\HorarioTrabajoController;
 use App\Http\Controllers\CitaController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PagoAutomaticoController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
@@ -82,3 +83,6 @@ Route::post ('/cancelar-cita', [CitaController::class, 'cancelarCita'])->name('c
 //RUTAS PROCESO AUTOMATIZADO - AGENDA AUTOMATICA
 Route::get('/confirmar-cita/cliente/{idCita}', [AgendaAutomaticaController::class, 'citaConfirmada'])->name('confirmar-cita-cliente');
 Route::get('/confirmada-cita/cliente/{idCita}', [AgendaAutomaticaController::class, 'citaConfirmadaIndex'])->name('cita-confirmada-cliente');
+
+//RUTAS PROCESO AUTOMATICO - PAGAR CITA
+Route::get('/pagar', [PagoAutomaticoController::class, 'index'])->name('pagar');

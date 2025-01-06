@@ -130,8 +130,17 @@
                     
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-action edit">Editar</button>
-                                                <button class="btn btn-sm btn-action anular">Cancelar</button>
+                                                @if ($cita->estado == 0)
+                                                    <button class="btn btn-sm btn-action edit">Editar</button>
+                                                    <button class="btn btn-sm btn-action anular">Cancelar</button>
+                                                @endif
+                                                @if ($cita->estado == 1)
+                                                    <button class="btn btn-sm btn-action edit">Editar</button>
+                                                    <button class="btn btn-sm btn-action anular">Cancelar</button>
+                                                @endif
+                                                @if ($cita->estado == 3)
+                                                    <a class="btn btn-sm btn-action pagar" href="{{ route('pagar') }}">Pagar</a>
+                                                @endif
                                             </td>                                        
                                 @endforeach
                             </tbody>

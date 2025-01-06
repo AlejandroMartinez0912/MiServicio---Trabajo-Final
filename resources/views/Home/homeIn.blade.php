@@ -43,17 +43,21 @@
         <!-- Barra de búsqueda -->
         <form class="d-flex ms-auto me-3" role="search" method="GET" action="{{ route('search') }}" style="max-width: 300px;">
             <input class="form-control me-2" type="search" name="search" placeholder="Buscar servicios..." aria-label="Buscar" id="searchInput" style="background-color: white; color: black; border: none; border-radius: 5px;" value="{{ request('search') }}">
-            <button class="btn" type="submit" style="background-color: #ff00cc; color: white; border: none;">
+            <button class="btn" type="submit" style="background-color: #ff00cc; color: white; border: none;"title="Buscar">
                 <i class="bx bx-search"></i>
             </button>
         </form>
 
         <div class="d-flex align-items-center">
             <!-- Botón de limpiar filtros -->
-            <a href="{{ route('search') }}" class="btn btn-warning ms-3" style="background-color: #333399; color: white; border: none;">
-                Limpiar filtros
+            <a href="{{ route('search') }}" 
+               class="btn btn-warning ms-3" 
+               style="background-color: #333399; color: white; border: none;" 
+               title="Limpiar filtros">
+                <i class='bx bx-eraser' style="cursor: pointer;"></i>
             </a>
         </div>
+        
         
         
     </div>
