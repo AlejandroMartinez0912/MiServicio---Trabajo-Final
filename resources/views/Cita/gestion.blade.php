@@ -126,7 +126,10 @@
                                                     <span class="badge badge-danger">Cancelada</span>
                                                 @elseif ($cita->estado == 3)
                                                     <span class="badge badge-success"><strong>Re-confirmada</strong></span>
+                                                @elseif ($cita->estado == 4)
+                                                    <span class="badge badge-success" style="background-color: #007bff"><strong>Pagada</strong></span>
                                                 @endif
+                                                
                     
                                             </td>
                                             <td>
@@ -139,8 +142,12 @@
                                                     <button class="btn btn-sm btn-action anular">Cancelar</button>
                                                 @endif
                                                 @if ($cita->estado == 3)
-                                                    <a class="btn btn-sm btn-action pagar" href="{{ route('pagar') }}">Pagar</a>
+                                                    <form action="{{ route('ver-pago') }}" method="GET" style="display:inline;">
+                                                        <input type="hidden" name="idCita" value="{{ $cita->idCita }}">
+                                                        <button class="btn btn-sm btn-action pagar" type="submit">Pagar</button>
+                                                    </form>
                                                 @endif
+                                               
                                             </td>                                        
                                 @endforeach
                             </tbody>
@@ -148,6 +155,13 @@
                     @endif
                 </div>
     </div>
+    <!-- Si existe una variable $successMessage, mostrarla -->
+    @if(isset($successMessage) && $successMessage)
+        <div class="alert alert-success">
+            {{ $successMessage }}
+        </div>
+    @endif
+
 </div>
 
 @endsection

@@ -85,4 +85,9 @@ Route::get('/confirmar-cita/cliente/{idCita}', [AgendaAutomaticaController::clas
 Route::get('/confirmada-cita/cliente/{idCita}', [AgendaAutomaticaController::class, 'citaConfirmadaIndex'])->name('cita-confirmada-cliente');
 
 //RUTAS PROCESO AUTOMATICO - PAGAR CITA
-Route::get('/pagar', [PagoAutomaticoController::class, 'index'])->name('pagar');
+Route::get('/ver-pago', [PagoAutomaticoController::class, 'index'])->name('ver-pago');
+
+Route::get('/mercado-pago', [PagoAutomaticoController::class, 'mercadoPago'])->name('mercado-pago');
+Route::get('/mercado-pago/success', [PagoAutomaticoController::class, 'success'])->name('mercado-pago.success');
+Route::get('/mercado-pago/failure', [PagoAutomaticoController::class, 'failure'])->name('mercado-pago.failure');
+Route::get('/mercado-pago/pending', [PagoAutomaticoController::class, 'pending'])->name('mercado-pago.pending');

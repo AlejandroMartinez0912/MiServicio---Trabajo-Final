@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(DatosProfesion::class, 'user_id');
     }
+    public function mercadoPagoAccount()
+    {
+        return $this->hasOne(MercadoPagoAccount::class);
+    }
+
 }

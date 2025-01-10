@@ -2,12 +2,24 @@
 
 namespace App\Services;
 
-use MercadoPago\MercadoPagoConfig;
+use GuzzleHttp\Client;
 
 class MercadoPagoService
 {
-    public static function configure()
+    public function createPreference(array $data, string $accessToken)
     {
-        MercadoPagoConfig::setAccessToken(env('MERCADO_PAGO_ACCESS_TOKEN'));
+        $client = new Client([
+            'base_uri' => 'https://api.mercadopago.com/',
+        ]);
+
+        $response = $client->post('checkout/preferences', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $data,
+        ]);
+
+        return json_decode($response->getBody(), true);
     }
 }
