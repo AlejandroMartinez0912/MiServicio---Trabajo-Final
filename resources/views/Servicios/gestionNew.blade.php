@@ -1239,6 +1239,7 @@
                     @if ($citas->isEmpty())
 
                         <p class="text-center">No tienes citas agendadas.</p>
+                    <!-- Si la fecha de la cita es menor a la fecha actual, no se muestra la cita-->
                     @else
                         <table class="table horarios-table table-hover table-bordered">
                             <thead class="thead-dark">
@@ -1585,9 +1586,218 @@
     <p>Contenido de la sección Informes.</p>
 </div>
 <div id="caja" class="section" style="display: none;">
-    <h1>Caja</h1>
-    <p>Contenido de la sección Caja.</p>
+    <div id="caja">
+        <h3 class="text-uppercase font-weight-bold text-white mb-4" >Caja y Movimientos</h3>
+        <!-- Si $mercadoPagoAccounts no está vacío, mostrar datos de Mercado Pago; de lo contrario, mostrar formulario -->
+        @if (!empty($mercadoPagoAccounts))
+            <div id="mercadoPago">
+                <h5>Mercado Pago</h5>
+            
+                <div style="margin-bottom: 20px; background-color: #333; padding: 20px; border-radius: 8px; display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Botón de vinculación con Mercado Pago -->
+                    <button class="btn btn-mercadopago" type="submit" >
+                        <img src="{{ asset('Images/mercadopago.png') }}" alt="Mercado Pago" style="width: 20px; margin-right: 8px;"> 
+                        Cuenta de Mercado Pago Vinculada
+                    </button> 
+                    <!-- Botón de desvinculación con Mercado Pago -->
+                    <button class="btn btn-mercadopago-desvincular" type="submit" >
+                        Desvincular Cuenta de Mercado Pago
+                    </button>
+                </div>
+            </div>
+            <div id="movimientos">
+                <h5>Movimientos</h5>
+                <form method="GET" action="{{ route('gestion-servicios') }}" style="margin-bottom: 20px; background-color: #333; padding: 20px; border-radius: 8px;">
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between;">
+                        <!-- Filtro por Fecha -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="fecha" style="color: white; font-size: 14px;">Fecha:</label>
+                            <input type="date" id="fecha" name="fecha" value="{{ request('fecha') }}" class="form-control" style="width: 100%; padding: 10px; margin-top: 5px; background-color: #555; color: white; border: 1px solid #444; border-radius: 4px;">
+                        </div>
+                
+                        <!-- Filtro por Nombre del Cliente -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="cliente" style="color: white; font-size: 14px;">Cliente:</label>
+                            <input type="text" id="cliente" name="cliente" placeholder="Nombre del cliente" value="{{ request('cliente') }}" class="form-control" style="width: 100%; padding: 10px; margin-top: 5px; background-color: #555; color: white; border: 1px solid #444; border-radius: 4px;">
+                        </div>
+                
+                        <!-- Filtro por Monto -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="monto_min" style="color: white; font-size: 14px;">Rango de Monto:</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="monto_min" name="monto_min" placeholder="Mínimo" value="{{ request('monto_min') }}" class="form-control" style="width: 48%; padding: 10px; background-color: #555; color: white; border: 1px solid #444; border-radius: 4px;">
+                                <input type="number" id="monto_max" name="monto_max" placeholder="Máximo" value="{{ request('monto_max') }}" class="form-control" style="width: 48%; padding: 10px; background-color: #555; color: white; border: 1px solid #444; border-radius: 4px;">
+                            </div>
+                        </div>
+
+                
+                        <!-- Filtro por Servicio -->
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="servicio" style="color: white; font-size: 14px;">Servicio:</label>
+                            <input type="text" name="servicio" placeholder="Servicio" value="{{ request('servicio') }}" style="width: 100%; padding: 10px; margin-top: 5px; background-color: #555; color: white; border: 1px solid #444; border-radius: 4px;"> <!-- Nuevo filtro -->
+                        </div>
+                
+                        <!-- Botones de Acción -->
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button type="submit" class="btn" style="background-color: #444; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; transition: background-color 0.3s;">
+                                Filtrar
+                            </button>
+                            <a href="{{ route('gestion-servicios') }}" class="btn" style="background-color: #555; color: white; padding: 10px 20px; border: none; border-radius: 4px; text-decoration: none; transition: background-color 0.3s;">
+                                Limpiar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+                <!-- Tabla -->
+                <table id="movimientos-table" style="width: 100%; border-collapse: collapse; margin-top: 20px; background-color: #333; color: white;">
+                    <thead style="background-color: #444;">
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #555;">Servicio</th>
+                            <th style="padding: 10px; border: 1px solid #555;">Fecha</th>
+                            <th style="padding: 10px; border: 1px solid #555;">Monto</th>
+                            <th style="padding: 10px; border: 1px solid #555;">Tipo</th>
+                            <th style="padding: 10px; border: 1px solid #555;">Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($citasFiltradas as $cita)
+                            <tr style="background-color: #444;">
+                                <td style="padding: 10px; border: 1px solid #555;">{{ $cita->servicio->nombre }}</td>
+                                <td style="padding: 10px; border: 1px solid #555;">{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d/m/Y') }}</td>
+                                <td style="padding: 10px; border: 1px solid #555;">${{ $cita->servicio->precio_base }}</td>
+                                <td style="padding: 10px; border: 1px solid #555;">Pagado</td>
+                                <td style="padding: 10px; border: 1px solid #555;">{{ $cita->persona->nombre }} {{ $cita->persona->apellido }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                
+            </div>
+            
+
+        @else
+            <div id="mercadoPago" style="margin-border: 20px;">
+                <p style="color: white">Usted no tiene una cuenta de Mercado Pago vinculada. Por favor vincule su cuenta de Mercado Pago para continuar.</p>
+                <!-- Formulario para vincular Mercado Pago -->
+                <a href="{{ route('mercado-pago-vincular') }}" class="btn btn-mercadopago">
+                    <img src="{{ asset('Images/mercadopago.png') }}" alt="Mercado Pago" style="width: 20px; margin-right: 8px;">
+                    Vincular cuenta de Mercado Pago
+                </a>
+            </div>
+            
+        @endif
+    </div>
+    <style>
+        /* Estilo para el contenedor de servicios */
+        #caja {
+            background: linear-gradient(135deg, #121212, #1f1f1f);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+    
+        #caja h3 {
+            color: #fff;
+            text-align: center;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+        }
+        #caja h5 {
+            color: #fff;
+            text-align: center;
+            border-bottom: 2px solid #444;
+            padding-bottom: 10px;
+            border-top: 2px;
+        }
+    
+        /* Estilo para cuando no hay servicios */
+        #caja p {
+            font-size: 1rem;
+            text-align: center;
+            color: #aaa;
+        }
+        .btn-mercadopago {
+            background-color: white;
+            color:#0063b1;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-mercadopago:hover {
+            background-color: #005087;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn-mercadopago:focus {
+            outline: none;
+        }
+        .btn-mercadopago-desvincular {
+            background-color: #cc0000;
+            color:white;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-mercadopago-desvincular:hover {
+            background-color: white;
+            color: #cc0000;
+            cursor: pointer;
+        }
+
+        .btn-mercadopago-desvincular:focus {
+            outline: none;
+        }
+        .btn-movimientos {
+            background-color: #218838;
+            color:white;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-movimientos:hover {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+    
+        /* Estilo para el botón Crear servicio */
+        .btn-create-caja {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+
+    
+    </style>
+    
 </div>
+
 
 
 @endsection

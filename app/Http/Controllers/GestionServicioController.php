@@ -10,10 +10,12 @@ use App\Models\Dias;
 use App\Models\Servicio;
 use App\Models\Rubro;
 use App\Models\Cita;
+use App\Models\MercadoPagoAccount;
 
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+
 
 class GestionServicioController extends Controller
 {
@@ -21,7 +23,7 @@ class GestionServicioController extends Controller
      * Mostrar Gestion de Servicios 
      */
 
-     public function index()
+     public function index(Request $request)
      {
          $userId = Auth::id();  // Obtiene el id del usuario autenticado
 
@@ -57,10 +59,23 @@ class GestionServicioController extends Controller
             // Si $datosProfesion está vacío, devolver una colección vacía
             $citas = collect(); // Crea una colección vacía
         }
-        
+
+        //BUSCAR MERCADO PAGO DEL USER 
+        // Buscar cuentas de Mercado Pago para el usuario
+        $mercadoPagoAccounts = MercadoPagoAccount::where('user_id', $userId)->get();
+
+        // Verificar si hay cuentas registradas
+        if ($mercadoPagoAccounts->isEmpty()) {
+            // No hay cuentas de Mercado Pago
+            $mercadoPagoAccounts = null;
+        }
+
+        // Filtrar citas si hay filtros en la solicitud
+        $citasFiltradas = $this->filtro($request);   
+
          // Pasar los datos a la vista
          return view('Servicios.gestionNew', compact('userId','persona' ,'datosProfesion', 'dias', 
-         'promedio', 'horariosTrabajo', 'rubros','servicios', 'citas'));
+         'promedio', 'horariosTrabajo', 'rubros','servicios', 'citas', 'mercadoPagoAccounts', 'citasFiltradas'));
      }
      
 
@@ -86,5 +101,57 @@ class GestionServicioController extends Controller
         $promedio = round($promedio, 2);
         return $promedio;
     }
+
+    public function filtro(Request $request)
+    {
+        $userId = Auth::id();
+        $datosProfesion = DatosProfesion::where('user_id', $userId)->first();
+    
+        if (!$datosProfesion) {
+            return collect(); // Retorna una colección vacía si no hay datos de profesión
+        }
+    
+        // Obtener los filtros de la solicitud
+        $fecha = $request->input('fecha');
+        $cliente = $request->input('cliente');
+        $montoMin = $request->input('monto_min'); // Monto mínimo
+        $montoMax = $request->input('monto_max'); // Monto máximo
+        $servicio = $request->input('servicio'); // Filtro por servicio
+    
+        // Consultar los datos filtrados
+        $citasFiltradas = Cita::where('idProfesion', $datosProfesion->id)
+            ->where('estado', 4) // Filtrar por estado pagado
+            ->when($fecha, function ($query, $fecha) {
+                return $query->whereDate('fechaCita', $fecha);
+            })
+            ->when($cliente, function ($query, $cliente) {
+                return $query->whereHas('persona', function ($q) use ($cliente) {
+                    $q->where('nombre', 'like', "%{$cliente}%")
+                    ->orWhere('apellido', 'like', "%{$cliente}%");
+                });
+            })
+            ->when($montoMin, function ($query, $montoMin) {
+                return $query->whereHas('servicio', function ($q) use ($montoMin) {
+                    $q->where('precio_base', '>=', $montoMin);
+                });
+            })
+            ->when($montoMax, function ($query, $montoMax) {
+                return $query->whereHas('servicio', function ($q) use ($montoMax) {
+                    $q->where('precio_base', '<=', $montoMax);
+                });
+            })
+            ->when($servicio, function ($query, $servicio) {
+                return $query->whereHas('servicio', function ($q) use ($servicio) {
+                    $q->where('nombre', 'like', "%{$servicio}%");
+                });
+            })
+            ->with(['servicio', 'persona']) // Cargar relaciones
+            ->get();
+    
+        return $citasFiltradas;
+    }
+    
+
+
 
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\CitaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagoAutomaticoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CajaController;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
 // Ruta de página principal llamada Home
@@ -91,3 +92,9 @@ Route::get('/mercado-pago', [PagoAutomaticoController::class, 'mercadoPago'])->n
 Route::get('/mercado-pago/success', [PagoAutomaticoController::class, 'success'])->name('mercado-pago.success');
 Route::get('/mercado-pago/failure', [PagoAutomaticoController::class, 'failure'])->name('mercado-pago.failure');
 Route::get('/mercado-pago/pending', [PagoAutomaticoController::class, 'pending'])->name('mercado-pago.pending');
+
+
+//VINCULAR MERCADO PAGO
+Route::get('mercado-pago/vincular', [PagoAutomaticoController::class, 'vincularMercadoPago'])->name('mercado-pago-vincular');
+Route::get('mercado-pago/callback', [PagoAutomaticoController::class, 'mercadoPagoCallback'])->name('mercado-pago-callback');
+

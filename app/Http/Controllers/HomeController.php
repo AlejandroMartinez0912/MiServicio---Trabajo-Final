@@ -11,6 +11,7 @@ use App\Models\DatosProfesion;
 use App\Models\HorarioTrabajo;
 use App\Models\Dias;
 use App\Models\Rubro;
+use App\Models\MercadoPagoAccount;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,7 +47,7 @@ class HomeController extends Controller
         $datosProfesion = DatosProfesion::all();
         $user = User::all();
 
-
+        
         return view('Home.homeIn', compact('servicios', 'rubros', 'persona', 
         'datosProfesion', 'user'));
     }
