@@ -12,6 +12,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagoAutomaticoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CajaController;
+use App\Http\Controllers\CalificacionController;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
 // Ruta de página principal llamada Home
@@ -98,3 +99,7 @@ Route::get('/mercado-pago/pending', [PagoAutomaticoController::class, 'pending']
 Route::get('mercado-pago/vincular', [PagoAutomaticoController::class, 'vincularMercadoPago'])->name('mercado-pago-vincular');
 Route::get('mercado-pago/callback', [PagoAutomaticoController::class, 'mercadoPagoCallback'])->name('mercado-pago-callback');
 
+//RUTAS PARA CALIFICAR.
+//RUTAS CALIFICAR
+Route::get('/calificaciones-pendientes', [CalificacionController::class, 'pendientes'])->name('calificaciones-pendientes');
+Route::post('/guardar-calificacion-cliente/{idCita}', [CalificacionController::class, 'guardarCalificacion'])->name('guardar-calificacion');

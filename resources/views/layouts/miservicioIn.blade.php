@@ -9,6 +9,7 @@
     <link href="https://unpkg.com/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 
     <!-- Scripts -->
@@ -186,6 +187,190 @@
     <main>
        @yield('contenido')
     </main>
+
+<!-- Modal -->
+<div class="modal fade" id="calificacionModal" tabindex="-1" aria-labelledby="calificacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="calificacionModalLabel">Califica tu cita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="calificacionForm" action="" method="POST"> <!-- Acción vacía inicialmente -->
+                    @csrf
+                    <input type="hidden" id="citaId" name="citaId">
+                    <div id="detalleCita"></div>
+
+                    <div class="mb-3">
+                        <label>Calificación:</label>
+                        <div id="estrellas">
+                            <span class="star" data-index="1">&#9733;</span>
+                            <span class="star" data-index="2">&#9733;</span>
+                            <span class="star" data-index="3">&#9733;</span>
+                            <span class="star" data-index="4">&#9733;</span>
+                            <span class="star" data-index="5">&#9733;</span>
+                        </div>
+                        <input type="hidden" id="calificacion" name="calificacion">
+                    </div>
+
+                    <div id="opcionesMotivos" style="display: none;">
+                        <p>Selecciona un motivo:</p>
+                        <button type="button" class="btn btn-outline-light" data-motivo="Tiempo de espera">Tiempo de espera</button>
+                        <button type="button" class="btn btn-outline-light" data-motivo="Calidad del servicio">Calidad del servicio</button>
+                        <button type="button" class="btn btn-outline-light" data-motivo="Atención recibida">Atención recibida</button>
+                    </div>
+
+                    <div id="comentarioAdicional" style="display: none;">
+                        <textarea id="comentarios" name="comentarios" class="form-control" placeholder="Comentario adicional"></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" id="calificarBtn" class="btn btn-primary">Enviar Calificación</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let citaId = null;
+    let calificacion = 0;
+    let motivoSeleccionado = null;
+
+    function verificarCalificacionesPendientes() {
+        $.get('/calificaciones-pendientes', function(data) {
+            if (data.pendientes.length > 0) {
+                const cita = data.pendientes[0];
+                citaId = cita.idCita;
+                $('#citaId').val(citaId);  // Asignar el idCita al campo oculto
+                $('#detalleCita').text(`Tienes pendiente calificar el servicio del ${cita.fechaCita}.`);
+
+                // Actualizar la acción del formulario con el idCita
+                $('#calificacionForm').attr('action', '/guardar-calificacion-cliente/' + citaId); // Construir la URL correctamente
+
+                const modal = new bootstrap.Modal(document.getElementById('calificacionModal'));
+                modal.show();
+            }
+        }).fail(function() {
+            console.error('Error al verificar citas pendientes.');
+        });
+    }
+
+    $(document).ready(function() {
+        verificarCalificacionesPendientes();
+
+        $('.star').on('click', function() {
+            calificacion = $(this).data('index');
+            $('#calificacion').val(calificacion);
+            $('.star').each(function(index) {
+                $(this).toggleClass('text-warning', index < calificacion);
+            });
+
+            if (calificacion < 5) {
+                $('#opcionesMotivos').show();
+                $('#comentarioAdicional').show();
+            } else {
+                $('#opcionesMotivos').hide();
+                $('#comentarioAdicional').hide();
+            }
+        });
+
+        $('#opcionesMotivos button').on('click', function() {
+            motivoSeleccionado = $(this).data('motivo');
+            $('#opcionesMotivos button').removeClass('btn-primary').addClass('btn-outline-light');
+            $(this).removeClass('btn-outline-light').addClass('btn-primary');
+        });
+
+        // Si se selecciona un motivo, se coloca en el campo de comentarios
+        $('#opcionesMotivos button').on('click', function() {
+            $('#comentarios').val(motivoSeleccionado);
+        });
+    });
+</script>
+
+<!-- Estilos para el modal -->
+<style>
+    .star {
+        font-size: 1.8rem;
+        cursor: pointer;
+        color: #ccc; /* Color de estrellas desactivadas */
+        transition: color 0.3s;
+    }
+
+    .star.text-warning {
+        color: #ff00cc; /* Color de estrellas seleccionadas */
+    }
+
+    .modal-content {
+        background-color: #333;
+        color: white;
+    }
+
+    .modal-header, .modal-footer {
+        border: none;
+        background-color: #333;
+    }
+
+    .modal-header .btn-close {
+        color: #ff00cc;
+    }
+
+    #opcionesMotivos button {
+        margin-right: 8px;
+        margin-top: 10px;
+        transition: transform 0.2s ease-in-out;
+        border: 1px solid #ff00cc;
+        color: #ff00cc;
+        background-color: transparent;
+    }
+
+    #opcionesMotivos button:hover {
+        transform: scale(1.05);
+        background-color: #ff00cc;
+        color: #333;
+    }
+
+    #comentarios {
+        background-color: #333;
+        color: white;
+        border: 1px solid #ff00cc;
+    }
+
+    .btn-outline-light {
+        border: 1px solid #ff00cc;
+        color: #ff00cc;
+    }
+
+    .btn-outline-light:hover {
+        background-color: #ff00cc;
+        color: #333;
+    }
+
+    .btn-primary {
+        background-color: #ff00cc;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #cc00b3;
+    }
+
+    /* Ajustes adicionales para los botones dentro del modal */
+    .modal-footer .btn {
+        background-color: #ff00cc;
+        border: none;
+    }
+
+    .modal-footer .btn:hover {
+        background-color: #cc00b3;
+    }
+</style>
+
+
+
 
     <!-- Footer -->
     <footer>

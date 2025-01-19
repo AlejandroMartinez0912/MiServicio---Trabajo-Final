@@ -49,7 +49,7 @@ class HomeController extends Controller
 
         
         return view('Home.homeIn', compact('servicios', 'rubros', 'persona', 
-        'datosProfesion', 'user'));
+        'datosProfesion', 'user', 'citas'));
     }
 
     public function search(Request $request)

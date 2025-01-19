@@ -44,4 +44,11 @@ class Cita extends Model
     {
         return $this->belongsTo(DatosProfesion::class, 'idProfesion', 'id');
     }
+
+    // Relación con Calificaciones
+    public function calificaciones()
+    {
+        // Aquí no cambiamos nada porque estamos utilizando 'idCita' como la clave foránea
+        return $this->hasMany(Calificacion::class, 'idCita', 'idCita');
+    }
 }

@@ -20,6 +20,9 @@ use App\Mail\CitaRegistrada;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Support\Facades\Mail;
 setlocale(LC_TIME, 'es_ES.UTF-8');
+use App\Models\Calificacion;        
+use Illuminate\Support\Facades\DB;
+
 
 
 class CitaController extends Controller
