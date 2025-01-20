@@ -188,49 +188,47 @@
        @yield('contenido')
     </main>
 
-<!-- Modal -->
+<!-- Modal de calificación -->
 <div class="modal fade" id="calificacionModal" tabindex="-1" aria-labelledby="calificacionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="calificacionModalLabel">Califica tu cita</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="calificacionForm" action="" method="POST"> <!-- Acción vacía inicialmente -->
-                    @csrf
-                    <input type="hidden" id="citaId" name="citaId">
-                    <div id="detalleCita"></div>
-
-                    <div class="mb-3">
-                        <label>Calificación:</label>
-                        <div id="estrellas">
-                            <span class="star" data-index="1">&#9733;</span>
-                            <span class="star" data-index="2">&#9733;</span>
-                            <span class="star" data-index="3">&#9733;</span>
-                            <span class="star" data-index="4">&#9733;</span>
-                            <span class="star" data-index="5">&#9733;</span>
-                        </div>
-                        <input type="hidden" id="calificacion" name="calificacion">
+            <form id="calificacionForm" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="calificacionModalLabel">Calificar Servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="detalleCita">Tienes una calificación pendiente.</p>
+                    <!-- Calificación con estrellas -->
+                    <div class="d-flex justify-content-center my-3">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <i class="fa fa-star star text-secondary" data-index="{{ $i }}"></i>
+                        @endfor
                     </div>
+                    <input type="hidden" id="calificacion" name="calificacion" value="">
 
+                    <!-- Motivos si la calificación es menor a 5 -->
                     <div id="opcionesMotivos" style="display: none;">
                         <p>Selecciona un motivo:</p>
-                        <button type="button" class="btn btn-outline-light" data-motivo="Tiempo de espera">Tiempo de espera</button>
-                        <button type="button" class="btn btn-outline-light" data-motivo="Calidad del servicio">Calidad del servicio</button>
-                        <button type="button" class="btn btn-outline-light" data-motivo="Atención recibida">Atención recibida</button>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-light" data-motivo="Tardanza">Tardanza</button>
+                            <button type="button" class="btn btn-outline-light" data-motivo="Mal servicio">Mal servicio</button>
+                            <button type="button" class="btn btn-outline-light" data-motivo="Otro">Otro</button>
+                        </div>
                     </div>
 
-                    <div id="comentarioAdicional" style="display: none;">
-                        <textarea id="comentarios" name="comentarios" class="form-control" placeholder="Comentario adicional"></textarea>
+                    <!-- Comentario adicional -->
+                    <div class="form-group mt-3" id="comentarioAdicional" style="display: none;">
+                        <label for="comentarios">Comentario adicional:</label>
+                        <textarea id="comentarios" name="comentarios" class="form-control" rows="3"></textarea>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" id="calificarBtn" class="btn btn-primary">Enviar Calificación</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" id="calificarBtn">Enviar Calificación</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -245,11 +243,9 @@
             if (data.pendientes.length > 0) {
                 const cita = data.pendientes[0];
                 citaId = cita.idCita;
-                $('#citaId').val(citaId);  // Asignar el idCita al campo oculto
-                $('#detalleCita').text(`Tienes pendiente calificar el servicio del ${cita.fechaCita}.`);
 
-                // Actualizar la acción del formulario con el idCita
-                $('#calificacionForm').attr('action', '/guardar-calificacion-cliente/' + citaId); // Construir la URL correctamente
+                $('#detalleCita').text(`Tienes pendiente calificar el servicio del ${cita.fechaCita}.`);
+                $('#calificacionForm').attr('action', '/guardar-calificacion-cliente/' + citaId);
 
                 const modal = new bootstrap.Modal(document.getElementById('calificacionModal'));
                 modal.show();
@@ -262,9 +258,11 @@
     $(document).ready(function() {
         verificarCalificacionesPendientes();
 
+        // Selección de estrellas
         $('.star').on('click', function() {
             calificacion = $(this).data('index');
             $('#calificacion').val(calificacion);
+
             $('.star').each(function(index) {
                 $(this).toggleClass('text-warning', index < calificacion);
             });
@@ -278,15 +276,19 @@
             }
         });
 
+        // Selección de motivo
         $('#opcionesMotivos button').on('click', function() {
             motivoSeleccionado = $(this).data('motivo');
             $('#opcionesMotivos button').removeClass('btn-primary').addClass('btn-outline-light');
             $(this).removeClass('btn-outline-light').addClass('btn-primary');
         });
 
-        // Si se selecciona un motivo, se coloca en el campo de comentarios
-        $('#opcionesMotivos button').on('click', function() {
-            $('#comentarios').val(motivoSeleccionado);
+        // Concatena el motivo al comentario
+        $('#calificarBtn').on('click', function(e) {
+            const comentarioAdicional = $('#comentarios').val().trim();
+            if (motivoSeleccionado) {
+                $('#comentarios').val(`Motivo: ${motivoSeleccionado}. ${comentarioAdicional}`);
+            }
         });
     });
 </script>

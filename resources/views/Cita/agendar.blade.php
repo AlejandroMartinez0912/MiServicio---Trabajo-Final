@@ -288,7 +288,15 @@
                     @if ($datosProfesion->calificacion == 0)
                         <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación: No calificado</p>
                     @else
-                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación: {{ $datosProfesion->calificacion }}</p>
+                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación: 
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= $datosProfesion->calificacion)
+                                    <i class='bx bxs-star text-warning'></i>
+                                @else
+                                    <i class='bx bx-star text-muted'></i>
+                                @endif
+                            @endfor
+                        </p>
                     @endif
                 </div>
             </div>
