@@ -58,7 +58,7 @@ class CalificacionController extends Controller
         $cita = Cita::findOrFail($idCita);
         $cita->calificaciones()->create([
             'calificacion' => $request->input('calificacion'),
-            'comentario' => $request->input('comentarios'),  // Cambié a comentarios, ya que es el nombre del input
+            'comentarios' => $request->input('comentarios'),  // Cambié a comentarios, ya que es el nombre del input
             'tipo' => 'cliente_a_especialista',
         ]);
 

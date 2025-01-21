@@ -214,13 +214,15 @@
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-outline-light" data-motivo="Tardanza">Tardanza</button>
                             <button type="button" class="btn btn-outline-light" data-motivo="Mal servicio">Mal servicio</button>
-                            <button type="button" class="btn btn-outline-light" data-motivo="Otro">Otro</button>
+                            <button type="button" class="btn btn-outline-light" data-motivo="Mal personal">Mal personal</button>
+                            <button type="button" class="btn btn-outline-light" data-motivo="Mal equipo">Mal equipo</button>
+                            <button type="button" class="btn btn-outline-light" data-motivo="Precio demasiado alto">Precio demasiado alto</button>
                         </div>
                     </div>
 
                     <!-- Comentario adicional -->
                     <div class="form-group mt-3" id="comentarioAdicional" style="display: none;">
-                        <label for="comentarios">Comentario adicional:</label>
+                        <label for="comentarios">Si no está entre las opciones anteriores, puedes dejar un comentario adicional:</label>
                         <textarea id="comentarios" name="comentarios" class="form-control" rows="3"></textarea>
                     </div>
                 </div>
@@ -290,13 +292,26 @@
 
         // Concatena el motivo al comentario
         $('#calificarBtn').on('click', function(e) {
+            e.preventDefault();
+
             const comentarioAdicional = $('#comentarios').val().trim();
-            if (motivoSeleccionado) {
-                $('#comentarios').val(`Motivo: ${motivoSeleccionado}. ${comentarioAdicional}`);
+            const motivoTexto = motivoSeleccionado ? `${motivoSeleccionado}. ` : '';
+            const comentarioFinal = `${motivoTexto}${comentarioAdicional}`.trim();
+
+            $('#comentarios').val(comentarioFinal);
+
+            // Verifica que haya calificación seleccionada
+            if (!calificacion) {
+                alert('Debe seleccionar una calificación.');
+                return;
             }
+
+            // Envía el formulario
+            $('#calificacionForm').submit();
         });
     });
 </script>
+
 
 <!-- Estilos para el modal -->
 <style>
@@ -349,9 +364,16 @@
     .btn-outline-light {
         border: 1px solid #ff00cc;
         color: #ff00cc;
+        font-size: 0.8rem; /* tamaño chico*/
+
     }
 
     .btn-outline-light:hover {
+        background-color: #ff00cc;
+        color: #333;
+    }
+
+    .btn-outline-light.active {
         background-color: #ff00cc;
         color: #333;
     }
@@ -374,6 +396,7 @@
     .modal-footer .btn:hover {
         background-color: #cc00b3;
     }
+    
 </style>
 
 
