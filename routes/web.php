@@ -103,3 +103,6 @@ Route::get('mercado-pago/callback', [PagoAutomaticoController::class, 'mercadoPa
 //RUTAS CALIFICAR
 Route::get('/calificaciones-pendientes', [CalificacionController::class, 'pendientes'])->name('calificaciones-pendientes');
 Route::post('/guardar-calificacion-cliente/{idCita}', [CalificacionController::class, 'guardarCalificacion'])->name('guardar-calificacion');
+
+Route::get('/pendientes-especialista', [CitaController::class, 'pendientesEspecialista']);
+Route::post('/guardar-calificacion-especialista/{idCita}', [CitaController::class, 'guardarCalificacionEspecialista']);

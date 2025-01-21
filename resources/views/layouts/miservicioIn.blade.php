@@ -244,7 +244,12 @@
                 const cita = data.pendientes[0];
                 citaId = cita.idCita;
 
-                $('#detalleCita').text(`Tienes pendiente calificar el servicio del ${cita.fechaCita}.`);
+                $('#detalleCita').html(`
+                    Tienes pendiente calificar el siguiente servicio:<br>
+                    <strong>Profesional:</strong> ${cita.nombreProfesional} ${cita.apellidoProfesional}<br>
+                    <strong>Servicio:</strong> ${cita.nombreServicio}<br>
+                    <strong>Fecha:</strong> ${cita.fechaCita}
+                `);
                 $('#calificacionForm').attr('action', '/guardar-calificacion-cliente/' + citaId);
 
                 const modal = new bootstrap.Modal(document.getElementById('calificacionModal'));
