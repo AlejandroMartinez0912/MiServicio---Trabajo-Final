@@ -25,6 +25,7 @@ class LoginController extends Controller
         $user = new User();
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->role = "user";
         $user->save();
 
         // Crear automáticamente el perfil (persona) asociado al usuario
@@ -54,7 +55,6 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         // Validar los datos de entrada
-        
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
@@ -69,7 +69,15 @@ class LoginController extends Controller
             // Regenerar la sesión para mayor seguridad
             $request->session()->regenerate();
 
-            // Redirigir a la ruta homein después de iniciar sesión
+            // Verificar si el usuario es administrador
+            $user = Auth::user(); // Obtén al usuario autenticado
+
+            if ($user->role === 'admin') {
+                // Redirigir al panel de administrador
+                return redirect()->route('index-admin');
+            }
+
+            // Redirigir a la página principal de usuarios normales
             return redirect()->route('homein');
         }
 

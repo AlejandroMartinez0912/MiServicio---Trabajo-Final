@@ -13,6 +13,7 @@ use App\Http\Controllers\PagoAutomaticoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CalificacionController;
+use App\Http\Controllers\AdministradorController;
 use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
 
 // Ruta de página principal llamada Home
@@ -106,3 +107,6 @@ Route::post('/guardar-calificacion-cliente/{idCita}', [CalificacionController::c
 
 Route::get('/pendientes-especialista', [CitaController::class, 'pendientesEspecialista']);
 Route::post('/guardar-calificacion-especialista/{idCita}', [CitaController::class, 'guardarCalificacionEspecialista']);
+
+//RUTAS PARA ADMINISTRADOR
+Route::get('/admin', [AdministradorController::class, 'index'])->name('index-admin');
