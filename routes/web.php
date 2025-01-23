@@ -108,5 +108,19 @@ Route::post('/guardar-calificacion-cliente/{idCita}', [CalificacionController::c
 Route::get('/pendientes-especialista', [CitaController::class, 'pendientesEspecialista']);
 Route::post('/guardar-calificacion-especialista/{idCita}', [CitaController::class, 'guardarCalificacionEspecialista']);
 
+
 //RUTAS PARA ADMINISTRADOR
 Route::get('/admin', [AdministradorController::class, 'index'])->name('index-admin');
+
+//Rutas de usuarios
+Route::get('/admin/usuarios', [AdministradorController::class, 'usuarios'])->name('admin-usuarios');
+// Rutas para activar y desactivar usuarios
+Route::post('/usuarios/{id}/activar', [AdministradorController::class, 'activarUsuario'])->name('usuarios-activar');
+Route::patch('/usuarios/{id}/desactivar', [AdministradorController::class, 'desactivarUsuario'])->name('usuarios-desactivar');
+//Rutas de profesionales activar y desactivar
+Route::patch('/desactivar-profesional/{id}', [AdministradorController::class, 'desactivarProfesional'])->name('desactivar-Profesional');
+Route::post('/profesional/{idProfesion}/activar', [AdministradorController::class, 'activarProfesional'])->name('activar-Profesional');
+
+
+Route::get('/admin/servicios', [AdministradorController::class, 'servicios'])->name('admin-servicios');
+Route::get('/admin/pagos', [AdministradorController::class, 'pagos'])->name('admin-pagos');
