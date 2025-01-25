@@ -33,4 +33,10 @@ class Persona extends Model
         return $this->hasMany(Cita::class, 'idPersona', 'id');
     }
 
+    //relacion con calificacionCliente - 1 persona puede tener muchas calificaciones
+    public function calificaciones()
+    {
+        return $this->hasMany(CalificacionCliente::class, 'idPersona', 'id');
+    }
+
 }

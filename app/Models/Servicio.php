@@ -46,6 +46,12 @@ class Servicio extends Model
         return $this->hasMany(Cita::class, 'idServicio', 'id');
     }
 
+    //Relacion con calificaciones - 1 servicio puede tener varias calificaciones
+    public function calificaciones()
+    {
+        return $this->hasMany(CalificacionProfesion::class, 'idServicio', 'id');
+    }
+
 
   
 }

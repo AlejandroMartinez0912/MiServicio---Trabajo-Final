@@ -188,219 +188,193 @@
        @yield('contenido')
     </main>
 
-<!-- Modal de calificación -->
-<div class="modal fade" id="calificacionModal" tabindex="-1" aria-labelledby="calificacionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="calificacionForm" method="POST">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="calificacionModalLabel">Calificar Servicio</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="detalleCita">Tienes una calificación pendiente.</p>
-                    <!-- Calificación con estrellas -->
-                    <div class="d-flex justify-content-center my-3">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <i class="fa fa-star star text-secondary" data-index="{{ $i }}"></i>
-                        @endfor
-                    </div>
-                    <input type="hidden" id="calificacion" name="calificacion" value="">
 
-                    <!-- Motivos si la calificación es menor a 5 -->
-                    <div id="opcionesMotivos" style="display: none;">
-                        <p>Selecciona un motivo:</p>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-light" data-motivo="Tardanza">Tardanza</button>
-                            <button type="button" class="btn btn-outline-light" data-motivo="Mal servicio">Mal servicio</button>
-                            <button type="button" class="btn btn-outline-light" data-motivo="Mal personal">Mal personal</button>
-                            <button type="button" class="btn btn-outline-light" data-motivo="Mal equipo">Mal equipo</button>
-                            <button type="button" class="btn btn-outline-light" data-motivo="Precio demasiado alto">Precio demasiado alto</button>
-                        </div>
-                    </div>
-
-                    <!-- Comentario adicional -->
-                    <div class="form-group mt-3" id="comentarioAdicional" style="display: none;">
-                        <label for="comentarios">Si no está entre las opciones anteriores, puedes dejar un comentario adicional:</label>
-                        <textarea id="comentarios" name="comentarios" class="form-control" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary" id="calificarBtn">Enviar Calificación</button>
-                </div>
-            </form>
-        </div>
+<!-- Modal de Calificación -->
+<div class="modal" id="calificacionModal" style="display: none;">
+    <div class="modal-content">
+        <h3>Calificar Servicio</h3>
+        <!-- Formulario para calificar -->
+        <form id="calificacionForm" method="POST" action="" data-id-cita="">
+            @csrf <!-- Token CSRF de Laravel para seguridad -->
+            <input type="hidden" id="citaId" name="idCita"> <!-- Campo oculto para idCita -->
+            <div>
+                <label for="calificacion">Calificación:</label>
+                <select name="calificacion" id="calificacion">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div>
+                <label for="comentario">Comentario:</label>
+                <textarea name="comentario" id="comentario" rows="4"></textarea>
+            </div>
+            <div>
+                <button type="submit">Guardar Calificación</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
-    let citaId = null;
-    let calificacion = 0;
-    let motivoSeleccionado = null;
-
-    function verificarCalificacionesPendientes() {
-        $.get('/calificaciones-pendientes', function(data) {
-            if (data.pendientes.length > 0) {
-                const cita = data.pendientes[0];
-                citaId = cita.idCita;
-
-                $('#detalleCita').html(`
-                    Tienes pendiente calificar el siguiente servicio:<br>
-                    <strong>Profesional:</strong> ${cita.nombreProfesional} ${cita.apellidoProfesional}<br>
-                    <strong>Servicio:</strong> ${cita.nombreServicio}<br>
-                    <strong>Fecha:</strong> ${cita.fechaCita}
-                `);
-                $('#calificacionForm').attr('action', '/guardar-calificacion-cliente/' + citaId);
-
-                const modal = new bootstrap.Modal(document.getElementById('calificacionModal'));
-                modal.show();
-            }
-        }).fail(function() {
-            console.error('Error al verificar citas pendientes.');
-        });
-    }
-
-    $(document).ready(function() {
-        verificarCalificacionesPendientes();
-
-        // Selección de estrellas
-        $('.star').on('click', function() {
-            calificacion = $(this).data('index');
-            $('#calificacion').val(calificacion);
-
-            $('.star').each(function(index) {
-                $(this).toggleClass('text-warning', index < calificacion);
-            });
-
-            if (calificacion < 5) {
-                $('#opcionesMotivos').show();
-                $('#comentarioAdicional').show();
-            } else {
-                $('#opcionesMotivos').hide();
-                $('#comentarioAdicional').hide();
+    $(document).ready(function () {
+        // Obtener las citas pendientes
+        $.ajax({
+            url: '/calificaciones/pendientes', // Aquí está la URL donde consultas las citas pendientes
+            type: 'GET',
+            success: function (data) {
+                // Verificamos si hay citas pendientes
+                if (data.length > 0) {
+                    var cita = data[0]; // Tomamos la primera cita pendiente (puedes modificar según tu caso)
+                    $('#citaId').val(cita.idCita); // Asignamos el id de la cita al campo oculto
+                    
+                    // Establecemos la acción del formulario (esto se hace dinámicamente según el id de la cita)
+                    $('#calificacionForm').attr('action', '/calificaciones/' + cita.idCita + '/guardar');
+                    
+                    // Mostramos el modal
+                    $('#calificacionModal').show();
+                }
+            },
+            error: function () {
+                alert('Hubo un error al obtener las citas pendientes.');
             }
         });
 
-        // Selección de motivo
-        $('#opcionesMotivos button').on('click', function() {
-            motivoSeleccionado = $(this).data('motivo');
-            $('#opcionesMotivos button').removeClass('btn-primary').addClass('btn-outline-light');
-            $(this).removeClass('btn-outline-light').addClass('btn-primary');
-        });
+        // Cuando se envíe el formulario
+        $('#calificacionForm').submit(function(event) {
+            event.preventDefault(); // Prevenir el envío automático del formulario
 
-        // Concatena el motivo al comentario
-        $('#calificarBtn').on('click', function(e) {
-            e.preventDefault();
+            var form = $(this); // Obtener el formulario
 
-            const comentarioAdicional = $('#comentarios').val().trim();
-            const motivoTexto = motivoSeleccionado ? `${motivoSeleccionado}. ` : '';
-            const comentarioFinal = `${motivoTexto}${comentarioAdicional}`.trim();
-
-            $('#comentarios').val(comentarioFinal);
-
-            // Verifica que haya calificación seleccionada
-            if (!calificacion) {
-                alert('Debe seleccionar una calificación.');
-                return;
-            }
-
-            // Envía el formulario
-            $('#calificacionForm').submit();
+            // Enviar el formulario de forma convencional
+            form.unbind('submit').submit(); // Enviar el formulario manualmente
         });
     });
 </script>
-
-
-<!-- Estilos para el modal -->
 <style>
-    .star {
-        font-size: 1.8rem;
-        cursor: pointer;
-        color: #ccc; /* Color de estrellas desactivadas */
-        transition: color 0.3s;
-    }
-
-    .star.text-warning {
-        color: #ff00cc; /* Color de estrellas seleccionadas */
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
     }
 
     .modal-content {
         background-color: #333;
-        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        width: 400px;
+        max-width: 90%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        color: #fff;
+        font-family: 'Arial', sans-serif;
     }
 
-    .modal-header, .modal-footer {
+    .modal h3 {
+        font-size: 26px;
+        color: #fff;
+        margin-bottom: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .modal form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .modal label {
+        font-size: 16px;
+        color: #fff;
+        margin-bottom: 8px;
+        text-align: left;
+        font-weight: 500;
+    }
+
+    .modal select,
+    .modal textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #222;
+        color: #fff;
+    }
+
+    .modal textarea {
+        resize: vertical;
+    }
+
+    .modal button {
+        padding: 12px 25px;
+        background-color: #ff00cc;
+        color: #fff;
         border: none;
-        background-color: #333;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
     }
 
-    .modal-header .btn-close {
-        color: #ff00cc;
+    .modal button:hover {
+        background-color: #333399;
     }
 
-    #opcionesMotivos button {
-        margin-right: 8px;
-        margin-top: 10px;
-        transition: transform 0.2s ease-in-out;
-        border: 1px solid #ff00cc;
-        color: #ff00cc;
+    /* Estilo del fondo oscuro de la pantalla */
+    .modal {
+        display: flex;
+    }
+
+    /* Botón de cerrar el modal */
+    .close-btn {
         background-color: transparent;
+        border: none;
+        color: #fff;
+        font-size: 25px;
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 15px;
     }
 
-    #opcionesMotivos button:hover {
-        transform: scale(1.05);
-        background-color: #ff00cc;
-        color: #333;
-    }
-
-    #comentarios {
-        background-color: #333;
-        color: white;
-        border: 1px solid #ff00cc;
-    }
-
-    .btn-outline-light {
-        border: 1px solid #ff00cc;
+    .close-btn:hover {
         color: #ff00cc;
-        font-size: 0.8rem; /* tamaño chico*/
-
     }
 
-    .btn-outline-light:hover {
-        background-color: #ff00cc;
-        color: #333;
+    /* Animación de entrada para el modal */
+    .modal-content {
+        animation: fadeIn 0.4s ease-in-out;
     }
 
-    .btn-outline-light.active {
-        background-color: #ff00cc;
-        color: #333;
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
-
-    .btn-primary {
-        background-color: #ff00cc;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background-color: #cc00b3;
-    }
-
-    /* Ajustes adicionales para los botones dentro del modal */
-    .modal-footer .btn {
-        background-color: #ff00cc;
-        border: none;
-    }
-
-    .modal-footer .btn:hover {
-        background-color: #cc00b3;
-    }
-    
 </style>
 
+   
 
-
+    
 
     <!-- Footer -->
     <footer>

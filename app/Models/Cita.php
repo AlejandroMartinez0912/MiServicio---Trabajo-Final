@@ -24,7 +24,8 @@ class Cita extends Model
         'fechaCita',
         'horaInicio',
         'horaFin',
-        'calificacion',
+        'calificacion_profesion',
+        'calificacion_cliente',
     ];
 
     // Relación con la tabla 'personas'
@@ -45,10 +46,16 @@ class Cita extends Model
         return $this->belongsTo(DatosProfesion::class, 'idProfesion', 'id');
     }
 
-    // Relación con Calificaciones
-    public function calificaciones()
+    // Relación con CalificacionesCliente - relacion 1 a 1 con citas
+    public function calificacionesCliente()
     {
-        // Aquí no cambiamos nada porque estamos utilizando 'idCita' como la clave foránea
-        return $this->hasMany(Calificacion::class, 'idCita', 'idCita');
+        return $this->hasOne(CalificacionCliente::class, 'idCita', 'idCita');
     }
+
+    //Relacion con CalificacionesProfesion - relacion 1 a 1 con citas
+    public function calificacionesProfesion()
+    {
+        return $this->hasOne(CalificacionProfesion::class, 'idCita', 'idCita');
+    }
+
 }

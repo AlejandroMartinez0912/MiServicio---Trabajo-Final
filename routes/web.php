@@ -102,11 +102,8 @@ Route::get('mercado-pago/callback', [PagoAutomaticoController::class, 'mercadoPa
 
 //RUTAS PARA CALIFICAR.
 //RUTAS CALIFICAR
-Route::get('/calificaciones-pendientes', [CalificacionController::class, 'pendientes'])->name('calificaciones-pendientes');
-Route::post('/guardar-calificacion-cliente/{idCita}', [CalificacionController::class, 'guardarCalificacion'])->name('guardar-calificacion');
-
-Route::get('/pendientes-especialista', [CitaController::class, 'pendientesEspecialista']);
-Route::post('/guardar-calificacion-especialista/{idCita}', [CitaController::class, 'guardarCalificacionEspecialista']);
+Route::get('/calificaciones/pendientes', [CalificacionController::class, 'VerCalificacionesPendientes']);
+Route::post('/calificaciones/{id}/guardar', [CalificacionController::class, 'GuardarCalificacionProfesion'])->name('calificaciones.guardar');
 
 
 //RUTAS PARA ADMINISTRADOR
@@ -120,6 +117,9 @@ Route::patch('/usuarios/{id}/desactivar', [AdministradorController::class, 'desa
 //Rutas de profesionales activar y desactivar
 Route::patch('/desactivar-profesional/{id}', [AdministradorController::class, 'desactivarProfesional'])->name('desactivar-Profesional');
 Route::post('/profesional/{idProfesion}/activar', [AdministradorController::class, 'activarProfesional'])->name('activar-Profesional');
+
+//ver perfil usuario cliente. 
+Route::get('/admin/perfil/{id}', [AdministradorController::class, 'verPerfil'])->name('admin-ver-perfil');
 
 
 Route::get('/admin/servicios', [AdministradorController::class, 'servicios'])->name('admin-servicios');

@@ -28,8 +28,8 @@ class CreateCitasTable extends Migration
             $table->date('fechaCita');
             $table->time('horaInicio');
             $table->time('horaFin');
-            $table->tinyInteger('calificacion')->nullable()->checkBetween(1, 5);
-
+            $table->boolean('calificacion_profesion')->default(0);
+            $table->boolean('calificacion_cliente')->default(0);
             
             $table->timestamps(); // Campos created_at y updated_at
 

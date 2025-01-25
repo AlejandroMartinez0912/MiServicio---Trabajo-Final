@@ -58,4 +58,16 @@ class DatosProfesion extends Model
         return $this->hasMany(Cita::class, 'idProfesion', 'id');
     }
 
+    //Relacion con servicios - 1profesional puede tener varios servicios
+    public function servicios()
+    {
+        return $this->hasMany(Servicio::class, 'idProfesion', 'id');
+    }
+
+    //Relacion con calificacionesProfesion - 1profeisonal puede tener varias calificaciones
+    public function calificacionesProfesion()
+    {
+        return $this->hasMany(CalificacionProfesion::class, 'idProfesion', 'id');
+    }
+
 }

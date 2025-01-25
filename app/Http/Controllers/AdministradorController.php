@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Persona;
 use App\Models\User;
 use App\Models\DatosProfesion;
-
+use App\Models\Servicio;
+use App\Models\Cita;
+use App\Models\Calificacion;
 use Illuminate\Http\Request;
 
 class AdministradorController extends Controller
@@ -54,6 +56,22 @@ class AdministradorController extends Controller
         $profesion->estado = 1;
         $profesion->save();
         return redirect()->route('admin-usuarios')->with('success', 'Profesional activado');
+    }
+
+    //Ver perfil de usuario
+    
+    public function verPerfil($id){
+        $user = User::find($id);
+        $persona = Persona::where('user_id', $id)->first();
+        $citas = Cita::where('idPersona', $id)->get();
+        //por cada cita encontrar calificaciones de esas citas en calificacion con el idCita y agendar en cada cita su calificacion
+        foreach ($citas as $cita) {
+            //array de citas con calificaciones
+            $cita->calificaciones = Calificacion::where('idCita', $cita->idCita)->get();  
+            $calificaciones = Calificacion::where('idCita', $cita->idCita)->get();          
+        }
+
+        return view('Administrador.usuariosPerfil', compact('user', 'persona', 'citas'));
     }
 
 
