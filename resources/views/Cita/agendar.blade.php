@@ -270,6 +270,19 @@
                     <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">
                         Precio estimado: ${{ number_format($servicio->precio_base, 2) }}
                     </p>
+                    @if ($servicio->calificacion == 0)
+                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación del servicio: No calificado</p>
+                    @else
+                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación del servicio: 
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if ($i <= $servicio->calificacion)
+                                    <i class='bx bxs-star text-warning'></i>
+                                @else
+                                    <i class='bx bx-star text-muted'></i>
+                                @endif
+                            @endfor
+                        </p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -288,7 +301,7 @@
                     @if ($datosProfesion->calificacion == 0)
                         <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación: No calificado</p>
                     @else
-                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación: 
+                        <p class="card-text" style="font-size: 0.9rem; color: #adb5bd;">Calificación del profesional: 
                             @for ($i = 1; $i <= 5; $i++)
                                 @if ($i <= $datosProfesion->calificacion)
                                     <i class='bx bxs-star text-warning'></i>
@@ -298,6 +311,7 @@
                             @endfor
                         </p>
                     @endif
+                    
                 </div>
             </div>
         </div>

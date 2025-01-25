@@ -141,7 +141,6 @@
     </div>
 </div>
 
-
 <style>
     .card {
     --bg-card: #27272a;
@@ -214,4 +213,210 @@
     }
 
 </style>
+
+<!-- Modal de Calificación -->
+<div class="modal" id="calificacionModal" style="display: none;">
+    <div class="modal-content">
+        <h3>Calificar Servicio</h3>
+        <!-- Formulario para calificar -->
+        <form id="calificacionForm" method="POST" action="" data-id-cita="">
+            @csrf <!-- Token CSRF de Laravel para seguridad -->
+            <input type="hidden" id="citaId" name="idCita"> <!-- Campo oculto para idCita -->
+            <div>
+                <label for="calificacion">Calificación:</label>
+                <select name="calificacion" id="calificacion">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div>
+                <label for="comentario">Comentario:</label>
+                <textarea name="comentario" id="comentario" rows="4"></textarea>
+            </div>
+            <div>
+                <button type="submit">Guardar Calificación</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Función para obtener calificaciones pendientes
+        function obtenerCalificacionesPendientes() {
+            $.ajax({
+                url: '/calificaciones/pendientes', // Ruta al método del controlador
+                type: 'GET',
+                success: function (response) {
+                    if (response.success && response.data.length > 0) {
+                        // Tomar la primera cita pendiente
+                        var cita = response.data[0];
+
+                        // Asignar valores dinámicamente al formulario y modal
+                        $('#citaId').val(cita.idCita);
+                        $('#calificacionForm').attr('action', '/calificaciones/' + cita.idCita + '/guardar');
+                        $('#calificacionModal').css('display', 'flex'); // Mostrar el modal
+                    } else {
+                        // No hay citas pendientes, simplemente no hacer nada
+                        $('#calificacionModal').css('display', 'none'); // Asegurarse de que el modal esté oculto
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al obtener las calificaciones pendientes:', error);
+                    $('#calificacionModal').css('display', 'none'); // Ocultar el modal en caso de error
+                }
+            });
+        }
+
+        // Llamar a la función al cargar la página o según sea necesario
+        obtenerCalificacionesPendientes();
+
+        // Manejar el envío del formulario
+        $('#calificacionForm').on('submit', function (e) {
+            e.preventDefault(); // Prevenir la acción predeterminada del formulario
+
+            var formData = $(this).serialize(); // Serializar datos del formulario
+            var actionUrl = $(this).attr('action'); // Obtener la URL de acción dinámica
+
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    // Calificación guardada exitosamente
+                    $('#calificacionModal').css('display', 'none'); // Cerrar el modal
+                    obtenerCalificacionesPendientes(); // Recargar la lista de pendientes
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al guardar la calificación:', error);
+                    alert('Ocurrió un error al guardar la calificación. Por favor, inténtelo de nuevo.');
+                }
+            });
+        });
+    });
+</script>
+
+
+<style>
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: #333;
+        padding: 30px;
+        border-radius: 8px;
+        width: 400px;
+        max-width: 90%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        color: #fff;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .modal h3 {
+        font-size: 26px;
+        color: #fff;
+        margin-bottom: 20px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .modal form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .modal label {
+        font-size: 16px;
+        color: #fff;
+        margin-bottom: 8px;
+        text-align: left;
+        font-weight: 500;
+    }
+
+    .modal select,
+    .modal textarea {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #222;
+        color: #fff;
+    }
+
+    .modal textarea {
+        resize: vertical;
+    }
+
+    .modal button {
+        padding: 12px 25px;
+        background-color: #ff00cc;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
+    }
+
+    .modal button:hover {
+        background-color: #333399;
+    }
+
+    /* Estilo del fondo oscuro de la pantalla */
+    .modal {
+        display: flex;
+    }
+
+    /* Botón de cerrar el modal */
+    .close-btn {
+        background-color: transparent;
+        border: none;
+        color: #fff;
+        font-size: 25px;
+        cursor: pointer;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+    }
+
+    .close-btn:hover {
+        color: #ff00cc;
+    }
+
+    /* Animación de entrada para el modal */
+    .modal-content {
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
 @endsection

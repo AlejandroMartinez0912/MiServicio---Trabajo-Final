@@ -5,106 +5,106 @@
 @section('contenido')
 <style>
     .card {
-    background: #222; /* Fondo del card */
-    border: none;
-    border-radius: 15px;
-    color: #eaeaea; /* Texto blanco-gris */
-}
+        background: #222; /* Fondo del card */
+        border: none;
+        border-radius: 15px;
+        color: #eaeaea; /* Texto blanco-gris */
+    }
 
-.card-body {
-    padding: 30px;
-}
+    .card-body {
+        padding: 30px;
+    }
 
-h2 {
-    font-weight: bold;
-    color: #fff;
-}
+    h2 {
+        font-weight: bold;
+        color: #fff;
+    }
 
-.form-label {
-    color: #bbb; /* Un gris más claro */
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-}
+    .form-label {
+        color: #bbb; /* Un gris más claro */
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
 
-.form-control {
-    background: #333; /* Fondo gris oscuro */
-    border: 1px solid #555; /* Borde gris tenue */
-    color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-}
+    .form-control {
+        background: #333; /* Fondo gris oscuro */
+        border: 1px solid #555; /* Borde gris tenue */
+        color: #fff;
+        border-radius: 8px;
+        padding: 10px;
+    }
 
-.form-control:focus {
-    background: #444;
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-}
+    .form-control:focus {
+        background: #444;
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    }
 
-button.btn-primary {
-    background: #007bff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1.1rem;
-    transition: background 0.3s ease;
-}
+    button.btn-primary {
+        background: #007bff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 1.1rem;
+        transition: background 0.3s ease;
+    }
 
-button.btn-primary:hover {
-    background: #0056b3;
-}
+    button.btn-primary:hover {
+        background: #0056b3;
+    }
 
-button.btn-secondary {
-    background: #555;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 1.1rem;
-    transition: background 0.3s ease;
-}
+    button.btn-secondary {
+        background: #555;
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        font-size: 1.1rem;
+        transition: background 0.3s ease;
+    }
 
-button.btn-secondary:hover {
-    background: #444;
-}
+    button.btn-secondary:hover {
+        background: #444;
+    }
 
-.profile-pic {
-    background: #444; /* Fondo oscuro para la imagen */
-    border-radius: 50%;
-    width: 120px;
-    height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    margin-left: 30px;
-    border: 2px solid #555;
-}
+    .profile-pic {
+        background: #444; /* Fondo oscuro para la imagen */
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-left: 30px;
+        border: 2px solid #555;
+    }
 
-.profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    .profile-pic img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-.profile-pic:hover {
-    border-color: #007bff;
-    cursor: pointer;
-}
+    .profile-pic:hover {
+        border-color: #007bff;
+        cursor: pointer;
+    }
 
-.alert {
-    border-radius: 10px;
-    padding: 15px;
-}
+    .alert {
+        border-radius: 10px;
+        padding: 15px;
+    }
 
-.alert-success {
-    background: #28a745;
-    color: #fff;
-}
+    .alert-success {
+        background: #28a745;
+        color: #fff;
+    }
 
-.alert-danger {
-    background: #dc3545;
-    color: #fff;
-}
+    .alert-danger {
+        background: #dc3545;
+        color: #fff;
+    }
 </style>
 <div class="container mt-5">
     <div class="row justify-content-center">

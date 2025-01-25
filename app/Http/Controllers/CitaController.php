@@ -149,6 +149,8 @@ class CitaController extends Controller
             'idPersona' => $idPersona,
             'idServicio' => $idServicio,
             'idProfesion' => $idProfesion,
+            'calificacion_profesion' => $i=0,
+            'calificacion_cliente' => $i=0,
         ]);
         // Guardar la cita
         $cita->save();

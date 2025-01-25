@@ -26,11 +26,27 @@ class CalificacionController extends Controller
     {
         $id = Auth::user()->id;
 
+        // Obtener las citas pendientes
         $citasPendientes = Cita::where('calificacion_profesion', 0)
             ->where('idPersona', $id)
+            ->where('estado', 4)
             ->get();
-            return response()->json($citasPendientes);
 
+        // Manejar el caso en que no haya citas pendientes
+        if ($citasPendientes->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No hay citas pendientes.',
+                'data' => [],
+            ], 200);
+        }
+
+        // Retornar las citas pendientes si existen
+        return response()->json([
+            'success' => true,
+            'message' => 'Citas pendientes obtenidas correctamente.',
+            'data' => $citasPendientes,
+        ], 200);
     }
     public function GuardarCalificacionProfesion(Request $request, $id)
     {
@@ -71,6 +87,43 @@ class CalificacionController extends Controller
         $profesion = DatosProfesion::findOrFail($idProfesion);
         $profesion->calificacion = $promedioProfesion;
         $profesion->save();
+    }
+
+    /**
+     * LOGICA PARA CALIFICAR CLIENTE
+     */
+
+    public function GuardarCalificacionCliente(Request $request, $id)
+    {
+        $cita = Cita::findOrFail($id);  
+
+        $calificacion = new CalificacionCliente();
+        $calificacion->idCita = $cita->idCita;  
+        $calificacion->idPersona = $cita->idPersona;
+        $calificacion->calificacion = $request->calificacion;
+        $calificacion->comentarios = $request->comentario;
+        $calificacion->save();
+
+        //actualizar cita con calificacion
+        $cita->calificacion_cliente = 1;
+        $cita->save();
+
+        //calcular promedio de cliente
+        $this->PromedioCliente($cita->idPersona);
+
+        return redirect()->back()->with('success', 'Calificacion guardada exitosamente.');
+    }
+
+    //promedio de cliente
+    public function PromedioCliente($idPersona)
+    {
+        // Calcular el promedio directamente en la base de datos
+        $promedioCliente = CalificacionCliente::where('idPersona', $idPersona)->avg('calificacion');
+        
+        //actualizar calificacion en servicios 
+        $persona = Persona::findOrFail($idPersona);
+        $persona->calificacion = $promedioCliente;
+        $persona->save();
     }
 
 }

@@ -1277,7 +1277,15 @@
                                                                 @if ($cita->persona->calificacion == 0.0)
                                                                     <p><strong>Calificación:</strong> No calificado</p>
                                                                 @else
-                                                                    <p><strong>Calificación:</strong> {{ $cita->persona->calificacion }}</p>
+                                                                    <p><strong>Calificación:</strong> 
+                                                                        @for ($i = 1; $i <= 5; $i++)
+                                                                            @if ($i <= $cita->persona->calificacion)
+                                                                                <i class="fas fa-star"></i> <!-- Estrella llena -->
+                                                                            @else
+                                                                                <i class="far fa-star"></i> <!-- Estrella vacía -->
+                                                                            @endif
+                                                                        @endfor
+                                                                    </p>
                                                                 @endif
                                                             </div>
                                                             <div class="modal-footer">
@@ -1307,8 +1315,11 @@
                                                     <span class="badge badge-danger">Cancelada</span>
                                                 @elseif ($cita->estado === 3)
                                                     <span class="badge badge-success"><strong>Re-confirmada</strong></span>
+                                                @elseif ($cita->estado == 4)
+                                                    <span class="badge badge-success" style="background-color: #28a745;"><strong>Pagada</strong></span>
                                                 @endif
                                             </td>
+                                            
                                             <td>
                                                 @if ($cita->estado === 0)
 
@@ -1397,6 +1408,177 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                @elseif ($cita->estado == 4 && $cita->calificacion_cliente == 0)
+                                                    <!-- Botón para abrir el modal -->
+                                                    <button type="button" class="btn btn-modern1" data-bs-toggle="modal" data-bs-target="#calificacionModal{{ $cita->idCita }}">
+                                                        Calificar
+                                                    </button>
+
+                                                    <!-- Modal de Calificación -->
+                                                    <div class="modal fade" id="calificacionModal{{ $cita->idCita }}" tabindex="-1" aria-labelledby="calificacionModalLabel{{ $cita->idCita }}" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="calificacionModalLabel{{ $cita->idCita }}">Calificar al Cliente</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form id="calificacionForm{{ $cita->idCita }}" method="POST" action="{{ route('calificaciones-cliente.guardar', ['id' => $cita->idCita]) }}">
+                                                                        @csrf <!-- Token CSRF de Laravel -->
+                                                                        
+                                                                        <div class="mb-3">
+                                                                            <label for="calificacion{{ $cita->idCita }}" class="form-label">Calificación:</label>
+                                                                            <select name="calificacion" id="calificacion{{ $cita->idCita }}" class="form-select">
+                                                                                <option value="1">1</option>
+                                                                                <option value="2">2</option>
+                                                                                <option value="3">3</option>
+                                                                                <option value="4">4</option>
+                                                                                <option value="5">5</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        
+                                                                        <div class="mb-3">
+                                                                            <label for="comentario{{ $cita->idCita }}" class="form-label">Comentario:</label>
+                                                                            <textarea name="comentario" id="comentario{{ $cita->idCita }}" class="form-control" rows="4"></textarea>
+                                                                        </div>
+                                                                        
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                                            <button type="submit" class="btn btn-primary">Guardar Calificación</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <style>
+                                                        /* Modal overlay */
+                                                        .modal {
+                                                            display: none;
+                                                            position: fixed;
+                                                            top: 0;
+                                                            left: 0;
+                                                            width: 100%;
+                                                            height: 100%;
+                                                            background-color: rgba(0, 0, 0, 0.6);
+                                                            z-index: 9999;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                        }
+
+                                                        /* Modal content */
+                                                        .modal-content {
+                                                            background-color: #333;
+                                                            padding: 30px;
+                                                            border-radius: 10px;
+                                                            width: 400px;
+                                                            max-width: 90%;
+                                                            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+                                                            text-align: center;
+                                                            color: #fff;
+                                                            font-family: 'Arial', sans-serif;
+                                                            position: relative;
+                                                        }
+
+                                                        /* Title styling */
+                                                        .modal h3 {
+                                                            font-size: 24px;
+                                                            color: #fff;
+                                                            margin-bottom: 20px;
+                                                            font-weight: bold;
+                                                            text-transform: uppercase;
+                                                        }
+
+                                                        /* Form layout */
+                                                        .modal form {
+                                                            display: flex;
+                                                            flex-direction: column;
+                                                            gap: 15px;
+                                                        }
+
+                                                        .modal label {
+                                                            font-size: 14px;
+                                                            color: #ccc;
+                                                            margin-bottom: 5px;
+                                                            text-align: left;
+                                                            font-weight: 500;
+                                                        }
+
+                                                        /* Input and textarea styling */
+                                                        .modal select,
+                                                        .modal textarea {
+                                                            padding: 10px;
+                                                            border: 1px solid #555;
+                                                            border-radius: 5px;
+                                                            font-size: 14px;
+                                                            width: 100%;
+                                                            background-color: #222;
+                                                            color: #fff;
+                                                            box-sizing: border-box;
+                                                        }
+
+                                                        .modal textarea {
+                                                            resize: vertical;
+                                                        }
+
+                                                        /* Button styling */
+                                                        .modal button {
+                                                            padding: 12px;
+                                                            background-color: #ff00cc;
+                                                            color: #fff;
+                                                            border: none;
+                                                            border-radius: 5px;
+                                                            font-size: 14px;
+                                                            cursor: pointer;
+                                                            transition: background-color 0.3s ease;
+                                                            text-transform: uppercase;
+                                                            font-weight: bold;
+                                                        }
+
+                                                        .modal button:hover {
+                                                            background-color: #333399;
+                                                        }
+
+                                                        /* Close button */
+                                                        .close-btn {
+                                                            background-color: transparent;
+                                                            border: none;
+                                                            color: #fff;
+                                                            font-size: 20px;
+                                                            cursor: pointer;
+                                                            position: absolute;
+                                                            top: 15px;
+                                                            right: 15px;
+                                                        }
+
+                                                        .close-btn:hover {
+                                                            color: #ff00cc;
+                                                        }
+
+                                                        /* Modal animation */
+                                                        .modal-content {
+                                                            animation: fadeIn 0.4s ease-in-out;
+                                                        }
+
+                                                        @keyframes fadeIn {
+                                                            0% {
+                                                                opacity: 0;
+                                                                transform: scale(0.8);
+                                                            }
+                                                            100% {
+                                                                opacity: 1;
+                                                                transform: scale(1);
+                                                            }
+                                                        }
+
+                                                        /* Make modal visible */
+                                                        .modal.show {
+                                                            display: flex;
+                                                        }
+                                                    </style>
+                                                @elseif ($cita->estado == 4 && $cita->calificacion_cliente == 1)
+                                                    <span class="badge badge-success" style="background-color: #007bff"><strong>Calificado</strong></span>
+
                                                 @endif
                                         </td>
                                 @endforeach

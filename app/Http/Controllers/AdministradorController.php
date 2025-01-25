@@ -8,6 +8,8 @@ use App\Models\DatosProfesion;
 use App\Models\Servicio;
 use App\Models\Cita;
 use App\Models\Calificacion;
+use App\Models\CalificacionCliente;
+use App\Models\CalificacionProfesion;
 use Illuminate\Http\Request;
 
 class AdministradorController extends Controller
@@ -65,10 +67,10 @@ class AdministradorController extends Controller
         $persona = Persona::where('user_id', $id)->first();
         $citas = Cita::where('idPersona', $id)->get();
         //por cada cita encontrar calificaciones de esas citas en calificacion con el idCita y agendar en cada cita su calificacion
+
         foreach ($citas as $cita) {
-            //array de citas con calificaciones
-            $cita->calificaciones = Calificacion::where('idCita', $cita->idCita)->get();  
-            $calificaciones = Calificacion::where('idCita', $cita->idCita)->get();          
+            $cita->calificacion_profesion = CalificacionProfesion::where('idCita', $cita->id)->first();
+            $cita->calificacion_cliente = CalificacionCliente::where('idCita', $cita->id)->first();
         }
 
         return view('Administrador.usuariosPerfil', compact('user', 'persona', 'citas'));

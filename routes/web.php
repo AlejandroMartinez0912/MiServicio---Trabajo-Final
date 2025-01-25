@@ -101,9 +101,12 @@ Route::get('mercado-pago/vincular', [PagoAutomaticoController::class, 'vincularM
 Route::get('mercado-pago/callback', [PagoAutomaticoController::class, 'mercadoPagoCallback'])->name('mercado-pago-callback');
 
 //RUTAS PARA CALIFICAR.
-//RUTAS CALIFICAR
+//RUTAS CALIFICAR PROFESION
 Route::get('/calificaciones/pendientes', [CalificacionController::class, 'VerCalificacionesPendientes']);
 Route::post('/calificaciones/{id}/guardar', [CalificacionController::class, 'GuardarCalificacionProfesion'])->name('calificaciones.guardar');
+
+//RUTAS CALIFICAR CLIENTE
+Route::post('/calificaciones-cliente/{id}/guardar', [CalificacionController::class, 'GuardarCalificacionCliente'])->name('calificaciones-cliente.guardar');
 
 
 //RUTAS PARA ADMINISTRADOR

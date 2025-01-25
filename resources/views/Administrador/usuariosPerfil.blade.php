@@ -22,6 +22,11 @@
     <table class="table table-bordered table-striped">
         <tbody>
             <tr>
+                <td><strong></strong></td>
+                <td><strong>Datos</strong></td>
+                <td><strong>Acciones</strong></td>
+            </tr>
+            <tr>
                 <td><strong>Email:</strong></td>
                 <td>{{ $user->email }}</td>
             </tr>
@@ -56,6 +61,65 @@
                     }
                 @endphp
                 <td>{{ $estado }}</td>
+                <td>
+                    @if ($estado==1)
+                        <!-- Botón para abrir el modal -->
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#desactivarModal{{ $persona->id }}">
+                            Desactivar Cuenta
+                        </button>
+
+                        <!-- Modal de desactivación -->
+                        <div class="modal fade" id="desactivarModal{{ $id }}" tabindex="-1" aria-labelledby="desactivarModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="desactivarModalLabel">Confirmación</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Estás seguro de que deseas desactivar esta cuenta? Esta acción es irreversible.
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form action="{{ route('usuarios-desactivar', $id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-danger">Desactivar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif ($estado == 0)
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#activarModal{{ $persona->id }}">
+                            Activar Cuenta
+                        </button>
+                        <!-- Modal para Activar Cuenta -->
+                        <div class="modal fade" id="activarModal{{ $persona->id }}" tabindex="-1" aria-labelledby="activarModalLabel{{ $persona->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="activarModalLabel{{ $persona->id }}">Confirmar Activación de Cuenta</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>¿Estás seguro de que deseas activar la cuenta de <strong>{{ $persona->nombre }}</strong>?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <!-- Formulario de activación -->
+                                        <form action="{{ route('usuarios-activar', $persona->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">Activar Cuenta</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </td>
+
+                
             </tr>
         </tbody>
     </table>
@@ -70,7 +134,7 @@
                     <th>Hora</th>
                     <th>Servicio</th>
                     <th>Estado</th>
-                    <th>Calificación a especialista</th>
+                    <th>Calificación de servicio</th>
                 </tr>
             </thead>
             <tbody>
