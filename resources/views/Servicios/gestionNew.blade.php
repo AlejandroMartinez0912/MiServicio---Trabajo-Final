@@ -32,14 +32,12 @@
                     <a class="nav-link" onclick="showSection('citas')"><i class='bx bx-list-check'></i> Mis citas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" onclick="showSection('agenda')"><i class='bx bxs-calendar'></i> Agenda</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showSection('informes')"><i class='bx bxs-detail'></i> Informes</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="showSection('informes')"><i class='bx bx-dollar'></i> Informes</a>
+                </li>
+                
             </ul>
         </div>
     </div>
@@ -921,57 +919,58 @@
                             <button type="button" class="btn-action anular" data-bs-toggle="modal" data-bs-target="#anularServicioModal{{ $servicio->id }}">
                                 <i class='bx bx-x' style="font-size: 20px;"></i>
                             </button>
+                             <!-- Modal para anular servicio -->
+                            <div class="modal fade" id="anularServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="anularServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="anularServicioModalLabel{{ $servicio->id }}">Anular Servicio</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ route('anular-servicio', $servicio->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-body">
+                                                <p>¿Estás seguro de que deseas anular este servicio? El estado del servicio cambiará a inactivo.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                <button type="submit" class="btn btn-danger">Anular Servicio</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         @else
                             <button type="button" class="btn-action activar" data-bs-toggle="modal" data-bs-target="#activarServicioModal{{ $servicio->id }}">
                                 <i class='bx bx-check' style="font-size: 20px;"></i>
-                            </button>                        
+                            </button>   
+                            <!-- Modal para activar servicio -->
+                            <div class="modal fade" id="activarServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="activarServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="activarServicioModalLabel{{ $servicio->id }}">Activar Servicio</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ route('activar-servicio', $servicio->id) }}" method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <p>¿Estás seguro de que deseas activar este servicio? El estado del servicio cambiará a activo.</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                <button type="submit" class="btn btn-success">Activar Servicio</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>                     
                         @endif
         
-                        <!-- Modal para anular servicio -->
-                        <div class="modal fade" id="anularServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="anularServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="anularServicioModalLabel{{ $servicio->id }}">Anular Servicio</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <form action="{{ route('anular-servicio', $servicio->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal-body">
-                                            <p>¿Estás seguro de que deseas anular este servicio? El estado del servicio cambiará a inactivo.</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn btn-danger">Anular Servicio</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                       
         
-                        <!-- Modal para activar servicio -->
-                        <div class="modal fade" id="activarServicioModal{{ $servicio->id }}" tabindex="-1" aria-labelledby="activarServicioModalLabel{{ $servicio->id }}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="activarServicioModalLabel{{ $servicio->id }}">Activar Servicio</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <form action="{{ route('activar-servicio', $servicio->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="modal-body">
-                                            <p>¿Estás seguro de que deseas activar este servicio? El estado del servicio cambiará a activo.</p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn btn-success">Activar Servicio</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        
         
                         <!-- Eliminar servicio-->
                         <button type="button" class="btn-action eliminar" data-bs-toggle="modal" data-bs-target="#eliminarServicioModal{{ $servicio->id }}">
@@ -1759,14 +1758,6 @@
     </style>
 </div>
 
-<div id="agenda" class="section" style="display: none;">
-    <h1>Agenda</h1>
-    <p>Contenido de la sección Agenda.</p>
-</div>
-<div id="informes" class="section" style="display: none;">
-    <h1>Informes</h1>
-    <p>Contenido de la sección Informes.</p>
-</div>
 <div id="caja" class="section" style="display: none;">
     <div id="caja">
         <h3 class="text-uppercase font-weight-bold text-white mb-4" >Caja y Movimientos</h3>
@@ -1979,6 +1970,12 @@
     </style>
     
 </div>
+
+<div id="informes" class="section" style="display: none;">
+    <h1>Informes</h1>
+    <p>Contenido de la sección Informes.</p>
+</div>
+
 
 
 

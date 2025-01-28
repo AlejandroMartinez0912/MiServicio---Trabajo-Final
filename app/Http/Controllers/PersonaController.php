@@ -6,6 +6,7 @@ use App\Models\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Auditoria;
 
 class PersonaController extends Controller
 {
@@ -53,6 +54,15 @@ class PersonaController extends Controller
             'documento', 
             'telefono'
         ]));
+
+        $auditoria = new Auditoria();
+        $auditoria->user_id = $persona->user_id;
+        $auditoria->accion = 'Actualización';
+        $auditoria->modulo = 'Usuarios';
+        $auditoria->detalles = 'Se actualizó el perfil de ' . $persona->nombre . ' ' . $persona->apellido;
+        $auditoria->ip = request()->ip();
+        $auditoria->save();
+        
         // Mensaje de exito.
         return redirect()->route('perfil')->with('success', 'Perfil actualizado correctamente.');
         } catch (\Exception $e) {

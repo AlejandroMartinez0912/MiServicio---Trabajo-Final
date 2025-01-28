@@ -16,6 +16,8 @@ use Hamcrest\Core\AllOf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\Auditoria;
 
 class CalificacionController extends Controller
 {
@@ -68,6 +70,14 @@ class CalificacionController extends Controller
         //calcular promedio de servicios y profesion
         $this->PromedioProfesional($cita->idServicio, $cita->idProfesion);
 
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Crear';
+            $auditoria->modulo = 'Calificacion a profesion';
+            $auditoria->detalles = 'Calificacion guardada: ' . $calificacion->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
+
         return redirect()->back()->with('success', 'Calificacion guardada exitosamente.');
     }
 
@@ -110,6 +120,14 @@ class CalificacionController extends Controller
 
         //calcular promedio de cliente
         $this->PromedioCliente($cita->idPersona);
+
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Crear';
+            $auditoria->modulo = 'Calificacion a cliente';
+            $auditoria->detalles = 'Calificacion guardada: ' . $calificacion->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
 
         return redirect()->back()->with('success', 'Calificacion guardada exitosamente.');
     }

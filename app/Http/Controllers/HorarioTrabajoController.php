@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\HorarioTrabajo;
 use App\Models\DatosProfesion;
 use App\Models\Dias;
+use App\Models\User;
+use App\Models\Auditoria;
 
 class HorarioTrabajoController extends Controller
 {
@@ -73,6 +75,14 @@ class HorarioTrabajoController extends Controller
         ]);
         // Guardar el horario en la base de datos
         $horario->save();
+
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Crear';
+            $auditoria->modulo = 'Horarios';
+            $auditoria->detalles = 'Horario creado: ' . $horario->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
         
         if ($horario->save()) {
             return redirect()->route('gestion-servicios')->with('success', 'Horario guardado correctamente.');
@@ -144,7 +154,16 @@ class HorarioTrabajoController extends Controller
         // Guardar el horario en la base de datos
         $horario->save();
         
+        
         if ($horario->save()) {
+
+            $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Actualizar';
+            $auditoria->modulo = 'Horarios';
+            $auditoria->detalles = 'Horario actualizado: ' . $horario->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
             return redirect()->route('gestion-servicios')->with('success', 'Horario guardado correctamente.');
         } else {
             return redirect()->route('gestion-servicios')->with('error', 'No se pudo guardar correctamente los horarios.')->withInput();        
@@ -161,6 +180,14 @@ class HorarioTrabajoController extends Controller
         $horario = HorarioTrabajo::findOrFail($id);
         $horario->delete();
 
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Eliminar';
+            $auditoria->modulo = 'Horarios';
+            $auditoria->detalles = 'Horario eliminado: ' . $horario->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
+
         return redirect()->route('gestion-servicios')->with('success', 'Horario eliminado correctamente.');
     }
 
@@ -173,6 +200,14 @@ class HorarioTrabajoController extends Controller
         $horario->estado = false;
         $horario->save();
 
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Anular';
+            $auditoria->modulo = 'Horarios';
+            $auditoria->detalles = 'Horario anulado: ' . $horario->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
+
         return redirect()->route('gestion-servicios')->with('success', 'Horario anulado correctamente.');
     }
     /**
@@ -183,6 +218,14 @@ class HorarioTrabajoController extends Controller
         $horario = HorarioTrabajo::findOrFail($id);
         $horario->estado = true;
         $horario->save();
+
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Activar';
+            $auditoria->modulo = 'Horarios';
+            $auditoria->detalles = 'Horario activado: ' . $horario->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
 
         return redirect()->route('gestion-servicios')->with('success', 'Horario activado correctamente.');
     }

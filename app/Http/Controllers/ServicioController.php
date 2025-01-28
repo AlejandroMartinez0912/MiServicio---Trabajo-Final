@@ -6,10 +6,11 @@ use App\Models\DatosProfesion;
 use App\Models\Servicio;
 use App\Models\User;
 use App\Models\Rubro;
-
+use App\Models\Auditoria;
 use Faker\Provider\ar_EG\Person;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ServicioController extends Controller
 {
@@ -49,6 +50,15 @@ class ServicioController extends Controller
                 $servicio->rubros()->sync($rubros);
             }
 
+            $auditoria = new Auditoria();
+            $auditoria->user_id = $userId;
+            $auditoria->accion = 'Creación';
+            $auditoria->modulo = 'Servicios';
+            $auditoria->detalles = 'Servicio creado: ' . $servicio->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
+            
+
             return redirect()->route('gestion-servicios')->with('success', 'Servicio creado exitosamente.');
         } else {
             // Si falla la validación, redirigir con el mensaje de error
@@ -63,6 +73,7 @@ class ServicioController extends Controller
       public function actualizarServicio(Request $request, $id)
       {
           $servicio = Servicio::findOrFail($id);
+          $userId = Auth::id();
       
           // Actualizamos los datos del servicio
           $servicio->update([
@@ -74,6 +85,15 @@ class ServicioController extends Controller
       
           // Actualizamos los rubros asociados (tabla pivote)
           $servicio->rubros()->sync($request->rubros);
+
+          $auditoria = new Auditoria();
+          $auditoria->user_id = $userId;
+          $auditoria->accion = 'Actualización';
+          $auditoria->modulo = 'Servicios';
+          $auditoria->detalles = 'Servicio actualizado: ' . $servicio->id;
+          $auditoria->ip = request()->ip();
+          $auditoria->save();
+          
       
           return redirect()->route('gestion-servicios')->with('success', 'Servicio actualizado exitosamente.');
       }
@@ -84,6 +104,17 @@ class ServicioController extends Controller
        {
            $servicio = Servicio::findOrFail($id);
            $servicio->delete();
+
+           $user = Auth::user();
+
+           $auditoria = new Auditoria();
+           $auditoria->user_id = $user->id;
+           $auditoria->accion = 'Eliminación';
+           $auditoria->modulo = 'Servicios';
+           $auditoria->detalles = 'Servicio eliminado: ' . $servicio->id;
+           $auditoria->ip = request()->ip();
+           $auditoria->save();
+           
            return redirect()->route('gestion-servicios')->with('success', 'Servicio eliminado exitosamente.');
        }
        /**
@@ -94,6 +125,17 @@ class ServicioController extends Controller
             $servicio = Servicio::findOrFail($id);
             $servicio->estado = 'Inactivo';
             $servicio->save();
+
+            $user = Auth::user();
+
+            $auditoria = new Auditoria();
+            $auditoria->user_id = $user->id;
+            $auditoria->accion = 'Anulación';
+            $auditoria->modulo = 'Servicios';
+            $auditoria->detalles = 'Servicio anulado: ' . $servicio->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
+            
             return redirect()->route('gestion-servicios')->with('success', 'Servicio anulado exitosamente.');
         }
         /**
@@ -103,9 +145,21 @@ class ServicioController extends Controller
         {
             $servicio = Servicio::findOrFail($id);
 
+            $user = $servicio->datos_profesion->user->id;
+
             // Actualizar el estado del servicio a activo
             $servicio->estado = 'Activo'; 
             $servicio->save();
+
+
+            $auditoria = new Auditoria();
+            $auditoria->user_id = $user->id;
+            $auditoria->accion = 'Activación';
+            $auditoria->modulo = 'Servicios';
+            $auditoria->detalles = 'Servicio activado: ' . $servicio->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
+            
 
             return redirect()->route('gestion-servicios')->with('success', 'Servicio activado exitosamente.');
         }

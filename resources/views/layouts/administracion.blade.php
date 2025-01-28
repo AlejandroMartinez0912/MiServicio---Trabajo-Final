@@ -189,7 +189,7 @@
     <div class="sidebar">
         <a href={{ route('index-admin') }} class="active">Panel: Administrador</a>
         <a href="{{ route('admin-usuarios') }}">Usuarios</a>
-        <a href="#">Servicios</a>
+        <a href="{{ route('admin-servicios') }}">Servicios</a>
         <a href="#">Pagos</a>
         <a href="#">Auditoría</a>
         <a href="#">Estadísticas</a>

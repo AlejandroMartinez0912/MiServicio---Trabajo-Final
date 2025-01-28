@@ -147,7 +147,6 @@
                         <!-- nombre y apellido de usuario, que están en la tabla persona -->
                         <td>{{ $usuario->persona?->nombre }} {{ $usuario->persona?->apellido }}
                             <!-- link para ver perfil-->
-                            <a href="{{ route('admin-ver-perfil', ['id' => $usuario->id]) }}"">Ver Perfil</a>
                         </td>
                         <!-- Mail -->
                         <td>{{ $usuario->email }}</td>
@@ -165,61 +164,8 @@
 
                         <!-- Acciones -->
                         <td>
-                            @if ($usuario->estado==1)
-                                <!-- Botón para abrir el modal -->
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#desactivarModal{{ $usuario->id }}">
-                                    Desactivar Cuenta
-                                </button>
+                            <a href="{{ route('admin-ver-perfil', ['id' => $usuario->id]) }}"">Ver Perfil</a>
 
-                                <!-- Modal de desactivación -->
-                                <div class="modal fade" id="desactivarModal{{ $usuario->id }}" tabindex="-1" aria-labelledby="desactivarModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="desactivarModalLabel">Confirmación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas desactivar esta cuenta? Esta acción es irreversible.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('usuarios-desactivar', $usuario->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-danger">Desactivar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @else
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#activarModal{{ $usuario->id }}">
-                                    Activar Cuenta
-                                </button>
-                                <!-- Modal para Activar Cuenta -->
-                                <div class="modal fade" id="activarModal{{ $usuario->id }}" tabindex="-1" aria-labelledby="activarModalLabel{{ $usuario->id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="activarModalLabel{{ $usuario->id }}">Confirmar Activación de Cuenta</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p>¿Estás seguro de que deseas activar la cuenta de <strong>{{ $usuario->name }}</strong>?</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <!-- Formulario de activación -->
-                                                <form action="{{ route('usuarios-activar', $usuario->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success">Activar Cuenta</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
                         </td>
                     </tr>
                 @endif
@@ -250,7 +196,7 @@
                         <td>{{ $profesion->nombre_fantasia }}</td>
 
                         <!-- nombre y apellido de usuario, que estan en la tabla persona-->
-                        <td>{{ $usuario->persona?->nombre  }} {{ $usuario->persona?->apellido }}</td>
+                        <td>{{ $profesion->user->persona->nombre  }} {{ $profesion->user->persona->apellido }}</td>
                         <!-- Mail-->
                         <td>{{ $profesion->user->email }}</td>
 
@@ -267,59 +213,9 @@
                         
                         <!-- Acciones -->
                         <td>
-                            @if ($profesion->estado == 1)
-                                <!-- Modal para desactivar cuenta de Profesional -->
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#desactivarModalProfesion{{ $profesion->id }}">
-                                    Desactivar Profesional
-                                </button>
-                                <div class="modal fade" id="desactivarModalProfesion{{ $profesion->id }}" tabindex="-1" aria-labelledby="desactivarModalProfesionLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="desactivarModalProfesionLabel">Confirmación</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas desactivar esta cuenta de profesional? Esta acción es irreversible.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <form action="{{ route('desactivar-Profesional', $profesion->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-danger">Desactivar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            @else
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#activarModal{{ $profesion->id }}">Activar Profesional</button>
-
-                                <!-- Modal para Activar Profesional -->
-                                <div class="modal fade" id="activarModal{{ $profesion->id }}" tabindex="-1" aria-labelledby="activarModalLabel{{ $profesion->id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="activarModalLabel{{ $profesion->id }}">Activar Profesional</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                ¿Estás seguro de que deseas activar este profesional?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                <!-- Formulario de activación -->
-                                                <form action="{{ route('activar-Profesional', $profesion->id) }}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success">Activar</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
+                            <!-- link para ver perfil profesion -->
+                            <a href="{{ route('admin-ver-perfil-profesion', ['idProfesion' => $profesion->id]) }}"">Ver Perfil</a>
+                            
                         </td>
                     </tr>
                 @endif

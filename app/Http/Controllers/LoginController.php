@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Persona;
+use App\Models\Auditoria;
+
 
 class LoginController extends Controller
 {
@@ -26,6 +28,7 @@ class LoginController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->role = "user";
+        $user->estado = 1;
         $user->save();
 
         // Crear automáticamente el perfil (persona) asociado al usuario
@@ -37,7 +40,17 @@ class LoginController extends Controller
         $persona->fecha_nacimiento = $request->fecha_nacimiento;
         $persona->documento = $request->documento;
         $persona->telefono = $request->telefono;
+
         $persona->save();
+
+        $auditoria = new Auditoria();
+        $auditoria->user_id = $user->id;
+        $auditoria->accion = 'Creación';
+        $auditoria->modulo = 'Usuarios';
+        $auditoria->detalles = 'El usuario creó un nuevo usuario';
+        $auditoria->ip = request()->ip();
+        $auditoria->save();
+        
 
 
         // Iniciar sesión automáticamente después de registrarse
@@ -64,6 +77,8 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember'); // Verificar si el usuario desea que se lo recuerde
 
+
+
         // Intentar autenticar al usuario
         if (Auth::attempt($credentials, $remember)) {
             // Regenerar la sesión para mayor seguridad
@@ -75,6 +90,12 @@ class LoginController extends Controller
             if ($user->role === 'admin') {
                 // Redirigir al panel de administrador
                 return redirect()->route('index-admin');
+            }
+
+            // Verificar el estado del usuario
+            if ($user->estado == 0) {
+                // Redirigir con un mensaje de error si el estado es 0
+                return redirect()->route('login')->with(['error' => 'Tu cuenta está inactiva. Por favor, contacta al administrador.']);
             }
 
             // Redirigir a la página principal de usuarios normales

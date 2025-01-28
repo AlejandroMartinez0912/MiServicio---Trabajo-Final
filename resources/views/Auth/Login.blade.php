@@ -6,6 +6,9 @@
     <title>MiServicio | Login</title>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="icon" href="{{ asset('Images/logo.png') }}" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
@@ -174,5 +177,37 @@
     </form>
     <p>¿No tienes una cuenta? <a href="{{ route('register') }}">¡Regístrate!</a></p>
 </div>
+ <!-- Script para alertas-->
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: '{{ session('success') }}',
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
+
+        @if(session('info'))
+            Swal.fire({
+                icon: 'info',
+                title: 'Información',
+                text: '{{ session('info') }}',
+                confirmButtonText: 'Aceptar'
+            });
+        @endif
+    });
+</script>
 </body>
+   
 </html>

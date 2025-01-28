@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 setlocale(LC_TIME, 'es_ES.UTF-8');
 use App\Models\Calificacion;        
 use Illuminate\Support\Facades\DB;
+use App\Models\Auditoria;
 
 
 
@@ -163,6 +164,14 @@ class CitaController extends Controller
         $user = User::findOrFail($persona->user_id);
         $usuario = User::findOrFail($user->id);
         Mail::to($usuario->email)->send(new CitaRegistrada($cita));
+
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Creo';
+            $auditoria->modulo = 'Citas';
+            $auditoria->detalles = 'Creacion de cita: ' . $cita->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
 
         
         // Redirigir con éxito
@@ -345,7 +354,13 @@ class CitaController extends Controller
         $usuario = User::findOrFail($user->id);
         Mail::to($usuario->email)->send(new CitaRechazada($cita));
 
-
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Eliminar';
+            $auditoria->modulo = 'Cita';
+            $auditoria->detalles = 'Cita eliminada: ' . $cita->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
 
         return redirect()->route('gestion-servicios')->with('success', 'Cita cancelada con éxito.');
 

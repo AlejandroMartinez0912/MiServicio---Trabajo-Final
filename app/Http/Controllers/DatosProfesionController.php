@@ -9,6 +9,7 @@ use App\Models\Dia;
 use App\Models\HorarioTrabajo;
 use App\Models\Persona;
 use App\Models\User;
+use App\Models\Auditoria;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -53,6 +54,14 @@ class DatosProfesionController extends Controller
             Persona::where('user_id', $userId)->update(['estado_profesional' => 1]);
         }
 
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Crear';
+            $auditoria->modulo = 'Datos Profesion';
+            $auditoria->detalles = 'Datos Profesionales creados'. $datosProfesion->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
+
 
         // Devolver una respuesta
         return redirect()->route('gestion-servicios')->with('success', 'Datos guardados correctamente.');
@@ -82,6 +91,14 @@ class DatosProfesionController extends Controller
         //$datosProfesion->experiencia = $validatedData['experiencia'];   
         $datosProfesion->estado = $validatedData['estado'];
         $datosProfesion->save();
+
+        $auditoria = new Auditoria();
+            $auditoria->user_id = Auth::user()->id;
+            $auditoria->accion = 'Actualizar';
+            $auditoria->modulo = 'DatoProfesion';
+            $auditoria->detalles = 'Datos Profesion actualizado: ' . $datosProfesion->id;
+            $auditoria->ip = request()->ip();
+            $auditoria->save();
 
         return redirect()->route('gestion-servicios')->with('success', 'Datos actualizados correctamente.');
     }

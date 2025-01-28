@@ -69,7 +69,7 @@ Route::post('/servicios', [ServicioController::class, 'guardarServicio'])->name(
 Route::put('/servicios/{id}', [ServicioController::class, 'actualizarServicio'])->name('actualizar-servicio')->middleware('auth');
 Route::delete('/servicios/{id}', [ServicioController::class, 'eliminarServicio'])->name('eliminar-servicio')->middleware('auth');
 Route::put('/servicios/{id}/anular', [ServicioController::class, 'anularServicio'])->name('anular-servicio');
-Route::put('/servicios/{id}/activar', [ServicioController::class, 'activarServicio'])->name('activar-servicio');
+Route::post('/servicios/{id}/activar', [ServicioController::class, 'activarServicio'])->name('activar-servicio');
 
 //RUTAS DE CITAS
 Route::get('/cita', [CitaController::class, 'index'])->name('index-cita')->middleware('auth');
@@ -123,6 +123,16 @@ Route::post('/profesional/{idProfesion}/activar', [AdministradorController::clas
 
 //ver perfil usuario cliente. 
 Route::get('/admin/perfil/{id}', [AdministradorController::class, 'verPerfil'])->name('admin-ver-perfil');
+Route::get ('/admin/perfil-profesional/{idProfesion}', [AdministradorController::class, 'verPerfilProfesional'])->name('admin-ver-perfil-profesion');
+
+//ACTUALIZAR PERFIL
+Route::post('/actualizar-perfil/{id}', [AdministradorController::class, 'actualizarPerfil'])->name('admin-actualizar-perfil');
+//Activar y desactivar servicios
+Route::post('/desactivar-servicio/{id}', [AdministradorController::class, 'desactivarServicio'])->name('desactivar-servicio');
+Route::post('/servicio/{id}/activar', [AdministradorController::class, 'activarServicio'])->name('activar-servicio');
+
+//ACTUALIZAR SERVICIO ADMIN
+Route::put('/actualizar-servicio/{id}', [AdministradorController::class, 'actualizarServicio'])->name('admin-actualizar-servicio');
 
 
 Route::get('/admin/servicios', [AdministradorController::class, 'servicios'])->name('admin-servicios');
