@@ -19,6 +19,11 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Para estadisticas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
     <link rel="icon" href="{{ asset('Images/logo.png') }}" type="image/png">
 
 
@@ -192,7 +197,7 @@
         <a href="{{ route('admin-servicios') }}">Servicios</a>
         <a href="#">Pagos</a>
         <a href="{{ route('admin-auditoria')}}">Auditoría</a>
-        <a href="#">Estadísticas</a>
+        <a href="{{ route('admin-estadisticas')}}">Estadísticas</a>
         <a href="#">Configuración</a>
     </div>
 

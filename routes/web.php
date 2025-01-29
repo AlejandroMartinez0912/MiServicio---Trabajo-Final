@@ -144,3 +144,10 @@ Route::get('/admin/pagos', [AdministradorController::class, 'pagos'])->name('adm
 Route::get('/auditorias', [AdministradorController::class, 'auditorias'])->name('admin-auditoria');
 Route::get('/auditorias/pdf', [AdministradorController::class, 'generatePdf'])->name('auditorias.pdf');
 
+//Rutas estadisticas
+Route::get('/admin/estadisticas', [AdministradorController::class, 'estadisticas'])->name('admin-estadisticas');
+Route::get('/exportar-excel', [AdministradorController::class, 'exportarExcel'])->name('exportar-excel');
+Route::get('/reportes/optimizar-precios', [AdministradorController::class, 'optimizarPrecios'])->name('reportes.optimizar-precios');
+Route::get('/reportes/mejores-servicios', [AdministradorController::class, 'mejoresServicios'])->name('reportes.mejores-servicios');
+
+
