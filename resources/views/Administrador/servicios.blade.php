@@ -188,7 +188,7 @@
                                         <div class="modal-body">
                                             <form method="POST" action="{{ route('admin-actualizar-servicio', $servicio->id) }}">
                                                 @csrf
-                                                @method('PUT')
+                                                @method('POST')
                                                 <input type="hidden" name="servicio_id" value="{{ $servicio->id }}">
                                                 <div class="mb-3">
                                                     <label for="nombre" class="form-label">Nombre:</label>

@@ -191,7 +191,7 @@
         <a href="{{ route('admin-usuarios') }}">Usuarios</a>
         <a href="{{ route('admin-servicios') }}">Servicios</a>
         <a href="#">Pagos</a>
-        <a href="#">Auditoría</a>
+        <a href="{{ route('admin-auditoria')}}">Auditoría</a>
         <a href="#">Estadísticas</a>
         <a href="#">Configuración</a>
     </div>

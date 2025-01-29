@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\AdministradorController;
-use Symfony\Component\HttpKernel\DependencyInjection\RegisterControllerArgumentLocatorsPass;
+use Barryvdh\DomPDF\Facade as PDF;
+
 
 // Ruta de página principal llamada Home
 Route::view('/', "Home.home")->name('home');
@@ -133,7 +134,13 @@ Route::post('/servicio/{id}/activar', [AdministradorController::class, 'activarS
 
 //ACTUALIZAR SERVICIO ADMIN
 Route::put('/actualizar-servicio/{id}', [AdministradorController::class, 'actualizarServicio'])->name('admin-actualizar-servicio');
+Route::post('/actualizar-servicio/{id}', [AdministradorController::class, 'actualizarServicio'])->name('admin-actualizar-servicio');
 
 
 Route::get('/admin/servicios', [AdministradorController::class, 'servicios'])->name('admin-servicios');
 Route::get('/admin/pagos', [AdministradorController::class, 'pagos'])->name('admin-pagos');
+
+//rutas de auditorias
+Route::get('/auditorias', [AdministradorController::class, 'auditorias'])->name('admin-auditoria');
+Route::get('/auditorias/pdf', [AdministradorController::class, 'generatePdf'])->name('auditorias.pdf');
+

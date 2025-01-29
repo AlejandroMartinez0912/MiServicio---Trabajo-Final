@@ -167,7 +167,7 @@ class CitaController extends Controller
 
         $auditoria = new Auditoria();
             $auditoria->user_id = Auth::user()->id;
-            $auditoria->accion = 'Creo';
+            $auditoria->accion = 'Creación';
             $auditoria->modulo = 'Citas';
             $auditoria->detalles = 'Creacion de cita: ' . $cita->id;
             $auditoria->ip = request()->ip();

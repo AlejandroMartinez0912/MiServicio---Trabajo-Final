@@ -7,16 +7,12 @@ use App\Models\User;
 use App\Models\DatosProfesion;
 use App\Models\Servicio;
 use App\Models\Cita;
-use App\Models\Calificacion;
-use App\Models\CalificacionCliente;
 use App\Models\CalificacionProfesion;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use App\Models\Rubro;
-use App\Models\MercadoPagoAccount;
 use App\Models\Auditoria;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade as PDF;
+
+
 
 
 class AdministradorController extends Controller
@@ -209,6 +205,7 @@ class AdministradorController extends Controller
     //actualizar servicio
     public function actualizarServicio(Request $request, $id){
 
+        
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'required|string',
@@ -278,5 +275,19 @@ class AdministradorController extends Controller
     public function pagos()
     {
         return view('Administrador.pagos');
+    }
+
+
+    /**
+     * LOGICA DE AUDITORIAS
+     */
+
+     // AUDITORIAS.BLADE.PHP
+     public function auditorias(){
+        $auditorias = Auditoria::all();
+        return view('Administrador.auditorias', compact('auditorias'));
+    }
+    public function generatePdf()
+    {
     }
 }
