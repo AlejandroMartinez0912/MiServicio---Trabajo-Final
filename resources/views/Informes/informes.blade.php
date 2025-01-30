@@ -243,8 +243,8 @@
                                 }
                             @endphp
                             <td>{{ $cita->estado }}</td>
-                            <td>{{ $cita->calificacionesProfesion->avg('calificacion') ?? 'No disponible' }}</td>
-                            <td>{{ $cita->calificacionesCliente->avg('calificacion') ?? 'No disponible' }}</td>
+                            <td>{{ $cita->calificacionesProfesion->calificacion ?? 'No disponible' }}</td>
+                            <td>{{ $cita->calificacionesCliente->calificacion ?? 'No disponible' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -294,8 +294,8 @@
                         "{{ $cita->servicio->nombre }}",
                         "{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d-m-Y H:i') }}",
                         "{{ $cita->estado == 4 ? 'Pagada' : ($cita->estado == 3 ? 'Re-confirmada' : ($cita->estado == 2 ? 'Cancelada' : ($cita->estado == 1 ? 'Confirmada' : 'Pendiente'))) }}",
-                        "{{ $cita->calificacionesProfesion->avg('calificacion') ?? 'No disponible' }}",
-                        "{{ $cita->calificacionesCliente->avg('calificacion') ?? 'No disponible' }}"
+                        "{{ $cita->calificacionesProfesion->calificacion ?? 'No disponible' }}",
+                        "{{ $cita->calificacionesCliente->calificacion ?? 'No disponible' }}"
                     ]);
                 @endforeach
 

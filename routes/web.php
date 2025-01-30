@@ -82,6 +82,12 @@ Route::get('cita/agendar', [CitaController::class, 'agendarCita'])
 
 Route::post('/citas/guardar', [CitaController::class, 'guardarCita'])->name('guardar-cita')->middleware('auth');
 
+Route::put('/citas/{id}', [CitaController::class, 'actualizarCita'])->name('actualizar-cita');
+
+Route::post('/cancelar-cita', [CitaController::class, 'cancelarCita'])->name('cancelar-cita');
+
+
+
 // Ruta para confirmar cita con 
 Route::post('/confirmar-cita', [CitaController::class, 'confirmarCita'])->name('confirmar-cita');
 Route::post ('/cancelar-cita', [CitaController::class, 'cancelarCita'])->name('cancelar-cita');

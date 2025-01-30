@@ -180,7 +180,7 @@
             <form action="{{ route('guardar-datos') }}" method="POST" class="p-4">
                 @csrf
             
-                <h3 text-white class="text-uppercase font-weight-bold text-dark mb-4">Datos Profesionales</h3>
+                <h3 text-white class="text-uppercase font-weight-bold text-dark mb-4" style="color: white">Datos Profesionales</h3>
                 
                 <!-- Sección: Nombre -->
                 <div class="row mb-4">

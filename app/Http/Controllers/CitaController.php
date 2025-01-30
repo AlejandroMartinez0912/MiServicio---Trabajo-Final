@@ -98,7 +98,6 @@ class CitaController extends Controller
             }
         }
 
-
         return view('Cita.agendar', compact('servicio', 'persona',
         'datosProfesion','citas', 'diasDeTrabajo'));
     }
@@ -299,6 +298,47 @@ class CitaController extends Controller
         return true;
     }
 
+
+    //Actualizar cita
+    public function actualizarCita(Request $request, $id)
+    {
+        $cita = Cita::findOrFail($id);
+
+        // Obtener los nuevos datos
+        $fechaCita = $request->input('fecha');
+        $horaInicio = $request->input('horaInicio');
+        $idServicio = $request->input('servicio_id');
+
+        // Calcular la nueva hora de fin
+        $horaFin = $this->HoraFin($horaInicio, $idServicio);
+
+        // Verificar disponibilidad
+        $mensaje = "";
+        if (!$this->verificarDiaHora($fechaCita, $horaInicio, $idServicio, $mensaje) ||
+            !$this->verificarCita($fechaCita, $horaInicio, $horaFin, $idServicio, $mensaje)) {
+            return redirect()->back()->with('error', $mensaje);
+        }
+
+        // Actualizar la cita
+        $cita->fechaCita = Carbon::parse($fechaCita);
+        $cita->horaInicio = $horaInicio;
+        $cita->horaFin = $horaFin;
+        $cita->idServicio = $idServicio;
+        $cita->estado = 0;
+        $cita->save();
+
+        // Registrar auditoría
+        $auditoria = new Auditoria();
+        $auditoria->user_id = Auth::user()->id;
+        $auditoria->accion = 'Edición';
+        $auditoria->modulo = 'Citas';
+        $auditoria->detalles = 'Modificación de cita: ' . $cita->id;
+        $auditoria->ip = request()->ip();
+        $auditoria->save();
+
+        return redirect()->back()->with('success', 'Cita actualizada correctamente.');
+    }
+
     /**
      * Confirmar cita especialista
      */
@@ -362,7 +402,7 @@ class CitaController extends Controller
             $auditoria->ip = request()->ip();
             $auditoria->save();
 
-        return redirect()->route('gestion-servicios')->with('success', 'Cita cancelada con éxito.');
+        return redirect()->back()->with('success', 'Cita cancelada con éxito.');
 
     }
 

@@ -69,8 +69,6 @@ class InformesController extends Controller
         if ($request->has('fechaCita') && $request->fechaCita != '') {
             $query->whereDate('fechaCita', $request->fechaCita);
         }
-
-        
         
         // Obtener las citas filtradas
         $citas = $query->get();

@@ -23,6 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
+    <link href="https://unpkg.com/boxicons/css/boxicons.min.css" rel="stylesheet">
 
     <link rel="icon" href="{{ asset('Images/logo.png') }}" type="image/png">
 
@@ -192,10 +193,9 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href={{ route('index-admin') }} class="active">Panel: Administrador</a>
-        <a href="{{ route('admin-usuarios') }}">Usuarios</a>
-        <a href="{{ route('admin-servicios') }}">Servicios</a>
-        <a href="#">Pagos</a>
+        <a href={{ route('index-admin') }}>Panel: Administrador</a>
+        <a href="{{ route('admin-usuarios') }}">Gestión de Usuarios</a>
+        <a href="{{ route('admin-servicios') }}">Gestión deServicios</a>
         <a href="{{ route('admin-auditoria')}}">Auditoría</a>
         <a href="{{ route('admin-estadisticas')}}">Estadísticas</a>
         <a href="#">Configuración</a>
@@ -204,12 +204,19 @@
     <!-- Main content -->
     <div class="main-content">
         <!-- Navbar -->
-        <nav>
+        <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: #333; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             <div>
-                <a href="#">MiServicio</a>
+                <a href="#" 
+                style="color: #ff00cc; font-size: 1.8rem; font-family: Arial, sans-serif; font-weight: bold; text-decoration: none; transition: color 0.3s;">
+                MiServicio
+                </a>
             </div>
+            
             <div>
-                <a href="{{ route('logout') }}">Cerrar sesión</a>
+                <a href="{{ route('logout') }}" 
+                style="color: white; font-size: 1.2rem; font-family: Arial, sans-serif; display: flex; align-items: center; text-decoration: none; transition: color 0.3s;">
+                <i class="bx bx-log-out" style="font-size: 1.5rem; margin-right: 8px;"></i>
+                </a>
             </div>
         </nav>
 
