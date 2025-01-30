@@ -34,9 +34,6 @@
                 <li class="nav-item">
                     <a class="nav-link" onclick="showSection('caja')"><i class='bx bx-dollar'></i> Caja</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick="showSection('informes')"><i class='bx bx-dollar'></i> Informes</a>
-                </li>
                 
             </ul>
         </div>
@@ -1971,10 +1968,7 @@
     
 </div>
 
-<div id="informes" class="section" style="display: none;">
-    <h1>Informes</h1>
-    <p>Contenido de la sección Informes.</p>
-</div>
+
 
 
 

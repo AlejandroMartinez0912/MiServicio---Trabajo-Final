@@ -15,6 +15,8 @@ use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CalificacionController;
 use App\Http\Controllers\AdministradorController;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\InformesController;
 
 
 // Ruta de página principal llamada Home
@@ -150,4 +152,11 @@ Route::get('/exportar-excel', [AdministradorController::class, 'exportarExcel'])
 Route::get('/reportes/optimizar-precios', [AdministradorController::class, 'optimizarPrecios'])->name('reportes.optimizar-precios');
 Route::get('/reportes/mejores-servicios', [AdministradorController::class, 'mejoresServicios'])->name('reportes.mejores-servicios');
 
+
+/**
+ * RUTAS INFORMES
+ */
+Route::get('/informes', [InformesController::class, 'index'])->name('informes');
+Route::get('informes/exportar-pdf', [InformesController::class, 'exportarPDF'])->name('informes.exportar-pdf');
+Route::get('informes/exportar-excel', [InformesController::class, 'exportarExcel'])->name('informes.exportar-excel');
 

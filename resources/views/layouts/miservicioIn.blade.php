@@ -169,12 +169,19 @@
                     <i class="bx bx-briefcase-alt"></i>
                 </a>
             </button>
+            <!-- informes -->
+            <button class="button">
+                <a class="dropdown-item" href="{{ route('informes') }}" title="Informes">
+                    <i class="bx bx-file"></i>
+                </a>
+            </button>
             <!-- citas -->
             <button class="button">
                 <a class="dropdown-item" href="{{ route('index-cita') }}" title="Mis citas">
                     <i class="bx bx-calendar"></i>
                 </a>
             </button>
+            
             <!-- salir -->
             <button class="button">
                 <a class="dropdown-item" href="{{ route('logout') }}" title="Salir">
