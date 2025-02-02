@@ -110,7 +110,7 @@
 
 <style>
     .card {
-        background: #222;
+        background: #333;
         border: none;
         border-radius: 15px;
         color: #eaeaea;
@@ -154,7 +154,7 @@
 <!-- Agregar Font Awesome -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <div class="container" style="background:black; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); color: #f8f9fa;">
+    <div class="container" style="background:#222; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3); color: #f8f9fa;">
         <h2>Informes de Citas</h2>
 
         <!-- Formulario de filtros -->

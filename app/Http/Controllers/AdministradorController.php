@@ -173,6 +173,16 @@ class AdministradorController extends Controller
         $servicios = Servicio::with('datosProfesion.user.persona')->get();
         return view('Administrador.servicios', compact('servicios'));
     }
+
+    //Ver servicio en especifico
+    public function verServicio($id){
+        //Rubros
+        $rubros = Rubro::all();
+
+        $servicio = Servicio::with('rubros')->findOrFail($id);
+
+        return view('Administrador.servicioIn', compact('servicio', 'rubros'));
+    }
     
     // desactivar servicio
     public function desactivarServicio($id){
@@ -209,20 +219,19 @@ class AdministradorController extends Controller
     //actualizar servicio
     public function actualizarServicio(Request $request, $id){
 
-        
-        $request->validate([
-            'nombre' => 'required|string|max:255',
-            'descripcion' => 'required|string',
-            'precio_base' => 'required|numeric|min:0',
-            'duracion_estimada' => 'nullable|numeric|min:0',
-        ]);
+        $servicio = Servicio::findOrFail($id);
+      
+          // Actualizamos los datos del servicio
+          $servicio->update([
+              'nombre' => $request->nombre,
+              'descripcion' => $request->descripcion,
+              'precio_base' => $request->precio_base,
+              'duracion_estimada' => $request->duracion_estimada,
+          ]);
+      
+        // Actualizamos los rubros asociados (tabla pivote)
+        $servicio->rubros()->sync($request->rubros);
 
-        $servicio = Servicio::find($id);
-        $servicio->nombre = $request->input('nombre');
-        $servicio->descripcion = $request->input('descripcion');
-        $servicio->precio_base = $request->input('precio_base');
-        $servicio->duracion_estimada = $request->input('duracion_estimada');
-        $servicio->save();
 
         $auditoria = new Auditoria();
             $auditoria->user_id = 9;

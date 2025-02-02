@@ -141,11 +141,11 @@ Route::post('/desactivar-servicio/{id}', [AdministradorController::class, 'desac
 Route::post('/servicio/{id}/activar', [AdministradorController::class, 'activarServicio'])->name('activar-servicio');
 
 //ACTUALIZAR SERVICIO ADMIN
-Route::put('/actualizar-servicio/{id}', [AdministradorController::class, 'actualizarServicio'])->name('admin-actualizar-servicio');
-Route::post('/actualizar-servicio/{id}', [AdministradorController::class, 'actualizarServicio'])->name('admin-actualizar-servicio');
+Route::put('/admin/servicios/{id}', [AdministradorController::class, 'actualizarServicio'])->name('admin-actualizar-servicio');
 
 
 Route::get('/admin/servicios', [AdministradorController::class, 'servicios'])->name('admin-servicios');
+Route::get('/admin/servicio/{id}', [AdministradorController::class, 'verServicio'])->name('admin-ver-servicio');
 Route::get('/admin/pagos', [AdministradorController::class, 'pagos'])->name('admin-pagos');
 
 //rutas de auditorias

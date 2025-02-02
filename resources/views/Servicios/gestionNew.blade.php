@@ -1841,6 +1841,83 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <!-- Botón Exportar a PDF con icono -->
+                <a href="#" id="exportPdf" class="btn btn-success" style="background: red" margin-top: 20px>
+                    <i class="fas fa-file-pdf"></i> Exportar a PDF
+                </a>
+
+                <!-- script para exportar a pdf -->
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.22/jspdf.plugin.autotable.min.js"></script>
+                <script>
+                    // Esperamos a que el DOM esté completamente cargado
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Obtener el botón de exportación a PDF
+                        const exportPdfButton = document.querySelector('#exportPdf');
+
+                        // Función para generar el PDF
+                        exportPdfButton.addEventListener('click', function() {
+                            const { jsPDF } = window.jspdf;  // Desestructuración de jsPDF
+                            const doc = new jsPDF();
+                            
+                            // Agregar título
+                            doc.setFontSize(18);
+                            doc.text("Informes de Citas", 14, 20);
+
+                            // Establecer el estilo de la tabla
+                            doc.setFontSize(10);
+                            const startX = 14;
+                            const startY = 30;
+                            const rowHeight = 10;
+                            
+                            // Encabezados de la tabla
+                            const headers = ["Servicio", "Fecha de Cita", "Estado", "Calificación Profesional", "Calificación Cliente"];
+                            const data = [];
+
+                            // Llenar los datos de la tabla
+                            @foreach($citas as $cita)
+                                data.push([
+                                    "{{ $cita->servicio->nombre }}",
+                                    "{{ \Carbon\Carbon::parse($cita->fechaCita)->format('d-m-Y H:i') }}",
+                                    "{{ $cita->estado == 4 ? 'Pagada' : ($cita->estado == 3 ? 'Re-confirmada' : ($cita->estado == 2 ? 'Cancelada' : ($cita->estado == 1 ? 'Confirmada' : 'Pendiente'))) }}",
+                                    "{{ $cita->calificacionesProfesion->calificacion ?? 'No disponible' }}",
+                                    "{{ $cita->calificacionesCliente->calificacion ?? 'No disponible' }}"
+                                ]);
+                            @endforeach
+
+                            // Dibujar encabezados y cuerpo de la tabla
+                            doc.autoTable({
+                                head: [headers],
+                                body: data,
+                                startY: startY,
+                                theme: 'grid',
+                                headStyles: { 
+                                    fillColor: [0, 102, 204],  // Azul más suave
+                                    textColor: [255, 255, 255],  // Blanco para el texto
+                                    fontSize: 12,  // Tamaño de letra en encabezado
+                                    halign: 'center'  // Centrado de texto
+                                },
+                                bodyStyles: {
+                                    fontSize: 10,  // Tamaño de letra en las filas
+                                    halign: 'center'  // Centrado de texto en las celdas
+                                },
+                                columnStyles: {
+                                    0: { cellWidth: 40 },  // Ajustar el tamaño de la primera columna
+                                    1: { cellWidth: 40 },  // Ajustar el tamaño de la segunda columna
+                                    2: { cellWidth: 40 },  // Ajustar el tamaño de la tercera columna
+                                    3: { cellWidth: 40 },  // Ajustar el tamaño de la cuarta columna
+                                    4: { cellWidth: 40 }   // Ajustar el tamaño de la quinta columna
+                                },
+                                margin: { top: 20 },
+                                rowHeight: rowHeight,  // Altura de las filas
+                            });
+
+                            // Descargar el PDF
+                            doc.save('informes_citas.pdf');
+                        });
+                    });
+                </script>
                 
             </div>
             
@@ -1967,10 +2044,6 @@
     </style>
     
 </div>
-
-
-
-
 
 
 @endsection
