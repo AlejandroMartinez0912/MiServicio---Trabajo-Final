@@ -194,15 +194,6 @@
         </table>
     </div>
 
-    <!-- Botón para descargar PDF de cada informe -->
-    <div class="btn-group">
-        <button class="btn btn-primary" id="descargar-pdf-informe1">Descargar PDF Informe 1</button>
-        <button class="btn btn-primary" id="descargar-pdf-informe2">Descargar PDF Informe 2</button>
-        <button class="btn btn-primary" id="descargar-pdf-informe3">Descargar PDF Informe 3</button>
-        <button class="btn btn-primary" id="descargar-pdf-informe4">Descargar PDF Informe 4</button>
-        <button class="btn btn-primary" id="descargar-pdf-todo">Descargar PDF de Toda la Página</button>
-        <button class="btn btn-success" id="descargar-excel">Descargar Excel</button>
-    </div>
 
 </div>
 
@@ -229,7 +220,7 @@
     });
 </script>
 
-<!-- PDF y Excel -->
+
 
 
 

@@ -89,54 +89,57 @@
 <div class="container mt-5">
     <div class="row justify-content-start g-4"> <!-- Clase 'g-4' para espaciado uniforme entre tarjetas -->
         @foreach ($servicios as $servicio)
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center"> <!-- Ajuste de columnas responsivas -->
-                <div class="card">
-                    <div class="title">
-                        <span>{{ $servicio->nombre }}</span>
-                    </div>
-                    <div class="size">
-                        <p>{{ $servicio->descripcion }}</p>
-                        <p>
-                            <strong>Calificación:</strong>
-                            @if ($servicio->calificacion == 0)
-                                No calificado
-                            @else
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $servicio->calificacion)
-                                        <i class='bx bxs-star text-warning'></i>
-                                    @else
-                                        <i class='bx bx-star text-muted'></i>
-                                    @endif
-                                @endfor
-                            @endif
-                        </p>
-                        <p>
-                            @php
-                                $duracionEstimada = \Carbon\Carbon::parse($servicio->duracion_estimada);
-                                $duracionEnMinutos = $duracionEstimada->hour * 60 + $duracionEstimada->minute;
-                            @endphp
-                            <strong>Duración:</strong> {{ floor($duracionEnMinutos / 60) }}h {{ $duracionEnMinutos % 60 }}m
-                        </p>
-                        <p>
-                            @php
-                                $especialista = $servicio->datosProfesion->user->persona;
-                                $especialistaNombre = $especialista->nombre;
-                                $especialistaApellido = $especialista->apellido;
-                            @endphp
-                            <strong>Especialista:</strong> {{$especialistaNombre}} {{$especialistaApellido}}
-                        </p>
-                    </div>
+            @if ($servicio->estado == 'activo')
 
-                    <div class="action">
-                        <div class="price">
-                            <span>${{ number_format($servicio->precio_base, 2) }}</span>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center"> <!-- Ajuste de columnas responsivas -->
+                    <div class="card">
+                        <div class="title">
+                            <span>{{ $servicio->nombre }}</span>
                         </div>
+                        <div class="size">
+                            <p>{{ $servicio->descripcion }}</p>
+                            <p>
+                                <strong>Calificación:</strong>
+                                @if ($servicio->calificacion == 0)
+                                    No calificado
+                                @else
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $servicio->calificacion)
+                                            <i class='bx bxs-star text-warning'></i>
+                                        @else
+                                            <i class='bx bx-star text-muted'></i>
+                                        @endif
+                                    @endfor
+                                @endif
+                            </p>
+                            <p>
+                                @php
+                                    $duracionEstimada = \Carbon\Carbon::parse($servicio->duracion_estimada);
+                                    $duracionEnMinutos = $duracionEstimada->hour * 60 + $duracionEstimada->minute;
+                                @endphp
+                                <strong>Duración:</strong> {{ floor($duracionEnMinutos / 60) }}h {{ $duracionEnMinutos % 60 }}m
+                            </p>
+                            <p>
+                                @php
+                                    $especialista = $servicio->datosProfesion->user->persona;
+                                    $especialistaNombre = $especialista->nombre;
+                                    $especialistaApellido = $especialista->apellido;
+                                @endphp
+                                <strong>Especialista:</strong> {{$especialistaNombre}} {{$especialistaApellido}}
+                            </p>
+                        </div>
+
+                        <div class="action">
+                            <div class="price">
+                                <span>${{ number_format($servicio->precio_base, 2) }}</span>
+                            </div>
+                        </div>
+                        <a href="{{ route('agendar-cita', ['idServicio' => $servicio->id]) }}" class="cart-button">
+                            <span>Agendar cita</span>
+                        </a>
                     </div>
-                    <a href="{{ route('agendar-cita', ['idServicio' => $servicio->id]) }}" class="cart-button">
-                        <span>Agendar cita</span>
-                    </a>
                 </div>
-            </div>
+            @endif
         @endforeach
     </div>
 </div>

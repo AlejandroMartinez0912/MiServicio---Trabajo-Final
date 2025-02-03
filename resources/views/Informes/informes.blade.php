@@ -259,6 +259,7 @@
                 <i class="fas fa-file-excel"></i> Exportar a Excel
             </a>
         @endif
+        
     </div>
     <!-- script para exportar a pdf -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
