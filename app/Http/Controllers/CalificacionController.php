@@ -27,10 +27,12 @@ class CalificacionController extends Controller
     public function VerCalificacionesPendientes()
     {
         $id = Auth::user()->id;
+        $persona = Persona::where('user_id', $id)->first();
+        $idPersona = $persona->id;
 
         // Obtener las citas pendientes
         $citasPendientes = Cita::where('calificacion_profesion', 0)
-            ->where('idPersona', $id)
+            ->where('idPersona', $idPersona)
             ->where('estado', 4)
             ->get();
 

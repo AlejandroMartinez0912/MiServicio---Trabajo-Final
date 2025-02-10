@@ -68,4 +68,10 @@ class User extends Authenticatable
         return $this->hasOne(MercadoPagoAccount::class);
     }
 
+    //RELACION CON FACTURAS LUEGO QUE REALIZA EL PAGO.  1 USUARIO 1..* FACTURAS
+    public function facturas()
+    {
+        return $this->hasMany(Factura::class);
+    }
+
 }

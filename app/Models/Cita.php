@@ -58,4 +58,10 @@ class Cita extends Model
         return $this->hasOne(CalificacionProfesion::class, 'idCita', 'idCita');
     }
 
+    //Relacion 1cita a 1 factura
+    public function factura()
+    {
+        return $this->hasOne(Factura::class, 'idCita', 'idCita');
+    }
+
 }

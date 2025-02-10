@@ -11,8 +11,12 @@ use App\Models\DatosProfesion;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Mail;
+use App\Models\Factura;
+use App\Models\Persona;
+use App\Mail\FacturaPago;
+use MercadoPago\SDK;
+use Illuminate\Support\Facades\DB;
 
 class PagoAutomaticoController extends Controller
 {
@@ -97,7 +101,21 @@ class PagoAutomaticoController extends Controller
         $cita->estado = 4;
         $cita->save();
 
-        
+        //insertar en facturas
+        $factura = new Factura();
+        $idPersona = $cita->idPersona;
+        $persona = Persona::find($idPersona);
+        $idUser = $persona->user_id;
+        $factura->user_id = $idUser;
+        $factura->idCita = $cita->idCita;
+        $total = $cita->servicio->precio_base;
+        $factura->total = $total;
+        $factura->metodo_pago = 'Mercado Pago';
+        $factura->fecha_pago = now();
+        $factura->save();
+
+        //Enviar mail con factura de pago
+        Mail::to($cita->persona->user->email)->send(new FacturaPago($factura, $persona, $cita));
 
         return redirect()->route('index-cita')->with('success', 'Pago realizado con éxito.');
         // Redirigir a la vista 'Cita.gestion' con los datos necesarios
