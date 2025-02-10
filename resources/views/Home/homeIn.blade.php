@@ -137,6 +137,7 @@
                         <a href="{{ route('agendar-cita', ['idServicio' => $servicio->id]) }}" class="cart-button">
                             <span>Agendar cita</span>
                         </a>
+                                           
                     </div>
                 </div>
             @endif

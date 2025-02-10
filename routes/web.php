@@ -76,9 +76,10 @@ Route::post('/servicios/{id}/activar', [ServicioController::class, 'activarServi
 
 //RUTAS DE CITAS
 Route::get('/cita', [CitaController::class, 'index'])->name('index-cita')->middleware('auth');
-Route::get('cita/agendar', [CitaController::class, 'agendarCita'])
+Route::get('cita/agendar/{idServicio}', [CitaController::class, 'agendarCita'])
     ->name('agendar-cita')
     ->middleware('auth');
+
 
 Route::post('/citas/guardar', [CitaController::class, 'guardarCita'])->name('guardar-cita')->middleware('auth');
 

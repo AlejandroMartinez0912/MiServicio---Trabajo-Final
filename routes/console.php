@@ -28,7 +28,7 @@ Artisan::command('inspire', function () {
     }
 })->everyMinute();
 
-/** 
+/**  
 \Illuminate\Support\Facades\Schedule::call(function () {
     $hora_actual = now()->format('H:i');
     Artisan::call('agenda:generar');
@@ -38,4 +38,4 @@ Artisan::command('inspire', function () {
     $hora_actual = now()->format('H:i');
     Artisan::call('recordatorio:enviar');
     
-})->everyMinute(); */
+})->everyMinute();   */

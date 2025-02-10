@@ -72,35 +72,37 @@ class CitaController extends Controller
     /**
      * Agendar cita
      */
-    public function agendarCita(Request $request){
+    public function agendarCita($idServicio) {
 
-        $idServicio = $request->input('idServicio');
+   
         $servicio = Servicio::findOrFail($idServicio);
-
-        //id de profesion
+        
+        // id de profesión
         $idProfesion = $servicio->datos_profesion_id;
         $datosProfesion = DatosProfesion::findOrFail($idProfesion);
         $user = User::findOrFail($datosProfesion->user_id);
-        $persona = Persona::findOrFail($user->id);
+
+        //Encontrar persona por user_id
+        $persona = Persona::where('user_id', $user->id)->first();
 
         
-        //id de persona
+        // id de persona
         $persona_id = $user->id;
         $citas = Cita::where('idPersona', $persona_id)->get();
-
-        //id dia de horario trabajo
+    
+        // id día de horario trabajo
         $horarioTrabajo = HorarioTrabajo::where('datos_profesion_id', $idProfesion)->get();
         $diasDeTrabajo = [];
-        foreach ($horarioTrabajo as $horarioTrabajo) {
-            $idDia = $horarioTrabajo->dias_id;
+        foreach ($horarioTrabajo as $horario) {
+            $idDia = $horario->dias_id;
             if (!in_array($idDia, $diasDeTrabajo)) {
                 $diasDeTrabajo[] = $idDia;
             }
-        }
-
-        return view('Cita.agendar', compact('servicio', 'persona',
-        'datosProfesion','citas', 'diasDeTrabajo'));
+        }  
+    
+        return view('Cita.agendar', compact('servicio',  'persona', 'datosProfesion', 'citas', 'diasDeTrabajo' ));
     }
+    
 
     /**
      * Guardar cita
