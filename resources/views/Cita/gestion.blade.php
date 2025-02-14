@@ -138,10 +138,10 @@
                                                     <span class="badge badge-danger">Cancelada</span>
                                                 @elseif ($cita->estado == 3)
                                                     <span class="badge badge-success"><strong>Re-confirmada</strong></span>
-                                                @elseif ($cita->estado == 4)
+                                                @elseif ($cita->estado == 4 && $cita->calificacion_profesion == 0)
                                                     <span class="badge badge-success" style="background-color: #007bff"><strong>Pagado</strong></span>
                                                 @elseif ($cita->estado == 4 && $cita->calificacion_profesion == 1)
-                                                    <span class="badge badge-success" style="background-color: #007bff"><strong>Pagado y calificado</strong></span>
+                                                    <span class="badge badge-success" style="background-color: #007"><strong>Pagado y calificado</strong></span>
                                                 @endif
                     
                                             </td>

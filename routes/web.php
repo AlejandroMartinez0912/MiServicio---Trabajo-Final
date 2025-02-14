@@ -165,5 +165,6 @@ Route::get('/reportes/mejores-servicios', [AdministradorController::class, 'mejo
  */
 Route::get('/informes', [InformesController::class, 'index'])->name('informes');
 Route::get('informes/exportar-pdf', [InformesController::class, 'exportarPDF'])->name('informes.exportar-pdf');
-Route::get('informes/exportar-excel', [InformesController::class, 'exportarExcel'])->name('informes.exportar-excel');
+Route::get('/exportar-pdf', [InformesController::class, 'exportarPDF'])->name('exportar.pdf');
+Route::get('/informes/exportar-excel', [InformesController::class, 'exportarExcel'])->name('informes.exportar-excel');
 
