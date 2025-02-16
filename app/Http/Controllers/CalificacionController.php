@@ -76,7 +76,7 @@ class CalificacionController extends Controller
             $auditoria->user_id = Auth::user()->id;
             $auditoria->accion = 'Crear';
             $auditoria->modulo = 'Calificacion a profesion';
-            $auditoria->detalles = 'Calificacion guardada: ' . $calificacion->id;
+            $auditoria->detalles = 'Calificacion cita: ' . $cita->idCita . ' Cliente: ' . $cita->persona->nombre . ' ' . $cita->persona->apellido .  ' Servicio: ' . $cita->servicio->nombre;
             $auditoria->ip = request()->ip();
             $auditoria->save();
 

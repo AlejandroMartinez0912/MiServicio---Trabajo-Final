@@ -168,9 +168,9 @@ class CitaController extends Controller
 
         $auditoria = new Auditoria();
             $auditoria->user_id = Auth::user()->id;
-            $auditoria->accion = 'Creación';
+            $auditoria->accion = 'Crear';
             $auditoria->modulo = 'Citas';
-            $auditoria->detalles = 'Creacion de cita: ' . $cita->id;
+            $auditoria->detalles = 'Cita creada: ' . $cita->idCita . ', Servicio: ' . $cita->servicio->nombre .  ', Cliente: ' . $cita->persona->nombre . ' ' . $cita->persona->apellido;
             $auditoria->ip = request()->ip();
             $auditoria->save();
 
@@ -321,6 +321,8 @@ class CitaController extends Controller
             return redirect()->back()->with('error', $mensaje);
         }
 
+        $citaVieja = Cita::findOrFail($id);
+
         // Actualizar la cita
         $cita->fechaCita = Carbon::parse($fechaCita);
         $cita->horaInicio = $horaInicio;
@@ -329,12 +331,19 @@ class CitaController extends Controller
         $cita->estado = 0;
         $cita->save();
 
+        $detalles = 
+            'Fecha de cita: ' . $citaVieja->fechaCita . ' -> ' . $cita->fechaCita . '
+            Hora de inicio: ' . $citaVieja->horaInicio . ' -> ' . $cita->horaInicio . '
+            Hora de fin: ' . $citaVieja->horaFin . ' -> ' . $cita->horaFin . '
+            Servicio: ' . $citaVieja->servicio->nombre . ' -> ' . $cita->servicio->nombre . '
+            Estado: ' . $citaVieja->estado . ' -> ' . $cita->estado;
+
         // Registrar auditoría
         $auditoria = new Auditoria();
         $auditoria->user_id = Auth::user()->id;
-        $auditoria->accion = 'Edición';
+        $auditoria->accion = 'Actualizar';
         $auditoria->modulo = 'Citas';
-        $auditoria->detalles = 'Modificación de cita: ' . $cita->id;
+        $auditoria->detalles = $detalles;
         $auditoria->ip = request()->ip();
         $auditoria->save();
 

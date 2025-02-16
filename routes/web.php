@@ -151,7 +151,9 @@ Route::get('/admin/pagos', [AdministradorController::class, 'pagos'])->name('adm
 
 //rutas de auditorias
 Route::get('/auditorias', [AdministradorController::class, 'auditorias'])->name('admin-auditoria');
-Route::get('/auditorias/pdf', [AdministradorController::class, 'generatePdf'])->name('auditorias.pdf');
+
+Route::get('/admin/auditorias/exportar-pdf', [AdministradorController::class, 'exportarPDF'])
+    ->name('exportar-auditoria-pdf');
 
 //Rutas estadisticas
 Route::get('/admin/estadisticas', [AdministradorController::class, 'estadisticas'])->name('admin-estadisticas');

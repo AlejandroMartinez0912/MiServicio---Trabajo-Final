@@ -44,6 +44,8 @@ class PersonaController extends Controller
             $persona->foto = basename($filename);
         }
 
+        $personaViejo = $persona;
+
         try {
         // Actualizar otros datos
         $persona->update($request->only([
@@ -55,11 +57,18 @@ class PersonaController extends Controller
             'telefono'
         ]));
 
+        $detalles =
+            "Domicilio anterior: " . $personaViejo->domicilio . "\n" .  
+            "Domicilio nuevo: " . $request->input('domicilio') . "\n".
+            "Teléfono anterior: " . $personaViejo->telefono . "\n" .  
+            "Teléfono nuevo: " . $request->input('telefono') . "\n"
+            ;
+    
         $auditoria = new Auditoria();
         $auditoria->user_id = $persona->user_id;
-        $auditoria->accion = 'Actualización';
+        $auditoria->accion = 'Actualizar';
         $auditoria->modulo = 'Usuarios';
-        $auditoria->detalles = 'Se actualizó el perfil de ' . $persona->nombre . ' ' . $persona->apellido;
+        $auditoria->detalles = $detalles;
         $auditoria->ip = request()->ip();
         $auditoria->save();
         

@@ -76,6 +76,8 @@ class DatosProfesionController extends Controller
     public function actualizarDatos(Request $request, $id)
     {
         $datosProfesion = DatosProfesion::findOrFail($id);
+        $datosViejos = $datosProfesion;
+
 
         $validatedData = $request->validate([
             'slogan' => 'nullable|string|max:255',
@@ -83,6 +85,7 @@ class DatosProfesionController extends Controller
             'telefono' => 'nullable|string|max:255',
             'estado' => 'required|boolean',
         ]);
+
 
         //Actualizar datos
         $datosProfesion->slogan = $validatedData['slogan'];
@@ -92,11 +95,18 @@ class DatosProfesionController extends Controller
         $datosProfesion->estado = $validatedData['estado'];
         $datosProfesion->save();
 
+        $detalles = 
+            'Datos profesionales anteriores: ' . $datosViejos->slogan . ' - Datos profesionales nuevos: ' . $datosProfesion->slogan .
+            ' - Ubicacion anteriores: ' . $datosViejos->ubicacion . ' - Ubicacion nuevos: ' . $datosProfesion->ubicacion .
+            ' - Telefono anteriores: ' . $datosViejos->telefono . ' - Telefono nuevos: ' . $datosProfesion->telefono .
+            ' - Estado anteriores: ' . $datosViejos->estado . ' - Estado nuevos: ' . $datosProfesion->estado;
+
+
         $auditoria = new Auditoria();
             $auditoria->user_id = Auth::user()->id;
             $auditoria->accion = 'Actualizar';
             $auditoria->modulo = 'DatoProfesion';
-            $auditoria->detalles = 'Datos Profesion actualizado: ' . $datosProfesion->id;
+            $auditoria->detalles = $detalles;
             $auditoria->ip = request()->ip();
             $auditoria->save();
 

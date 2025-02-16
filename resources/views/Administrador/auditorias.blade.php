@@ -3,7 +3,7 @@
 @section('contenido')
 
 <style>
-    input[type="text"] {
+    input[type="text"], select {
         margin-bottom: 15px;
         padding: 8px;
         width: 100%;
@@ -85,30 +85,78 @@
 </style>
 
 <div class="container">
-    <h3>Gestión de Auditorias</h3>
-    <h2>Auditorias</h2>
+    <h3>Gestión de Auditorías</h3>
+    <h2>Auditorías</h2>
 
-    <!-- Botones para filtrar por columnas específicas -->
-    <div class="btn-group">
-        <button class="btn btn-primary" onclick="filterByColumn('tableAuditorias', 0, 'Id Auditoria')">Filtrar por ID</button>
-        <button class="btn btn-primary" onclick="filterByColumn('tableAuditorias', 1, 'User ID')">Filtrar por User ID</button>
-        <button class="btn btn-primary" onclick="filterByColumn('tableAuditorias', 2, 'Acción')">Filtrar por Acción</button>
-        <button class="btn btn-primary" onclick="filterByColumn('tableAuditorias', 3, 'Modulo')">Filtrar por Módulo</button>
-        <button class="btn btn-primary" onclick="filterByDate('tableAuditorias', 6)">Filtrar por Fecha</button>
-        <button class="btn btn-primary" onclick="clearFilters('tableAuditorias')">Limpiar Filtros</button>
-    </div>
+    <!-- Formulario de filtros -->
+    <form method="GET" action="{{ route('admin-auditoria') }}" id="filtroForm">
+        <div class="row">
+            <!-- Filtro por ID de auditoría -->
+            <div class="col-md-2">
+                <label for="idAuditoria">ID Auditoría</label>
+                <input type="number" name="idAuditoria" id="idAuditoria" class="form-control" value="{{ request('idAuditoria') }}">
+            </div>
 
-    <!-- Campo de búsqueda general -->
-    <input type="text" id="searchAuditorias" placeholder="Buscar en Auditorias..." onkeyup="filterTable('tableAuditorias', this.value)">
+            <!-- Filtro por ID de usuario -->
+            <div class="col-md-2">
+                <label for="userId">ID Usuario</label>
+                <input type="number" name="userId" id="userId" class="form-control" value="{{ request('userId') }}">
+            </div>
+
+            <!-- Filtro por acción -->
+            <div class="col-md-2">
+                <label for="accion">Acción</label>
+                <select name="accion" id="accion" class="form-control">
+                    <option value="">Todas</option>
+                    <option value="Crear" {{ request('accion') == 'Crear' ? 'selected' : '' }}>Crear</option>
+                    <option value="Eliminar" {{ request('accion') == 'Eliminar' ? 'selected' : '' }}>Eliminar</option>
+                    <option value="Actualizar" {{ request('accion') == 'Actualizar' ? 'selected' : '' }}>Actualizar</option>
+                    <option value="Anular" {{ request('accion') == 'Anular' ? 'selected' : '' }}>Anular</option>
+                    <option value="Activar" {{ request('accion') == 'Activar' ? 'selected' : '' }}>Activar</option>
+                </select>
+            </div>
+
+            <!-- Filtro por módulo -->
+            <div class="col-md-2">
+                <label for="modulo">Módulo</label>
+                <select name="modulo" id="modulo" class="form-control">
+                    <option value="">Todos</option>
+                    <option value="Usuarios" {{ request('modulo') == 'Usuarios' ? 'selected' : '' }}>Usuarios</option>
+                    <option value="Citas" {{ request('modulo') == 'Citas' ? 'selected' : '' }}>Citas</option>
+                    <option value="Servicios" {{ request('modulo') == 'Servicios' ? 'selected' : '' }}>Servicios</option>
+                    <option value="Profesión" {{ request('modulo') == 'Profesión' ? 'selected' : '' }}>Profesión</option>
+                    <option value="Pagos" {{ request('modulo') == 'Pagos' ? 'selected' : '' }}>Pagos</option>
+                </select>
+            </div>
+
+            <!-- Filtro por fecha inicio -->
+            <div class="col-md-2">
+                <label for="fechaInicio">Fecha de Inicio</label>
+                <input type="date" name="fechaInicio" id="fechaInicio" class="form-control" value="{{ request('fechaInicio') }}">
+            </div>
+
+            <!-- Filtro por fecha fin -->
+            <div class="col-md-2">
+                <label for="fechaFin">Fecha de Fin</label>
+                <input type="date" name="fechaFin" id="fechaFin" class="form-control" value="{{ request('fechaFin') }}">
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="col-md-12 text-center mt-3">
+                <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                <a href="{{ route('admin-auditoria') }}" class="btn btn-secondary">Limpiar Filtros</a>
+            </div>
+        </div>
+    </form>
 
     <!-- Tabla de auditorías -->
     <table id="tableAuditorias">
         <thead>
             <tr>
-                <th>Id Auditoria</th>
+                <th>Id Auditoría</th>
                 <th>User ID</th>
                 <th>Acción</th>
-                <th>Modulo</th>
+                <th>Módulo</th>
                 <th>Detalles</th>
                 <th>IP</th>
                 <th>Fecha y hora</th>
@@ -128,75 +176,11 @@
             @endforeach
         </tbody>
     </table>
+    <!-- Botón para exportar a PDF con filtros aplicados -->
+    <a href="{{ route('exportar-auditoria-pdf', request()->query()) }}" class="btn btn-danger">
+        <i class="fas fa-file-pdf"></i> Exportar a PDF
+    </a>
+
 </div>
 
-<!-- Script para la lógica de filtrado -->
-<script>
-    function filterTable(tableId, searchValue) {
-        const table = document.getElementById(tableId);
-        const rows = table.getElementsByTagName('tr');
-        searchValue = searchValue.toLowerCase();
-
-        for (let i = 1; i < rows.length; i++) { // Empieza desde 1 para saltar el encabezado
-            const cells = rows[i].getElementsByTagName('td');
-            let match = false;
-
-            for (let cell of cells) {
-                if (cell.textContent.toLowerCase().includes(searchValue)) {
-                    match = true;
-                    break;
-                }
-            }
-
-            rows[i].style.display = match ? '' : 'none';
-        }
-    }
-
-    function filterByColumn(tableId, columnIndex, columnName) {
-        const filterValue = prompt(`Ingrese el valor para filtrar por ${columnName}:`);
-        if (filterValue === null) return; // Cancelar acción si el usuario presiona "Cancelar"
-
-        const table = document.getElementById(tableId);
-        const rows = table.getElementsByTagName('tr');
-
-        for (let i = 1; i < rows.length; i++) { // Empieza desde 1 para saltar el encabezado
-            const cell = rows[i].getElementsByTagName('td')[columnIndex];
-            const match = cell.textContent.toLowerCase().includes(filterValue.toLowerCase());
-
-            rows[i].style.display = match ? '' : 'none';
-        }
-    }
-
-    function filterByDate(tableId, columnIndex) {
-        const startDate = prompt("Ingrese la fecha inicial (YYYY-MM-DD):");
-        const endDate = prompt("Ingrese la fecha final (YYYY-MM-DD):");
-        if (!startDate || !endDate) return; // Salir si el usuario cancela
-
-        const table = document.getElementById(tableId);
-        const rows = table.getElementsByTagName('tr');
-
-        for (let i = 1; i < rows.length; i++) {
-            const cell = rows[i].getElementsByTagName('td')[columnIndex];
-            const cellDate = new Date(cell.textContent.trim());
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-
-            const match = cellDate >= start && cellDate <= end;
-            rows[i].style.display = match ? '' : 'none';
-        }
-    }
-
-    function clearFilters(tableId) {
-        const table = document.getElementById(tableId);
-        const rows = table.getElementsByTagName('tr');
-
-        for (let i = 1; i < rows.length; i++) {
-            rows[i].style.display = ''; // Mostrar todas las filas
-        }
-
-        // Limpiar campo de búsqueda si está en uso
-        const searchField = document.getElementById('searchAuditorias');
-        if (searchField) searchField.value = '';
-    }
-</script>
 @endsection

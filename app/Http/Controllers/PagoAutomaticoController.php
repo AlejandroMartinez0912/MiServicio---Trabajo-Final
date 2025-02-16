@@ -17,6 +17,7 @@ use App\Models\Persona;
 use App\Mail\FacturaPago;
 use MercadoPago\SDK;
 use Illuminate\Support\Facades\DB;
+use App\Models\Auditoria;
 
 class PagoAutomaticoController extends Controller
 {
@@ -116,6 +117,15 @@ class PagoAutomaticoController extends Controller
 
         //Enviar mail con factura de pago
         Mail::to($cita->persona->user->email)->send(new FacturaPago($factura, $persona, $cita));
+
+        //Add Auditoria
+        $auditoria = new Auditoria();
+        $auditoria->user_id = Auth::user()->id;
+        $auditoria->accion = 'Pago';
+        $auditoria->modulo = 'Cita';
+        $auditoria->detalles = 'Pago realizado de la cita: ' . $cita->idCita .' por el cliente: ' . $cita->persona->user->email . ' con el servicio: ' . $cita->servicio->nombre . ' al especialista: ' . $cita->datosProfesion->nombre_fantasia;
+        $auditoria->ip = request()->ip();
+        $auditoria->save();
 
         return redirect()->route('index-cita')->with('success', 'Pago realizado con éxito.');
         // Redirigir a la vista 'Cita.gestion' con los datos necesarios

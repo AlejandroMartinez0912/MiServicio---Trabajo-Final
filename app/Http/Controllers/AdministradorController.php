@@ -11,11 +11,12 @@ use App\Models\CalificacionProfesion;
 use App\Models\Auditoria;
 use App\Models\Rubro;
 use Illuminate\Support\Facades\DB;
-use Barryvdh\DomPDF\Facade as PDF;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 
 
@@ -45,7 +46,7 @@ class AdministradorController extends Controller
             $auditoria->user_id = 9;
             $auditoria->accion = 'Eliminar';
             $auditoria->modulo = 'Usuarios';
-            $auditoria->detalles = 'Usuario eliminado: ' . $user->id;
+            $auditoria->detalles = 'Estado anterior: ' . $user->estado . ' Estado actual: ' . $user->estado;
             $auditoria->ip = request()->ip();
             $auditoria->save();
 
@@ -61,7 +62,7 @@ class AdministradorController extends Controller
             $auditoria->user_id = 9;
             $auditoria->accion = 'Activar';
             $auditoria->modulo = 'Usuarios';
-            $auditoria->detalles = 'Usuario activado: ' . $user->id;
+            $auditoria->detalles = 'Estado anterior: ' . $user->estado . ' Estado actual: ' . $user->estado;
             $auditoria->ip = request()->ip();
             $auditoria->save();
         return redirect()->back()->with('success', 'Usuario activado');
@@ -296,12 +297,83 @@ class AdministradorController extends Controller
      */
 
      // AUDITORIAS.BLADE.PHP
-     public function auditorias(){
-        $auditorias = Auditoria::all();
-        return view('Administrador.auditorias', compact('auditorias'));
-    }
-    public function generatePdf()
+     public function auditorias(Request $request)
     {
+        // Obtener los filtros del request
+        $idAuditoria = $request->input('idAuditoria');
+        $userId = $request->input('userId');
+        $accion = $request->input('accion');
+        $modulo = $request->input('modulo');
+        $fechaInicio = $request->input('fechaInicio');
+        $fechaFin = $request->input('fechaFin');
+
+        // Consulta con filtros aplicados
+        $auditorias = Auditoria::query();
+
+        if ($idAuditoria) {
+            $auditorias->where('id', $idAuditoria);
+        }
+
+        if ($userId) {
+            $auditorias->where('user_id', $userId);
+        }
+
+        if ($accion) {
+            $auditorias->where('accion', $accion);
+        }
+
+        if ($modulo) {
+            $auditorias->where('modulo', $modulo);
+        }
+
+        if ($fechaInicio && $fechaFin) {
+            $auditorias->whereBetween('created_at', [$fechaInicio . ' 00:00:00', $fechaFin . ' 23:59:59']);
+        } elseif ($fechaInicio) {
+            $auditorias->where('created_at', '>=', $fechaInicio . ' 00:00:00');
+        } elseif ($fechaFin) {
+            $auditorias->where('created_at', '<=', $fechaFin . ' 23:59:59');
+        }
+
+        // Obtener resultados ordenados por fecha
+        $auditorias = $auditorias->orderBy('created_at', 'desc')->get();
+
+        // Listado de valores posibles para los filtros
+        $acciones = ['Crear', 'Eliminar', 'Actualizar', 'Anular', 'Activar'];
+        $modulos = ['Usuarios', 'Citas', 'Servicios', 'Profesión', 'Pagos', 'Empresas', 'Auditorías'];
+
+        return view('Administrador.auditorias', compact('auditorias', 'acciones', 'modulos'));
+    }
+
+    public function exportarPDF(Request $request)
+    {
+        // Aplicar los filtros de la vista
+        $query = Auditoria::query();
+
+        if ($request->has('idAuditoria') && $request->idAuditoria) {
+            $query->where('id', $request->idAuditoria);
+        }
+        if ($request->has('userId') && $request->userId) {
+            $query->where('user_id', $request->userId);
+        }
+        if ($request->has('accion') && $request->accion) {
+            $query->where('accion', $request->accion);
+        }
+        if ($request->has('modulo') && $request->modulo) {
+            $query->where('modulo', $request->modulo);
+        }
+        if ($request->has('fechaInicio') && $request->fechaInicio) {
+            $query->whereDate('created_at', '>=', $request->fechaInicio);
+        }
+        if ($request->has('fechaFin') && $request->fechaFin) {
+            $query->whereDate('created_at', '<=', $request->fechaFin);
+        }
+
+        $auditorias = $query->get();
+
+        // Generar el PDF
+        $pdf = Pdf::loadView('Administrador.pdfAuditorias', compact('auditorias'));
+
+        return $pdf->download('auditorias_filtradas.pdf');
     }
 
     /**

@@ -52,7 +52,7 @@ class ServicioController extends Controller
 
             $auditoria = new Auditoria();
             $auditoria->user_id = $userId;
-            $auditoria->accion = 'Creación';
+            $auditoria->accion = 'Crear';
             $auditoria->modulo = 'Servicios';
             $auditoria->detalles = 'Servicio creado: ' . $servicio->id;
             $auditoria->ip = request()->ip();
@@ -74,6 +74,8 @@ class ServicioController extends Controller
       {
           $servicio = Servicio::findOrFail($id);
           $userId = Auth::id();
+
+          $servicioActual = $servicio;
       
           // Actualizamos los datos del servicio
           $servicio->update([
@@ -86,14 +88,21 @@ class ServicioController extends Controller
           // Actualizamos los rubros asociados (tabla pivote)
           $servicio->rubros()->sync($request->rubros);
 
-          $auditoria = new Auditoria();
-          $auditoria->user_id = $userId;
-          $auditoria->accion = 'Actualización';
-          $auditoria->modulo = 'Servicios';
-          $auditoria->detalles = 'Servicio actualizado: ' . $servicio->id;
-          $auditoria->ip = request()->ip();
-          $auditoria->save();
-          
+        // Generamos los detalles para la auditoría
+        $detalles = 'Servicio anterior: ' . 
+        'Nombre: ' . $servicioActual->nombre . ' -> ' . $servicio->nombre . ', ' .
+        'Descripción: ' . $servicioActual->descripcion . ' -> ' . $servicio->descripcion . ', ' .
+        'Precio Base: ' . $servicioActual->precio_base . ' -> ' . $servicio->precio_base . ', ' .
+        'Duración Estimada: ' . $servicioActual->duracion_estimada . ' -> ' . $servicio->duracion_estimada . ', ' .
+        'Rubros: ' . implode(', ', $servicioActual->rubros->pluck('nombre')->toArray()) . ' -> ' . implode(', ', $request->rubros);
+
+        $auditoria = new Auditoria();
+        $auditoria->user_id = $userId;
+        $auditoria->accion = 'Actualizar';
+        $auditoria->modulo = 'Servicios';
+        $auditoria->detalles = $detalles;
+        $auditoria->ip = request()->ip();
+        $auditoria->save();
       
           return redirect()->route('gestion-servicios')->with('success', 'Servicio actualizado exitosamente.');
       }
@@ -109,9 +118,9 @@ class ServicioController extends Controller
 
            $auditoria = new Auditoria();
            $auditoria->user_id = $user->id;
-           $auditoria->accion = 'Eliminación';
+           $auditoria->accion = 'Eliminar';
            $auditoria->modulo = 'Servicios';
-           $auditoria->detalles = 'Servicio eliminado: ' . $servicio->id;
+           $auditoria->detalles = 'Servicio eliminado: ' . $servicio->nombre;
            $auditoria->ip = request()->ip();
            $auditoria->save();
            
@@ -130,9 +139,9 @@ class ServicioController extends Controller
 
             $auditoria = new Auditoria();
             $auditoria->user_id = $user->id;
-            $auditoria->accion = 'Anulación';
+            $auditoria->accion = 'Anular';
             $auditoria->modulo = 'Servicios';
-            $auditoria->detalles = 'Servicio anulado: ' . $servicio->id;
+            $auditoria->detalles = 'Servicio anulado: ' . $servicio->nombre;
             $auditoria->ip = request()->ip();
             $auditoria->save();
             
@@ -154,9 +163,9 @@ class ServicioController extends Controller
 
             $auditoria = new Auditoria();
             $auditoria->user_id = $user->id;
-            $auditoria->accion = 'Activación';
+            $auditoria->accion = 'Activar';
             $auditoria->modulo = 'Servicios';
-            $auditoria->detalles = 'Servicio activado: ' . $servicio->id;
+            $auditoria->detalles = 'Servicio activado: ' . $servicio->nombre;
             $auditoria->ip = request()->ip();
             $auditoria->save();
             

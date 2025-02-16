@@ -45,9 +45,17 @@ class LoginController extends Controller
 
         $auditoria = new Auditoria();
         $auditoria->user_id = $user->id;
-        $auditoria->accion = 'Creación';
+        $auditoria->accion = 'Crear';
         $auditoria->modulo = 'Usuarios';
-        $auditoria->detalles = 'El usuario creó un nuevo usuario';
+        $auditoria->detalles = 'Se creo un nuevo usuario: ' . $user->id;
+        $auditoria->ip = request()->ip();
+        $auditoria->save();
+
+        $auditoria = new Auditoria();
+        $auditoria->user_id = $user->id;
+        $auditoria->accion = 'Crear';
+        $auditoria->modulo = 'Personas';
+        $auditoria->detalles = 'Se creo un nuevo perfil: ' . $persona->id;
         $auditoria->ip = request()->ip();
         $auditoria->save();
         
