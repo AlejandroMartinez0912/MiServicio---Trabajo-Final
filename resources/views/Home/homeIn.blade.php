@@ -244,11 +244,24 @@
                 <button type="submit">Guardar Calificación</button>
             </div>
         </form>
+
+        <!-- Mensaje de éxito -->
+        <div id="successMessage" style="display: none; color: green; margin-top: 10px;">
+            ¡Calificación guardada con éxito!
+        </div>
     </div>
 </div>
 
 <script>
     $(document).ready(function () {
+        // Mostrar mensaje de éxito si está presente
+        @if(session('success'))
+            $('#successMessage').text("{{ session('success') }}").show();
+            setTimeout(function () {
+                $('#successMessage').fadeOut();
+            }, 3000);
+        @endif
+
         // Función para obtener calificaciones pendientes
         function obtenerCalificacionesPendientes() {
             $.ajax({
@@ -292,6 +305,10 @@
                 success: function (response) {
                     // Calificación guardada exitosamente
                     $('#calificacionModal').css('display', 'none'); // Cerrar el modal
+                    $('#successMessage').text("¡Calificación guardada con éxito!").show();
+                    setTimeout(function () {
+                        $('#successMessage').fadeOut();
+                    }, 3000);
                     obtenerCalificacionesPendientes(); // Recargar la lista de pendientes
                 },
                 error: function (xhr, status, error) {
@@ -302,6 +319,7 @@
         });
     });
 </script>
+
 
 
 <style>

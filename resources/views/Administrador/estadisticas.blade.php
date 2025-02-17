@@ -94,6 +94,28 @@
 
     <div class="section" id="informe-1">
         <h2>Cantidad de Servicios Contratados por Rubros</h2>
+        
+        <form method="GET" action="{{ route('estadisticas') }}">
+            <label for="fecha_inicio">Desde:</label>
+            <input type="date" name="fecha_inicio" value="{{ request('fecha_inicio') }}">
+        
+            <label for="fecha_fin">Hasta:</label>
+            <input type="date" name="fecha_fin" value="{{ request('fecha_fin') }}">
+        
+            <label for="rubro">Rubro:</label>
+            <select name="rubro">
+                <option value="">Todos</option>
+                @foreach($rubros as $rubro)
+                    <option value="{{ $rubro }}" {{ request('rubro') == $rubro ? 'selected' : '' }}>
+                        {{ $rubro }}
+                    </option>
+                @endforeach
+            </select>
+        
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+        <canvas id="graficoServicios"></canvas>
+
         <table>
             <thead>
                 <tr>
@@ -110,11 +132,19 @@
                 @endforeach
             </tbody>
         </table>
-        <canvas id="graficoServicios"></canvas>
+        <!-- Botón para exportar a PDF con filtros aplicados -->
+        <a href="{{ route('informe1-pdf', request()->query()) }}" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i> Exportar a PDF
+        </a>
     </div>
 
     <div class="section" id="informe-2">
         <h2>Optimización de Precios según Demanda y Calificaciones</h2>
+        <!-- Gráfico de precios -->
+        <h3>Comparación de Precios</h3>
+        <canvas id="precioChart"></canvas>
+    
+        <!-- Tabla de datos -->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -148,10 +178,67 @@
                 @endforeach
             </tbody>
         </table>
+        <a href="{{ route('informe2-pdf', request()->query()) }}" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i> Exportar a PDF
+        </a>
+        
     </div>
-
+    
+    <!-- Agregar Chart.js desde CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById('precioChart').getContext('2d');
+    
+            // Datos desde Laravel
+            var servicios = @json($informe2);
+    
+            var nombres = servicios.map(s => s.nombre);
+            var preciosBase = servicios.map(s => s.precio_base);
+            var preciosSugeridos = servicios.map(s => s.precio_sugerido);
+    
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: nombres,
+                    datasets: [
+                        {
+                            label: 'Precio Actual',
+                            data: preciosBase,
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Precio Sugerido',
+                            data: preciosSugeridos,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: { enabled: true }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
+    
     <div class="section" id="informe-3">
         <h2>Servicios Destacados</h2>
+        <div>
+            <!-- Gráfico de barras para los mejores servicios -->
+            <canvas id="graficoMejoresServicios"></canvas>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -170,10 +257,17 @@
                 @endforeach
             </tbody>
         </table>
+        <a href="{{ route('informe3-pdf', request()->query()) }}" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i> Exportar a PDF
+        </a>
     </div>
-
+    
     <div class="section" id="informe-4">
         <h2>Servicios de Baja Calidad</h2>
+        <div>
+            <!-- Gráfico de barras para los servicios de baja calidad -->
+            <canvas id="graficoBajaCalidad"></canvas>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -192,7 +286,61 @@
                 @endforeach
             </tbody>
         </table>
+        <a href="{{ route('informe4-pdf', request()->query()) }}" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i> Exportar a PDF
+        </a>
     </div>
+    
+    <script>
+        // Gráfico de Servicios Destacados
+        const ctx1 = document.getElementById('graficoMejoresServicios').getContext('2d');
+        const graficoMejoresServicios = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: @json($informe3->pluck('nombre')), // Nombres de los servicios
+                datasets: [{
+                    label: 'Cantidad de Reservas',
+                    data: @json($informe3->pluck('cantidad_reservas')), // Cantidad de reservas
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Color de las barras
+                    borderColor: 'rgba(54, 162, 235, 1)', // Borde de las barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Gráfico de Servicios de Baja Calidad
+        const ctx2 = document.getElementById('graficoBajaCalidad').getContext('2d');
+        const graficoBajaCalidad = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: @json($informe4->pluck('nombre')), // Nombres de los servicios
+                datasets: [{
+                    label: 'Cantidad de Reservas',
+                    data: @json($informe4->pluck('cantidad_reservas')), // Cantidad de reservas
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)', // Color de las barras
+                    borderColor: 'rgba(255, 99, 132, 1)', // Borde de las barras
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    
 
    
 

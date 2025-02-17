@@ -380,111 +380,174 @@ class AdministradorController extends Controller
      * ESTADISTICAS
      */
 
-     public function estadisticas()
-     {
-         // Obtener los datos de servicios contratados por rubro
-         $informe1 = $this->serviciosPorRubro();
-         $informe2 = $this->optimizarPrecios();
-         $informe3 = $this->mejoresServicios();
-         $informe4 = $this->serviciosBajaCalidad();
-     
-         // Retornar la vista con los datos
-         return view('Administrador.estadisticas', compact('informe1', 'informe2', 'informe3', 'informe4'));
-     }
-    //Exportar por EXCEL
-    public function exportarExcel(Request $request)
+     public function estadisticas(Request $request)
     {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $informe1 = $this->serviciosPorRubro($request);
+        $informe2 = $this->optimizarPrecios();
+        $informe3 = $this->mejoresServicios();
+        $informe4 = $this->serviciosBajaCalidad();
 
-        // Encabezados
-        $sheet->setCellValue('A1', 'Rubro');
-        $sheet->setCellValue('B1', 'Total de Servicios Contratados');
+        // Obtener rubros para el filtro
+        $rubros = DB::table('rubros')->pluck('nombre', 'nombre');
 
-        // Datos
-        $informe1 = json_decode($request->input('datos'));
-        $fila = 2;
-
-        foreach ($informe1 as $dato) {
-            $sheet->setCellValue("A{$fila}", $dato->rubro);
-            $sheet->setCellValue("B{$fila}", $dato->total_reservas);
-            $fila++;
-        }
-
-        // Guardar archivo temporal
-        $archivo = 'estadisticas.xlsx';
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($archivo);
-
-        return Response::download($archivo)->deleteFileAfterSend(true);
+        return view('Administrador.estadisticas', compact('informe1', 'informe2', 'informe3', 'informe4', 'rubros'));
     }
+    
 
 
      //Informe 1
      //servicios por rubros
-     public function serviciosPorRubro()
-    {
-         // Consultar la cantidad de reservas agrupadas por rubro
-         $estadisticas = DB::table('servicio_rubro')
+     public function serviciosPorRubro(Request $request)
+     {
+         $query = DB::table('servicio_rubro')
              ->join('servicios', 'servicio_rubro.servicio_id', '=', 'servicios.id')
+             ->join('citas', 'citas.idServicio', '=', 'servicios.id') // Unir con la tabla `citas`
              ->join('rubros', 'servicio_rubro.rubro_id', '=', 'rubros.id')
              ->select('rubros.nombre as rubro', DB::raw('SUM(servicios.cantidad_reservas) as total_reservas'))
              ->groupBy('rubros.nombre')
-             ->orderByDesc('total_reservas')
-             ->get();
+             ->orderByDesc('total_reservas');
      
-         return $estadisticas; // Retornamos un array de datos en lugar de JSON
-    }
+         // Filtros dinámicos
+         if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+             $query->whereBetween('citas.fechaCita', [$request->fecha_inicio, $request->fecha_fin]); // Corregido a `citas.fechaCita`
+         }
+     
+         if ($request->filled('rubro')) {
+             $query->where('rubros.nombre', $request->rubro);
+         }
+     
+         return $query->get();
+     }
     
+     public function informe1(Request $request)
+     {
+         $query = DB::table('servicio_rubro')
+             ->join('servicios', 'servicio_rubro.servicio_id', '=', 'servicios.id')
+             ->join('citas', 'citas.idServicio', '=', 'servicios.id') // Unir con la tabla `citas`
+             ->join('rubros', 'servicio_rubro.rubro_id', '=', 'rubros.id')
+             ->select('rubros.nombre as rubro', DB::raw('SUM(servicios.cantidad_reservas) as total_reservas'))
+             ->groupBy('rubros.nombre')
+             ->orderByDesc('total_reservas');
+     
+         // Filtros dinámicos
+         if ($request->filled('fecha_inicio') && $request->filled('fecha_fin')) {
+             $query->whereBetween('citas.fechaCita', [$request->fecha_inicio, $request->fecha_fin]);
+         }
+     
+         if ($request->filled('rubro')) {
+             $query->where('rubros.nombre', $request->rubro);
+         }
+     
+         $serviciosPorRubro = $query->get();
+     
+         // Generar el PDF
+         $pdf = PDF::loadView('Administrador.estadisticasPdf.informe1', compact('serviciosPorRubro'));
+     
+         // Descargar el PDF
+         return $pdf->download('informe_servicios_por_rubro.pdf');
+     }
+     
 
     //Informe 2
     //Optimizar precios
     public function optimizarPrecios()
     {
-        // Obtener servicios con su promedio de calificación y cantidad de reservas
-        $servicios = Servicio::select('id', 'nombre', 'precio_base', 'calificacion', 'cantidad_reservas')
+        return Servicio::select('id', 'nombre', 'precio_base', 'calificacion', 'cantidad_reservas')
             ->get()
             ->map(function ($servicio) {
-                // Aplicar lógica de ajuste de precios
-                if ($servicio->calificacion >= 4.5 && $servicio->cantidad_reservas > 10) {
-                    $servicio->precio_sugerido = $servicio->precio_base * 1.15; // Aumento del 15%
-                } elseif ($servicio->calificacion >= 4 && $servicio->cantidad_reservas < 5) {
-                    $servicio->precio_sugerido = $servicio->precio_base * 0.90; // Descuento del 10%
-                } else {
-                    $servicio->precio_sugerido = $servicio->precio_base; // Mantener precio
+                $precioBase = $servicio->precio_base;
+                $calificacion = $servicio->calificacion;
+                $reservas = $servicio->cantidad_reservas;
+                $precioSugerido = $precioBase;
+
+                // Ajuste basado en calificación y demanda
+                if ($calificacion >= 4.7 && $reservas > 15) {
+                    $precioSugerido *= 1.20; // Aumento del 20%
+                } elseif ($calificacion >= 4.5 && $reservas > 10) {
+                    $precioSugerido *= 1.15; // Aumento del 15%
+                } elseif ($calificacion >= 4.0 && $reservas >= 5 && $reservas <= 10) {
+                    $precioSugerido *= 1.05; // Aumento moderado del 5%
+                } elseif ($calificacion >= 4.0 && $reservas < 5) {
+                    $precioSugerido *= 0.90; // Descuento del 10%
+                } elseif ($calificacion < 3.5 && $reservas < 5) {
+                    $precioSugerido *= 0.80; // Gran descuento del 20% por baja demanda y mala calificación
                 }
+
+                // Asegurar que el precio sugerido no sea menor al 70% ni mayor al 150% del precio base
+                $precioSugerido = max($precioBase * 0.70, min($precioSugerido, $precioBase * 1.50));
+
+                $servicio->precio_sugerido = round($precioSugerido, 2); // Redondear a 2 decimales
                 return $servicio;
             });
-
-        return $servicios;
     }
+
+    public function informe2(Request $request)
+    {
+        // Obtener los servicios optimizados
+        $serviciosOptimizado = $this->optimizarPrecios();
+
+        // Generar el PDF
+        $pdf = PDF::loadView('Administrador.estadisticasPdf.informe2', compact('serviciosOptimizado'));
+
+        // Descargar el PDF
+        return $pdf->download('informe_optimizacion_precios.pdf');
+    }
+
 
     //Informe 3
     // mejores servicios
     public function mejoresServicios()
     {
-        // Obtener los servicios con calificación superior a 4.5 y cantidad de reservas mayor a 5
+        return Servicio::select('id', 'nombre', 'calificacion', 'cantidad_reservas')
+            ->where('calificacion', '>=', 4.5)
+            ->where('cantidad_reservas', '>=', 5)
+            ->orderByDesc('calificacion') // Primero ordena por calificación
+            ->orderByDesc('cantidad_reservas') // Luego por reservas
+            ->limit(10) // Limita a los 10 mejores servicios
+            ->get();
+    }
+    public function informe3(Request $request)
+    {
+        // Obtener los servicios destacados (con calificación >= 4 y reservas >= 3)
         $serviciosDestacados = Servicio::select('id', 'nombre', 'calificacion', 'cantidad_reservas')
             ->where('calificacion', '>=', 4)
             ->where('cantidad_reservas', '>=', 3)
-            ->orderByDesc('cantidad_reservas') // Ordenar por cantidad de reservas
+            ->orderByDesc('cantidad_reservas')
             ->get();
 
-        return $serviciosDestacados;
+        // Cargar la vista del informe y pasar los datos
+        $pdf = PDF::loadView('Administrador.estadisticasPdf.informe3', compact('serviciosDestacados'));
+
+        // Descargar el PDF
+        return $pdf->download('informe_servicios_destacados.pdf');
     }
 
     //Informe 4
     //servicios baja calidad
     public function serviciosBajaCalidad()
     {
-        // Obtener los servicios con calificación menor a 3.5 y cantidad de reservas menor a 3
+        return Servicio::select('id', 'nombre', 'calificacion', 'cantidad_reservas')
+            ->where('calificacion', '<=', 3.0)
+            ->where('cantidad_reservas', '<=', 2)
+            ->orderBy('calificacion') // Primero ordena por menor calificación
+            ->orderBy('cantidad_reservas') // Luego por menor cantidad de reservas
+            ->limit(10) // Limita a los 10 peores servicios
+            ->get();
+    }
+    public function informe4(Request $request)
+    {
+        // Obtener los servicios de baja calidad (con calificación < 3.5 y reservas < 3)
         $serviciosBajaCalidad = Servicio::select('id', 'nombre', 'calificacion', 'cantidad_reservas')
             ->where('calificacion', '<', 3.5)
             ->where('cantidad_reservas', '<', 3)
-            ->orderBy('calificacion') // Ordenar por calificación (menor primero)
+            ->orderBy('calificacion')
             ->get();
 
-        return $serviciosBajaCalidad;
+        // Cargar la vista del informe y pasar los datos
+        $pdf = PDF::loadView('Administrador.estadisticasPdf.informe4', compact('serviciosBajaCalidad'));
+
+        // Descargar el PDF
+        return $pdf->download('informe_servicios_baja_calidad.pdf');
     }
 
 }

@@ -160,7 +160,13 @@ Route::get('/admin/estadisticas', [AdministradorController::class, 'estadisticas
 Route::get('/exportar-excel', [AdministradorController::class, 'exportarExcel'])->name('exportar-excel');
 Route::get('/reportes/optimizar-precios', [AdministradorController::class, 'optimizarPrecios'])->name('reportes.optimizar-precios');
 Route::get('/reportes/mejores-servicios', [AdministradorController::class, 'mejoresServicios'])->name('reportes.mejores-servicios');
+Route::get('/estadisticas', [AdministradorController::class, 'estadisticas'])->name('estadisticas');
 
+
+Route::get('/informe1/pdf', [AdministradorController::class, 'informe1'])->name('informe1-pdf');
+Route::get('/informe2/pdf', [AdministradorController::class, 'informe2'])->name('informe2-pdf');
+Route::get('/informe3/pdf', [AdministradorController::class, 'informe3'])->name('informe3-pdf');
+Route::get('/informe4/pdf', [AdministradorController::class, 'informe4'])->name('informe4-pdf');
 
 /**
  * RUTAS INFORMES
