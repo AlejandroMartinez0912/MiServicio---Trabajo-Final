@@ -222,10 +222,17 @@
 <div class="modal" id="calificacionModal" style="display: none;">
     <div class="modal-content">
         <h3>Calificar Servicio</h3>
+
+        <!-- Información de la Cita -->
+        <p><strong>Servicio:</strong> <span id="servicioNombre"></span></p>
+        <p><strong>Profesional:</strong> <span id="profesionalNombre"></span></p>
+        <p><strong>Fecha de la Cita:</strong> <span id="fechaCita"></span></p>
+
         <!-- Formulario para calificar -->
         <form id="calificacionForm" method="POST" action="" data-id-cita="">
-            @csrf <!-- Token CSRF de Laravel para seguridad -->
-            <input type="hidden" id="citaId" name="idCita"> <!-- Campo oculto para idCita -->
+            @csrf
+            <input type="hidden" id="citaId" name="idCita">
+
             <div>
                 <label for="calificacion">Calificación:</label>
                 <select name="calificacion" id="calificacion">
@@ -245,81 +252,82 @@
             </div>
         </form>
 
-        <!-- Mensaje de éxito -->
         <div id="successMessage" style="display: none; color: green; margin-top: 10px;">
             ¡Calificación guardada con éxito!
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
-        // Mostrar mensaje de éxito si está presente
-        @if(session('success'))
-            $('#successMessage').text("{{ session('success') }}").show();
-            setTimeout(function () {
-                $('#successMessage').fadeOut();
-            }, 3000);
-        @endif
+    // Mostrar mensaje de éxito si está presente
+    @if(session('success'))
+        $('#successMessage').text("{{ session('success') }}").show();
+        setTimeout(function () {
+            $('#successMessage').fadeOut();
+        }, 3000);
+    @endif
 
-        // Función para obtener calificaciones pendientes
-        function obtenerCalificacionesPendientes() {
-            $.ajax({
-                url: '/calificaciones/pendientes', // Ruta al método del controlador
-                type: 'GET',
-                success: function (response) {
-                    if (response.success && response.data.length > 0) {
-                        // Tomar la primera cita pendiente
-                        var cita = response.data[0];
+    // Función para obtener calificaciones pendientes
+    function obtenerCalificacionesPendientes() {
+        $.ajax({
+            url: '/calificaciones/pendientes', // Ruta al método del controlador
+            type: 'GET',
+            success: function (response) {
+                if (response.success && response.data.length > 0) {
+                    var cita = response.data[0]; // Tomar la primera cita pendiente
 
-                        // Asignar valores dinámicamente al formulario y modal
-                        $('#citaId').val(cita.idCita);
-                        $('#calificacionForm').attr('action', '/calificaciones/' + cita.idCita + '/guardar');
-                        $('#calificacionModal').css('display', 'flex'); // Mostrar el modal
-                    } else {
-                        // No hay citas pendientes, simplemente no hacer nada
-                        $('#calificacionModal').css('display', 'none'); // Asegurarse de que el modal esté oculto
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al obtener las calificaciones pendientes:', error);
-                    $('#calificacionModal').css('display', 'none'); // Ocultar el modal en caso de error
+                    // Asignar valores dinámicamente al formulario y modal
+                    $('#citaId').val(cita.idCita);
+                    $('#calificacionForm').attr('action', '/calificaciones/' + cita.idCita + '/guardar');
+
+                    // Mostrar la información en el modal
+                    $('#servicioNombre').text(cita.servicio ? cita.servicio.nombre : 'No disponible');
+                    $('#profesionalNombre').text(cita.datos_profesion ? cita.datos_profesion.nombre_fantasia : 'No disponible');
+                    $('#fechaCita').text(cita.fechaCita);
+
+                    $('#calificacionModal').css('display', 'flex'); // Mostrar el modal
+                } else {
+                    $('#calificacionModal').css('display', 'none'); // Ocultar el modal si no hay citas
                 }
-            });
-        }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al obtener las calificaciones pendientes:', error);
+                $('#calificacionModal').css('display', 'none'); // Ocultar el modal en caso de error
+            }
+        });
+    }
 
-        // Llamar a la función al cargar la página o según sea necesario
-        obtenerCalificacionesPendientes();
+    // Llamar a la función al cargar la página
+    obtenerCalificacionesPendientes();
 
-        // Manejar el envío del formulario
-        $('#calificacionForm').on('submit', function (e) {
-            e.preventDefault(); // Prevenir la acción predeterminada del formulario
+    // Manejar el envío del formulario
+    $('#calificacionForm').on('submit', function (e) {
+        e.preventDefault(); // Prevenir la acción predeterminada del formulario
 
-            var formData = $(this).serialize(); // Serializar datos del formulario
-            var actionUrl = $(this).attr('action'); // Obtener la URL de acción dinámica
+        var formData = $(this).serialize(); // Serializar datos del formulario
+        var actionUrl = $(this).attr('action'); // Obtener la URL de acción dinámica
 
-            $.ajax({
-                url: actionUrl,
-                type: 'POST',
-                data: formData,
-                success: function (response) {
-                    // Calificación guardada exitosamente
-                    $('#calificacionModal').css('display', 'none'); // Cerrar el modal
-                    $('#successMessage').text("¡Calificación guardada con éxito!").show();
-                    setTimeout(function () {
-                        $('#successMessage').fadeOut();
-                    }, 3000);
-                    obtenerCalificacionesPendientes(); // Recargar la lista de pendientes
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al guardar la calificación:', error);
-                    alert('Ocurrió un error al guardar la calificación. Por favor, inténtelo de nuevo.');
-                }
-            });
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                // Calificación guardada exitosamente
+                $('#calificacionModal').css('display', 'none'); // Cerrar el modal
+                $('#successMessage').text("¡Calificación guardada con éxito!").show();
+                setTimeout(function () {
+                    $('#successMessage').fadeOut();
+                }, 3000);
+                obtenerCalificacionesPendientes(); // Recargar la lista de pendientes
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al guardar la calificación:', error);
+                alert('Ocurrió un error al guardar la calificación. Por favor, inténtelo de nuevo.');
+            }
         });
     });
+});
 </script>
-
 
 
 <style>

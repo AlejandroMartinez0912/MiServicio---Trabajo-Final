@@ -34,6 +34,7 @@ class CalificacionController extends Controller
         $citasPendientes = Cita::where('calificacion_profesion', 0)
             ->where('idPersona', $idPersona)
             ->where('estado', 4)
+            ->with(['servicio', 'datosProfesion'])
             ->get();
 
         // Manejar el caso en que no haya citas pendientes
