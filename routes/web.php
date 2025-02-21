@@ -27,6 +27,7 @@ Route::view('/login', "Auth.Login")->name('login');
 
 //Ruta de register
 Route::view('/register', "Auth.Register")->name('register');
+Route::get('/register/verificar/{idUser}', [LoginController::class, 'verificarEmail'])->name('verificar-email');
 
 // RUTAS DE LOGIN
 Route::view('/privada', "homeIn")->middleware('auth')->name('privada');

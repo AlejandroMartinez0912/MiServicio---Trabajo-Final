@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Persona;
 use App\Models\Auditoria;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use App\Mail\VerificacionEmail;
+use Illuminate\Support\Facades\Mail;
 
 
 class LoginController extends Controller
@@ -20,52 +25,65 @@ class LoginController extends Controller
      */
     public function register(Request $request)
     {
-        //Validar usuario
-        $this->validateRegister($request);
+    
+            // Validar usuario
+            $this->validateRegister($request);
 
-        // Crear un nuevo usuario
-        $user = new User();
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->role = "user";
-        $user->estado = 1;
+            // Crear un nuevo usuario
+            $user = new User();
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->role = "user";
+            $user->estado = 1;
+            $user->verificacion_email = 0;
+            $user->save();
+
+            //Enviar correo de confirmación
+            Mail::to($user->email)->send(new VerificacionEmail($user));
+
+            // Crear automáticamente el perfil (persona) asociado al usuario
+            $persona = new Persona();
+            $persona->user_id = $user->id;
+            $persona->nombre = $request->nombre;
+            $persona->apellido = $request->apellido;
+            $persona->domicilio = $request->domicilio;
+            $persona->fecha_nacimiento = $request->fecha_nacimiento;
+            $persona->documento = $request->documento;
+            $persona->telefono = $request->telefono;
+            $persona->save();
+
+            
+            // Guardar auditoría
+            $this->guardarAuditoria($user->id, 'Crear', 'Usuarios', 'Se creó un nuevo usuario: ' . $user->id);
+            $this->guardarAuditoria($user->id, 'Crear', 'Personas', 'Se creó un nuevo perfil: ' . $persona->id);
+
+            /**Iniciar sesión automáticamente
+            Auth::login($user);
+
+            // Redirigir a la ruta privada
+            return redirect()->route('homein');  **/
+            return redirect()->route('login')->with(['success' => 'Tu cuenta ha sido creada. Por favor, verifica tu correo electrónica.']);
+    }
+
+    //Verificar email
+    public function verificarEmail($idUser){
+        $user = User::find($idUser);
+        $user->verificacion_email = 1;
         $user->save();
 
-        // Crear automáticamente el perfil (persona) asociado al usuario
-        $persona = new Persona();
-        $persona->user_id = $user->id;
-        $persona->nombre = $request->nombre;
-        $persona->apellido = $request->apellido;
-        $persona->domicilio = $request->domicilio;
-        $persona->fecha_nacimiento = $request->fecha_nacimiento;
-        $persona->documento = $request->documento;
-        $persona->telefono = $request->telefono;
+        //Llevar al login con un mensaje de que ya puede iniciar sesion
+        return redirect()->route('login')->with(['success' => 'Tu cuenta ha sido verificada. Por favor, inicia sesión.']);
+    }
 
-        $persona->save();
-
+    private function guardarAuditoria($userId, $accion, $modulo, $detalles)
+    {
         $auditoria = new Auditoria();
-        $auditoria->user_id = $user->id;
-        $auditoria->accion = 'Crear';
-        $auditoria->modulo = 'Usuarios';
-        $auditoria->detalles = 'Se creo un nuevo usuario: ' . $user->id;
+        $auditoria->user_id = $userId;
+        $auditoria->accion = $accion;
+        $auditoria->modulo = $modulo;
+        $auditoria->detalles = $detalles;
         $auditoria->ip = request()->ip();
         $auditoria->save();
-
-        $auditoria = new Auditoria();
-        $auditoria->user_id = $user->id;
-        $auditoria->accion = 'Crear';
-        $auditoria->modulo = 'Personas';
-        $auditoria->detalles = 'Se creo un nuevo perfil: ' . $persona->id;
-        $auditoria->ip = request()->ip();
-        $auditoria->save();
-        
-
-
-        // Iniciar sesión automáticamente después de registrarse
-        Auth::login($user);
-        
-        // Redirigir a la ruta privada
-        return redirect()->route('homein');
     }
     /**
      * Inicia sesión en la aplicación.
@@ -106,12 +124,16 @@ class LoginController extends Controller
                 return redirect()->route('login')->with(['error' => 'Tu cuenta está inactiva. Por favor, contacta al administrador.']);
             }
 
+            if ($user->verificacion_email == 0) {
+                // Redirigir con un mensaje de error si el estado es 0
+                return redirect ()->route('login')->with(['error' => 'Tu cuenta no ha sido verificada. Por favor, verifica la cuenta en el Email.']);
+            }
             // Redirigir a la página principal de usuarios normales
             return redirect()->route('homein');
         }
 
         // Redirigir de vuelta a la página de inicio de sesión con un mensaje de error
-        return redirect()->route('home')->withErrors(['email' => 'Las credenciales proporcionadas son incorrectas.']);
+        return redirect()->route('login')->withErrors(['email' => 'Las credenciales proporcionadas son incorrectas.']);
     }
 
     /**

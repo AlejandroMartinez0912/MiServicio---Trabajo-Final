@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('role');
             $table->boolean('estado')->default(1);
+            $table->boolean('verificacion_email')->default(0)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

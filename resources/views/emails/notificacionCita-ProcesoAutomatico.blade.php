@@ -168,8 +168,8 @@
             
             <!-- Botón de Confirmación -->
             <a href="{{ route('confirmar-cita-cliente', ['idCita' => $cita->idCita]) }}" 
-                style="padding: 10px 20px; background-color: #333; color: white; text-decoration: none; border-radius: 5px;">
-                Confirmar cita
+                style="display:inline-block; padding:10px 20px; color:#fff; background:linear-gradient(90deg, #ff00cc, #333399); font-weight:bold; text-decoration:none; border-radius:5px;">
+                                Confirmar cita
              </a>
             <p>Si necesitas hacer alguna modificación en tu cita, no dudes en ponerte en contacto con nosotros.</p>
         </div>
