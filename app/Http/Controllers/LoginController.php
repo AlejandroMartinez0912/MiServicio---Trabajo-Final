@@ -17,15 +17,10 @@ use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
 {
-    /**
-     * Registra un nuevo usuario en la aplicación.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
+    
     public function register(Request $request)
     {
-    
+        try {
             // Validar usuario
             $this->validateRegister($request);
 
@@ -38,7 +33,7 @@ class LoginController extends Controller
             $user->verificacion_email = 0;
             $user->save();
 
-            //Enviar correo de confirmación
+            // Enviar correo de confirmación
             Mail::to($user->email)->send(new VerificacionEmail($user));
 
             // Crear automáticamente el perfil (persona) asociado al usuario
@@ -52,18 +47,17 @@ class LoginController extends Controller
             $persona->telefono = $request->telefono;
             $persona->save();
 
-            
             // Guardar auditoría
             $this->guardarAuditoria($user->id, 'Crear', 'Usuarios', 'Se creó un nuevo usuario: ' . $user->id);
             $this->guardarAuditoria($user->id, 'Crear', 'Personas', 'Se creó un nuevo perfil: ' . $persona->id);
 
-            /**Iniciar sesión automáticamente
-            Auth::login($user);
-
-            // Redirigir a la ruta privada
-            return redirect()->route('homein');  **/
-            return redirect()->route('login')->with(['success' => 'Tu cuenta ha sido creada. Por favor, verifica tu correo electrónica.']);
+            // Llevar al login con un mensaje de éxito
+            return redirect()->route('login')->with(['success' => 'Tu cuenta ha sido creada. Por favor, verifica tu correo electrónico.']);
+        } catch (\Exception $e) {
+            return redirect()->route('register')->with(['error' => 'Ocurrió un error inesperado. Inténtalo de nuevo.']);
+        }
     }
+
 
     //Verificar email
     public function verificarEmail($idUser){
@@ -85,12 +79,8 @@ class LoginController extends Controller
         $auditoria->ip = request()->ip();
         $auditoria->save();
     }
-    /**
-     * Inicia sesión en la aplicación.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
+
+    // Función de inicio de sesión
     public function login(Request $request)
     {
         // Validar los datos de entrada
@@ -99,10 +89,10 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
+        
         // Obtener las credenciales del usuario
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember'); // Verificar si el usuario desea que se lo recuerde
-
 
 
         // Intentar autenticar al usuario
@@ -133,7 +123,7 @@ class LoginController extends Controller
         }
 
         // Redirigir de vuelta a la página de inicio de sesión con un mensaje de error
-        return redirect()->route('login')->withErrors(['email' => 'Las credenciales proporcionadas son incorrectas.']);
+        return redirect()->route('login')->with(['error' => 'Las credenciales proporcionadas son incorrectas.']);
     }
 
     /**
