@@ -14,6 +14,7 @@ Artisan::command('inspire', function () {
 
 // \Illuminate\Support\Facades\Schedule::command('recordatorio:enviar')->everyMinute();  
 
+
 \Illuminate\Support\Facades\Schedule::call(function () {
     $hora_actual = now()->format('H:i');
     if ($hora_actual === '04:00') {
@@ -26,14 +27,14 @@ Artisan::command('inspire', function () {
     if ($hora_actual === '08:00') {
         Artisan::call('recordatorio:enviar');
     }
-})->everyMinute();
+})->everyMinute(); 
 
-/**  
+/**
 \Illuminate\Support\Facades\Schedule::call(function () {
     $hora_actual = now()->format('H:i');
-    Artisan::call('agenda:generar');
+    Artisan::call('agenda:generar'); 
     
-})->everyMinute();  
+})->everyMinute();   
 \Illuminate\Support\Facades\Schedule::call(function () {
     $hora_actual = now()->format('H:i');
     Artisan::call('recordatorio:enviar');

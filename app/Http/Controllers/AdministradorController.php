@@ -43,7 +43,7 @@ class AdministradorController extends Controller
         $user->save();
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Eliminar';
             $auditoria->modulo = 'Usuarios';
             $auditoria->detalles = 'Estado anterior: ' . $user->estado . ' Estado actual: ' . $user->estado;
@@ -59,7 +59,7 @@ class AdministradorController extends Controller
         $user->save();
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Activar';
             $auditoria->modulo = 'Usuarios';
             $auditoria->detalles = 'Estado anterior: ' . $user->estado . ' Estado actual: ' . $user->estado;
@@ -83,7 +83,7 @@ class AdministradorController extends Controller
         }
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Desactivar';
             $auditoria->modulo = 'DatoProfesion';
             $auditoria->detalles = 'Profesional desactivado: ' . $profesion->id;
@@ -106,7 +106,7 @@ class AdministradorController extends Controller
         }
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Activar';
             $auditoria->modulo = 'DatoProfesion';
             $auditoria->detalles = 'Profesional activado: ' . $profesion->id;
@@ -144,7 +144,7 @@ class AdministradorController extends Controller
         $persona->save();
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Actualizar';
             $auditoria->modulo = 'Usuarios';
             $auditoria->detalles = 'Perfil actualizado: ' . $user->id;
@@ -192,7 +192,7 @@ class AdministradorController extends Controller
         $servicio->save();
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Desactivar';
             $auditoria->modulo = 'Servicios';
             $auditoria->detalles = 'Servicio desactivado: ' . $servicio->id;
@@ -207,7 +207,7 @@ class AdministradorController extends Controller
         $servicio->save();
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Activar';
             $auditoria->modulo = 'Servicios';
             $auditoria->detalles = 'Servicio activado: ' . $servicio->id;
@@ -235,7 +235,7 @@ class AdministradorController extends Controller
 
 
         $auditoria = new Auditoria();
-            $auditoria->user_id = 9;
+            $auditoria->user_id = 1;
             $auditoria->accion = 'Actualizar';
             $auditoria->modulo = 'Servicios';
             $auditoria->detalles = 'Servicio actualizado: ' . $servicio->id;

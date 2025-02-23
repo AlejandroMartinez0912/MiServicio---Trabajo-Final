@@ -28,11 +28,15 @@ class LoginController extends Controller
             $user = new User();
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            $user->role = "user";
             $user->estado = 1;
             $user->verificacion_email = 0;
             $user->save();
 
+
+            // Asignar un rol al usuario
+            $user->role = ($user->id == 1) ? "admin" : "user";
+            $user->save();
+            
             // Enviar correo de confirmación
             Mail::to($user->email)->send(new VerificacionEmail($user));
 

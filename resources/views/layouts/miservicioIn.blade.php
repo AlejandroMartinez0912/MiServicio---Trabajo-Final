@@ -181,6 +181,14 @@
                     <i class="bx bx-calendar"></i>
                 </a>
             </button>
+            <!-- Botón para Manual de Usuario en YouTube -->
+            <button class="button">
+                <a class="dropdown-item" href="https://www.youtube.com/playlist?list=PLvsZ4qDinLYez_YyDNvqMwHgCfqN1pzlL" 
+                title="Manual de Usuario" target="_blank">
+                    <i class="bx bxl-youtube"></i>
+                </a>
+            </button>
+
             
             <!-- salir -->
             <button class="button">
